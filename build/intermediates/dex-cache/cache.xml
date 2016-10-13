@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\animated-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="de4db3785756bfb0915a9f59a9b3f2fea7407be4">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-animated-vector-drawable-23.4.0_a81d4cb50596a4f0e0cd4502ee7b7ebed64d0f21.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d9ecde39b460470e655de6e47c05573d2d5a8bfb">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-cardview-v7-23.4.0_fb859dc618c90d1c0c8da540a4ac29af5a95c2e1.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\libs\internal_impl-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ea3c07504d2c8f4b13aa17c45c1b68ed9c1c3674">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\internal_impl-23.4.0_922d10e4c1042a9006fdc6e96ae46e6ddd70d280.jar" />
+    </item>
+    <item
+        jar="E:\zzl\android-sdks\extras\android\m2repository\com\android\support\support-annotations\23.4.0\support-annotations-23.4.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ffbe55fdb2bb456b1485831706a9eac3300bb6b8">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\support-annotations-23.4.0_ef9447a5c83fbd133147604b07b35a77ac45a7fa.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\design\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="5326d9a850d491714fef8cbfaa9ea3416f0bf0d2">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-design-23.4.0_68d76462da4667c99b0f82d6247054beeacc1f50.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="ec75036c3c52e451d0cde50a5aedaf5fd32354a0">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-recyclerview-v7-23.4.0_56bc99c7f3a25e630fa46901eb69d3b664c9f9ab.jar" />
+    </item>
+    <item
+        jar="C:\Documents and Settings\CHangJianGuo\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.4\695b63d702f505b9b916e02272e3b6381bade7f\gson-2.4.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="0695b63d702f505b9b916e02272e3b6381bade7f">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\gson-2.4_d0136a1f4f5f77a0803a987711bfc88729d7a991.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\me.gujun.android.taggroup\library\1.4\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="f91fda9bdd268cd21a0ef9d8f40154ded0bd4c53">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\me.gujun.android.taggroup-library-1.4_f98646c60f37396b56e2ad684005f08e31a8ced5.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="67bd36ee9340ec7c254108936ad16b24bed160cc">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.4.0_1ecaba911b0f22614f2234124f7d60123f43dc3e.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="66f7d5cb2316c98ccbdd34eccdee6267825cd588">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\instant-run_717ac63f343ea7492e418c4a1230f07a52aea6b5.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\support-vector-drawable\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="c2c594cace5d83a3227b2b6e658ecbfd586d3ed9">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-support-vector-drawable-23.4.0_010b0a29fb660c21aa8c9073cc83afb7347ab785.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.4.0\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="548f06de403a9409f00554b3ee12a9fdea0e236c">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.4.0_ca12662e833f82a5fd2bedefe7cd46165838eb10.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="018edc55cc7c60fc22759e491d8c486f9d9f3599">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_adfcc531ff7751c9e08a1fa3152636c31f11ff57.jar" />
+    </item>
+    <item
+        jar="E:\WorkSpace\BIT100\app\build\intermediates\exploded-aar\com.yolanda.nohttp\nohttp\1.0.4\jars\classes.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="d2580e3758a0cf5adfcbc49b4cfd40cbc3dcc3df">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\com.yolanda.nohttp-nohttp-1.0.4_42ca79883d5f087c8616ca9db2d7661644726294.jar" />
+    </item>
+    <item
+        jar="C:\Documents and Settings\CHangJianGuo\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.7.0\9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4\glide-3.7.0.jar"
+        jumboMode="true"
+        revision="23.0.2"
+        sha1="9e9eeaf9948ee4d6c3ab354e8dc14368f16994a4">
+        <dex dex="E:\WorkSpace\BIT100\app\build\intermediates\pre-dexed\debug\glide-3.7.0_9275ebee91025ab2d0c96076a7b31782878d4f57.jar" />
+    </item>
+
+</items>
