@@ -16,11 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.yolanda.nohttp.rest.OnResponseListener;
+import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.NetworkUtil;
+import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.ItemDecoratorBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.model.bean.TagsBean;
-import com.zhongzilu.bit100.view.adapter.RecycleViewAdapter;
+import com.zhongzilu.bit100.model.response.AllCategoriesResponse;
+import com.zhongzilu.bit100.view.adapter.CategoryRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -31,12 +39,13 @@ import java.util.ArrayList;
  * Created by zhongzilu on 2016-09-17.
  */
 public class Bit100CategoryFragment extends Fragment
-        implements MyItemClickListener, MyItemLongClickListener{
+        implements MyItemClickListener, MyItemLongClickListener, NetworkUtil.NetworkCallback{
+    private static final String TAG = "Bit100CategoryFragment==>";
 
     private View contentView;
     private SwipeRefreshLayout mRefresh;
     private RecyclerView mRecyclerView;
-    private RecycleViewAdapter mAdapter;
+    private CategoryRecyclerViewAdapter mAdapter;
     private ArrayList<PushModel> mPushList = new ArrayList<>();
     private LinearLayoutManager mLayoutManager;
     private boolean isLoadMore = false;
@@ -56,9 +65,9 @@ public class Bit100CategoryFragment extends Fragment
         setHasOptionsMenu(true);
 
         if (mRecyclerView == null)
-            mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_category_list);
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_common_recyclerView);
         if (mRefresh == null)
-            mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_category);
+            mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
 
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,7 +87,7 @@ public class Bit100CategoryFragment extends Fragment
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         //实例化对象
-        mAdapter = new RecycleViewAdapter(getActivity(), mPushList);
+        mAdapter = new CategoryRecyclerViewAdapter(getActivity(), mPushList);
 
         //设置监听器
         mAdapter.setOnItemClickListener(this);
@@ -96,17 +105,17 @@ public class Bit100CategoryFragment extends Fragment
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE && isLoadMore) {
 
-                    if (mPushList.size() > 21) {
+//                    if (mPushList.size() > 21) {
                         mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                        Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.toast_no_more, Toast.LENGTH_SHORT).show();
                         isLoadMore = false;
-                        return;
-                    }
+//                        return;
+//                    }
 
-                    addTestDate();
-                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                    mAdapter.notifyDataSetChanged();
-                    isLoadMore = false;
+//                    addTestDate();
+//                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
+//                    mAdapter.notifyDataSetChanged();
+//                    isLoadMore = false;
 
                 }
             }
@@ -123,20 +132,25 @@ public class Bit100CategoryFragment extends Fragment
             }
         });
 
+        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("标签", "")));
+        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(getResources().getStringArray(R.array.tags))));
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst){
-            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
+//            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
+            NetworkUtil.getAllCategories(this);
             isFirst = false;
         }
     }
 
     private void addTestDate() {
         for (int i = 0; i < 10; i++){
-            mPushList.add(new PushModel(RecycleViewAdapter.TYPE_CATEGORY, new Object()));
+            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, new Object()));
         }
     }
 
@@ -147,19 +161,19 @@ public class Bit100CategoryFragment extends Fragment
 
             //添加数据
 //            if (mPushList.isEmpty()) {
-            mPushList.clear();
+//            mPushList.clear();
+//
+//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("标签", "")));
+//
+//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(getResources().getStringArray(R.array.tags))));
+//
+//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("目录", "")));
 
-            mPushList.add(new PushModel(RecycleViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("标签", "")));
-
-            mPushList.add(new PushModel(RecycleViewAdapter.TYPE_TAGS, new TagsBean(getResources().getStringArray(R.array.tags))));
-
-            mPushList.add(new PushModel(RecycleViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("目录", "")));
-
-            addTestDate();
+//            addTestDate();
 //            }
 
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setVisibility(View.VISIBLE);
+//            mRecyclerView.setAdapter(mAdapter);
+//            mRecyclerView.setVisibility(View.VISIBLE);
             if (mRefresh.isRefreshing())
                 mRefresh.setRefreshing(false);
         }
@@ -177,7 +191,7 @@ public class Bit100CategoryFragment extends Fragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_item3, menu);
+//        inflater.inflate(R.menu.menu_item3, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -189,5 +203,44 @@ public class Bit100CategoryFragment extends Fragment
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public OnResponseListener<String> callback() {
+        return new OnResponseListener<String>() {
+            @Override
+            public void onStart(int what) {
+                mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("目录", "")));
+            }
+
+            @Override
+            public void onSucceed(int what, Response<String> response) {
+                LogUtil.d(TAG, "onSucceed: " + response);
+                AllCategoriesResponse result = new Gson().fromJson(response.get(),
+                        new TypeToken<AllCategoriesResponse>(){}.getType());
+                if ("ok".equals(result.status)){
+                    for (CategoriesBean cb : result.categories){
+                        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
+                    }
+
+                    mAdapter.notifyDataSetChanged();
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    if (mRefresh.isRefreshing())
+                        mRefresh.setRefreshing(false);
+                } else {
+                    Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<String> response) {
+                Toast.makeText(getActivity(), response.get(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish(int what) {
+
+            }
+        };
     }
 }

@@ -1,9 +1,11 @@
 package com.zhongzilu.bit100.widget;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -45,6 +47,9 @@ public class CustomLoadingWebView extends WebView {
         getSettings().setLoadsImagesAutomatically(true);
         //将图片调整到适合webview的大小
         getSettings().setUseWideViewPort(true);
+        //没有网络的时候加载缓存
+        getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        getSettings().setNeedInitialFocus(true);
     }
 
     public class WebChromeClient extends android.webkit.WebChromeClient {
@@ -64,6 +69,12 @@ public class CustomLoadingWebView extends WebView {
     }
 
     public class WebViewClient extends android.webkit.WebViewClient{
+
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+        }
+
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);

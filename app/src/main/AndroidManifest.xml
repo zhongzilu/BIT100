@@ -9,6 +9,13 @@
     <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission-sdk-23 android:name="android.permission.MANAGE_DOCUMENTS" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:name=".application.App"
         android:allowBackup="true"
@@ -27,19 +34,22 @@
         </activity>
 
         <!--主Activity-->
-        <activity android:name=".view.activity.Bit100MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".view.activity.Bit100MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--文章详情Activity-->
-        <activity android:name=".view.activity.Bit100ArticleDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".view.activity.Bit100ArticleDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--设置Activity-->
-        <activity android:name=".view.activity.SettingsActivity"/>
+        <activity android:name=".view.activity.SettingsActivity" />
 
         <!--登录Activity-->
-        <activity android:name=".view.activity.Bit100LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".view.activity.Bit100LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 

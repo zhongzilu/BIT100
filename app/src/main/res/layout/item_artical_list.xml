@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
@@ -12,28 +13,29 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/tv_user_name"
+            android:id="@+id/tv_author_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:ellipsize="marquee"
             android:lines="1"
-            android:text="钟子路"
+            tools:text="钟子路"
             android:textColor="#616161"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/tv_article_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="2016-09-16"
+            tools:text="2016-09-16"
             android:textColor="@color/hint"
             android:textSize="12sp" />
 
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/img_item_cover"
+        android:id="@+id/img_article_thumb"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:scaleType="centerCrop"
@@ -41,7 +43,7 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/tv_user_description"
+        android:id="@+id/tv_article_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="marquee"
@@ -50,12 +52,14 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:padding="10dp"
         android:singleLine="true"
-        android:text="程序调用系统裁剪之后直接闪退"
+        tools:text="程序调用系统裁剪之后直接闪退"
         android:textSize="16sp" />
 
     <LinearLayout
+        android:id="@+id/layout_article_tags_wrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:clipChildren="true">
 
         <ImageView
             android:layout_width="20dp"
@@ -64,45 +68,45 @@
             android:layout_marginStart="10dp"
             android:src="@drawable/ic_tag_multiple" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/tag_border"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="2dp"
-            android:text="标签"
-            android:textColor="@color/hint"
-            android:textSize="12sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:layout_marginStart="5dp"-->
+            <!--android:background="@drawable/tag_border"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:paddingLeft="4dp"-->
+            <!--android:paddingRight="4dp"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:text="标签"-->
+            <!--android:textColor="@color/hint"-->
+            <!--android:textSize="12sp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/tag_border"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="2dp"
-            android:text="标签"
-            android:textColor="@color/hint"
-            android:textSize="12sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:background="@drawable/tag_border"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:paddingLeft="4dp"-->
+            <!--android:paddingRight="4dp"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:text="标签"-->
+            <!--android:textColor="@color/hint"-->
+            <!--android:textSize="12sp" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/tag_border"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:paddingTop="2dp"
-            android:text="标签"
-            android:textColor="@color/hint"
-            android:textSize="12sp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:background="@drawable/tag_border"-->
+            <!--android:paddingBottom="2dp"-->
+            <!--android:paddingLeft="4dp"-->
+            <!--android:paddingRight="4dp"-->
+            <!--android:paddingTop="2dp"-->
+            <!--android:text="标签"-->
+            <!--android:textColor="@color/hint"-->
+            <!--android:textSize="12sp" />-->
 
     </LinearLayout>
 
@@ -123,6 +127,7 @@
         android:paddingTop="5dp">
 
         <ImageView
+            android:id="@+id/img_article_up"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:layout_centerVertical="true"
@@ -130,6 +135,7 @@
             android:src="@drawable/ic_thumb_up_outline" />
 
         <ImageView
+            android:id="@+id/img_article_share"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentRight="true"

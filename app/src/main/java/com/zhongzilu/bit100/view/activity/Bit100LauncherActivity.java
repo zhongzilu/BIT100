@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 /**
  * App启动时的启动页
- *
  * Created by zhongzilu on 2016-07-28.
  */
 public class Bit100LauncherActivity extends AppCompatActivity {
@@ -22,7 +21,7 @@ public class Bit100LauncherActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                goNext();
+                goMainActivity();
             }
         }, mDelay);
     }

@@ -3,6 +3,8 @@ package com.zhongzilu.bit100.application;
 import android.app.Application;
 import android.content.Context;
 
+import com.yolanda.nohttp.Logger;
+import com.yolanda.nohttp.NoHttp;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 
 /**
@@ -18,6 +20,9 @@ public class App extends Application {
         context = this;
 
         SharePreferenceUtil.config(this);
+        NoHttp.initialize(this);
+        Logger.setDebug(false);
+        Logger.setTag("BIT100==>");
     }
 
     public static Context getAppContext(){

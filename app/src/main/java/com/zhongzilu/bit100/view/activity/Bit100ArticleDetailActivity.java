@@ -10,7 +10,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.view.fragment.Bit100ArticleDetailFragment;
 
 import java.io.File;
@@ -29,11 +31,13 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "Bit100ArticleDetailActivity==>";
 
+    //UI
     private Bit100ArticleDetailFragment mFragment;
-    private String loadUrl; //活动链接地址
-    public static final String EXTRA_LOADURL = "loadUrl";
     private FragmentTransaction transaction;
     private ImageView mHeaderBgImage;
+
+    private ArticleDetailBean mBean; //文章bean
+    public static final String EXTRA_ARTICLE_BEAN = "article_bean";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +45,7 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_article_detail_layout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article_detail);
-        toolbar.setTitle("程序调用魅族系统裁剪之后直接闪退程序调用");
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         setupActionBar();
 
@@ -49,7 +53,12 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
 
         //获取其他界面传过来的值
         if (getIntent() != null) {
-            loadUrl = getIntent().getStringExtra(EXTRA_LOADURL);
+            mBean = getIntent().getParcelableExtra(EXTRA_ARTICLE_BEAN);
+            if (mBean != null) {
+                toolbar.setTitle(mBean.title);
+            } else {
+                LogUtil.d(TAG, "onCreate: article intent extra is null");
+            }
         }
 
         String path = SharePreferenceUtil.getImagePath();
@@ -58,7 +67,7 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
         }
 
         if (mFragment == null){
-            mFragment = new Bit100ArticleDetailFragment();
+            mFragment = Bit100ArticleDetailFragment.newInstance(mBean);
             transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.layout_article_detail_parent, mFragment);
             transaction.commit();
@@ -82,8 +91,8 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        mFragment.onHiddenChanged(true);
+        if (mFragment != null)
+            mFragment.onHiddenChanged(true);
     }
 
     @Override
@@ -91,6 +100,11 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case android.R.id.home:
                 onBackPressed();
+                break;
+
+            case R.id.action_share:
+                if (mFragment != null)
+                mFragment.onOptionsItemSelected(item);
                 break;
         }
         return true;
