@@ -61,8 +61,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         mViewPager = (ViewPager) findViewById(R.id.pager_organization_info_main);
         mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
         mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
-
-        initGLSurfaceView();
+//        mGlSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
 
 //        View mChangeImageBtn = findViewById(R.id.btn_change_bg_image);
 //        mChangeImageBtn.setOnClickListener(this);
@@ -80,8 +79,6 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void initGLSurfaceView(){
-        mGlSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
-
         // Check if the system supports OpenGL ES 2.0.
         final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
@@ -109,13 +106,13 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     @Override
     protected void onPause() {
         super.onPause();
-        mGlSurfaceView.onPause();
+//        mGlSurfaceView.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mGlSurfaceView.onResume();
+//        mGlSurfaceView.onResume();
     }
 
     @Override
@@ -177,12 +174,12 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         target.setType(type);
         target.addCategory(Intent.CATEGORY_OPENABLE);
 
-        Intent intent = Intent.createChooser(target, "选择方式");
+        Intent intent = Intent.createChooser(target, getString(R.string.title_chooser));
 
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, code);
         } else {
-            Toast.makeText(this, "不存在处理的应用", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_can_not_deal, Toast.LENGTH_SHORT).show();
         }
     }
 

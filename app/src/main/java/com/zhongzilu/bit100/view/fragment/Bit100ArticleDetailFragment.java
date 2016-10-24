@@ -1,9 +1,11 @@
 package com.zhongzilu.bit100.view.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,23 +16,49 @@ import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.yolanda.nohttp.rest.OnResponseListener;
+import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.NetworkUtil;
+import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
+import com.zhongzilu.bit100.model.response.AllPostsResponse;
 import com.zhongzilu.bit100.widget.CustomLoadingWebView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * 文章详情Fragment
  * Created by zhongzilu on 2016-09-16.
  */
 public class Bit100ArticleDetailFragment extends Fragment
-        implements DownloadListener, CustomLoadingWebView.OnReLoadListener {
+        implements DownloadListener, CustomLoadingWebView.OnReLoadListener,
+        NetworkUtil.NetworkCallback {
 
     private static final String TAG = "Bit100ArticleDetailFragment==>";
 
+    //UI
     private View contentView;
     private CustomLoadingWebView mWebView;
-    private WebSettings mWebSettings;
+    private NestedScrollView mScroll;
+
+    //Network
+    private String mContent;
+    //Value
+    private static ArticleDetailBean mBean;
+    //Other
     private boolean isFirst = true;
+
+    public static Bit100ArticleDetailFragment newInstance(ArticleDetailBean bean) {
+        Bundle args = new Bundle();
+        args.putParcelable("bean", bean);
+        mBean = bean;
+        Bit100ArticleDetailFragment fragment = new Bit100ArticleDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +68,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         return contentView;
     }
 
+    @SuppressLint("JavascriptInterface")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -48,18 +77,22 @@ public class Bit100ArticleDetailFragment extends Fragment
 
         if (mWebView == null)
             mWebView = (CustomLoadingWebView) view.findViewById(R.id.wv_article_detail_webView);
+        mScroll = (NestedScrollView) view.findViewById(R.id.nested_scroll_view);
+        mWebView.addJavascriptInterface(this, "Submit");
+        mWebView.setOnReloadListener(this);
 
         initWebView();
     }
 
     private void initWebView() {
+
         //设置支持JavaScript等
-        mWebSettings = mWebView.getSettings();
+        WebSettings mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.setHapticFeedbackEnabled(false);
+        mWebSettings.setDomStorageEnabled(true);
         //支持内容重新布局
         mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-        mWebSettings.setNeedInitialFocus(true);
 
 //        mWebView.setInitialScale(0); // 改变这个值可以设定初始大小
 
@@ -82,7 +115,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.d(TAG, "setUserVisibleHint: " + isVisibleToUser);
         if (isVisibleToUser && isFirst){
-            mWebView.loadUrl("file:///android_asset/index.html");
+            NetworkUtil.getRecentPost(this);
             isFirst = false;
         }
     }
@@ -92,7 +125,8 @@ public class Bit100ArticleDetailFragment extends Fragment
         super.onHiddenChanged(hidden);
         LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
-            mWebView.loadUrl("file:///android_asset/index.html");
+            if (mBean == null)return;
+            NetworkUtil.getPostById(mBean, this);
             isFirst = false;
         }
     }
@@ -108,10 +142,23 @@ public class Bit100ArticleDetailFragment extends Fragment
 
         switch (item.getItemId()){
             case R.id.action_share:
-                Toast.makeText(getActivity(), "点击分享", Toast.LENGTH_SHORT).show();
+                shareArticle();
                 break;
         }
         return true;
+    }
+
+    // zhongzilu: 16-10-21 分享文章地址
+    private void shareArticle(){
+        if (mBean == null)return;
+
+        Toast.makeText(getActivity(), R.string.toast_invoking_share, Toast.LENGTH_SHORT).show();
+        Intent localIntent = new Intent("android.intent.action.SEND");
+        localIntent.setType("text/plain");
+        localIntent.putExtra("android.intent.extra.TEXT", mBean.title +
+                "【来自"+getString(R.string.app_name)+"App】\n" + mBean.url);
+        localIntent.putExtra("android.intent.extra.SUBJECT", "这是分享内容");
+        startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
     }
 
     @Override
@@ -128,7 +175,10 @@ public class Bit100ArticleDetailFragment extends Fragment
 
     @Override
     public void onReloadEnd() {
-
+        mWebView.loadUrl("javascript:show(" + mContent + ")");
+        int width = mWebView.getWidth();
+        int height = mWebView.getHeight();
+        mScroll.measure(width, height);
     }
 
     @Override
@@ -138,7 +188,67 @@ public class Bit100ArticleDetailFragment extends Fragment
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Toast.makeText(getActivity(), "请安装浏览器或下载软件", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), R.string.toast_can_not_deal_download_intent, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public OnResponseListener<JSONObject> callback() {
+
+        return new OnResponseListener<JSONObject>() {
+            @Override
+            public void onStart(int what) {}
+
+            @Override
+            public void onSucceed(int what, Response<JSONObject> response) {
+
+                try {
+                    String status = response.get().getString("status");
+                    if ("ok".equals(status)) {
+                        switch (what){
+                            case NetworkUtil.TAG_GET_RECENT_POST:
+                                AllPostsResponse result = new Gson()
+                                        .fromJson(response.get().toString(), AllPostsResponse.class);
+                                //注意：
+                                // 之所以要判断result.posts.length > 1，是因为获取首页的数据时，返回了置顶的
+                                // 一篇文章，如果后台取消了置顶的文章，这里的Gson解析会出错
+                                if (result.posts.length > 1){
+                                    mBean = result.posts[1];
+                                    mContent = formatContent(mBean.content);
+                                } else {
+                                    mBean = result.posts[0];
+                                    mContent = formatContent(mBean.content);
+                                }
+                                break;
+
+                            case NetworkUtil.TAG_GET_POST_BY_ID:
+                                JSONObject obj = response.get().getJSONObject("post");
+                                String content = obj.getString("content");
+                                mContent = formatContent(content);
+                                break;
+                        }
+                        mWebView.loadUrl("file:///android_asset/index.html");
+
+                    } else {
+                        Toast.makeText(getActivity(), response.get().getString("error"), Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailed(int what, Response<JSONObject> response) {
+                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish(int what) {}
+        };
+    }
+
+    private String formatContent(String content){
+        return "\"" + content.replaceAll("\"", "'") + "\"";
     }
 }
