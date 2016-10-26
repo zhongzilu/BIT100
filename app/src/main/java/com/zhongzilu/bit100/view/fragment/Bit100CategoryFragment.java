@@ -3,6 +3,7 @@ package com.zhongzilu.bit100.view.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -107,7 +108,7 @@ public class Bit100CategoryFragment extends Fragment
 
 //                    if (mPushList.size() > 21) {
                         mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                        Toast.makeText(getContext(), R.string.toast_no_more, Toast.LENGTH_SHORT).show();
+                        Snackbar.make(recyclerView, R.string.toast_no_more, Snackbar.LENGTH_SHORT).show();
                         isLoadMore = false;
 //                        return;
 //                    }

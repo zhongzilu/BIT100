@@ -216,5 +216,7 @@
     <string name="title_chooser_share">选择分享</string>
     <string name="toast_can_not_deal_download_intent">请安装浏览器或下载软件</string>
     <string name="toast_invoking_share">正在启动分享</string>
+    <string name="title_activity_gallery">Gallery</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

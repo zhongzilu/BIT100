@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.widget.Toast;
 
@@ -24,6 +26,7 @@ import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
+import com.zhongzilu.bit100.view.activity.GalleryActivity;
 import com.zhongzilu.bit100.widget.CustomLoadingWebView;
 
 import org.json.JSONException;
@@ -68,7 +71,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         return contentView;
     }
 
-    @SuppressLint("JavascriptInterface")
+    @SuppressLint("AddJavascriptInterface")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -78,7 +81,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         if (mWebView == null)
             mWebView = (CustomLoadingWebView) view.findViewById(R.id.wv_article_detail_webView);
         mScroll = (NestedScrollView) view.findViewById(R.id.nested_scroll_view);
-        mWebView.addJavascriptInterface(this, "Submit");
+        mWebView.addJavascriptInterface(this, "Android");
         mWebView.setOnReloadListener(this);
 
         initWebView();
@@ -152,13 +155,31 @@ public class Bit100ArticleDetailFragment extends Fragment
     private void shareArticle(){
         if (mBean == null)return;
 
-        Toast.makeText(getActivity(), R.string.toast_invoking_share, Toast.LENGTH_SHORT).show();
+        Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
         Intent localIntent = new Intent("android.intent.action.SEND");
         localIntent.setType("text/plain");
         localIntent.putExtra("android.intent.extra.TEXT", mBean.title +
                 "【来自"+getString(R.string.app_name)+"App】\n" + mBean.url);
         localIntent.putExtra("android.intent.extra.SUBJECT", "这是分享内容");
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
+    }
+
+    //
+
+    /**
+     * 新增 从网页上传递图片地址数组以及网页上点击图片的位置，
+     * 然后传递给GalleryActivity，调用ViewPager显示图片
+     * zhongzilu: 2016-10-25
+     * @param imgSrc 网页上所有的图片地址路径数组
+     * @param position 网页上点击的图片位置
+     */
+    @JavascriptInterface
+    public void showImages(String[] imgSrc, int position){
+        LogUtil.d(TAG, "showImages: imageSize==>" + imgSrc.length + "\tposition==>" + position);
+        Intent intent = new Intent(getActivity(), GalleryActivity.class);
+        intent.putExtra(GalleryActivity.EXTRA_IMAGES_LIST, imgSrc);
+        intent.putExtra(GalleryActivity.EXTRA_CURRENT_IMAGE_POSITION, position);
+        startActivity(intent);
     }
 
     @Override

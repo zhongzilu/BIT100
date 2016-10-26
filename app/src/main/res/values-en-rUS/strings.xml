@@ -1,19 +1,19 @@
 <resources>
-    <string name="app_name">比特壹百</string>
+    <string name="app_name">BIT100</string>
 
     <!--menu action title-->
-    <string name="action_settings">设置</string>
-    <string name="action_change_skin">更换背景</string>
-    <string name="action_search">搜索</string>
-    <string name="action_gift">隐藏任务</string>
-    <string name="action_share_app">分享应用</string>
-    <string name="action_share">分享</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_change_skin">Change background</string>
+    <string name="action_search">Search</string>
+    <string name="action_gift">Hide Function</string>
+    <string name="action_share_app">Share Application</string>
+    <string name="action_share">Share</string>
 
     <!--activity name-->
-    <string name="activity_login">登录</string>
-    <string name="activity_forgotPwd">忘记密码</string>
-    <string name="activity_register">注册</string>
-    <string name="activity_forgotPwd_next">找回密码</string>
+    <string name="activity_login">Login</string>
+    <string name="activity_forgotPwd">Forgot Password?</string>
+    <string name="activity_register">Register</string>
+    <string name="activity_forgotPwd_next">Retrieve password</string>
 
     <!--any error alert text-->
     <string name="error_account_null">账号不能为空</string>
@@ -25,7 +25,7 @@
     <string name="error_code_null">验证码不能为空</string>
     <string name="error_code_error">验证码错误</string>
 
-    <string name="str_loading_data">正在加载中…</string>
+    <string name="str_loading_data">Loading…</string>
 
     <string name="test_str">如果你不能用一句话描述问题，说明你对他还不够了解</string>
     <string-array name="tags">
@@ -210,11 +210,11 @@
     <string name="pref_title_vibrate">Vibrate</string>
 
     <string name="share_application">推荐给大家一款很好的博客应用【比特壹佰】,简单即美好!\n下载请戳这里：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
-    <string name="toast_no_more">没有更多了</string>
-    <string name="toast_can_not_deal">不存在处理的应用</string>
-    <string name="title_chooser">选择方式</string>
-    <string name="title_chooser_share">选择分享</string>
-    <string name="toast_can_not_deal_download_intent">请安装浏览器或下载软件</string>
-    <string name="toast_invoking_share">正在启动分享</string>
+    <string name="toast_no_more">No more</string>
+    <string name="toast_can_not_deal">not existed deal applications</string>
+    <string name="title_chooser">Choose Method</string>
+    <string name="title_chooser_share">Choose Share</string>
+    <string name="toast_can_not_deal_download_intent">Please install Browser or Download software</string>
+    <string name="toast_invoking_share">Loading Share Function</string>
 
 </resources>
