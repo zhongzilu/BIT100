@@ -10,8 +10,25 @@
 <body>
 </body>
 <script type="text/javascript">
+
+    var img;
+    var imgSrc = [];
     function show(text) {
         document.body.innerHTML = text;
+        img = document.getElementsByTagName("img");
+        for(var i=0; i < img.length; i++){
+            img[i].setAttribute("onclick", "showImage("+i+")");
+            imgSrc.push(img[i].src);
+        }
     }
+
+    function showImage(position){
+        try{
+            Android.showImages(imgSrc, position);
+        } catch(error){
+            alert(error);
+        }
+    }
+
 </script>
 </html>

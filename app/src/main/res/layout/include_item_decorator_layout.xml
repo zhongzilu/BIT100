@@ -9,7 +9,6 @@
         android:layout_height="2dp"
         android:background="#eee" />
 
-
     <TextView
         android:id="@+id/tv_item_decorator_title"
         android:layout_width="wrap_content"

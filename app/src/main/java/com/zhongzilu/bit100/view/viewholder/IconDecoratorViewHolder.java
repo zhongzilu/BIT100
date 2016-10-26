@@ -9,6 +9,7 @@ import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
 /**
+ * 带有图标的分割栏ViewHolder
  * Created by zhongzilu on 2016-09-16.
  */
 public class IconDecoratorViewHolder extends BaseViewHolder {

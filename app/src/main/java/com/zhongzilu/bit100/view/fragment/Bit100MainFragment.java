@@ -48,11 +48,13 @@ public class Bit100MainFragment extends Fragment
 
     private static final String TAG = "Bit100MainFragment==>";
 
+    //UI
     private View contentView;
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout mRefresh;
 
+    //other
     private ArrayList<PushModel> mPushList = new ArrayList<>();
     private boolean isLoadMore = false;
     private boolean isFirst = true;
@@ -114,6 +116,7 @@ public class Bit100MainFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //设置Fragment可以重载Activity的菜单栏
         setHasOptionsMenu(true);
 
         if (mRecyclerView == null)
@@ -160,7 +163,7 @@ public class Bit100MainFragment extends Fragment
 
 //                    if (mPushList.size() > 11) {
                         mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                        Toast.makeText(getContext(), R.string.toast_no_more, Toast.LENGTH_SHORT).show();
+                        Snackbar.make(recyclerView, R.string.toast_no_more, Snackbar.LENGTH_SHORT).show();
 //                        isLoadMore = false;
 //                        return;
 //                    }
@@ -283,12 +286,14 @@ public class Bit100MainFragment extends Fragment
     }
 
     private void shareAction(String text){
-        Toast.makeText(getActivity(), R.string.toast_invoking_share, Toast.LENGTH_SHORT).show();
+
+        Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
         Intent localIntent = new Intent("android.intent.action.SEND");
         localIntent.setType("text/plain");
         localIntent.putExtra("android.intent.extra.TEXT", text);
         localIntent.putExtra("android.intent.extra.SUBJECT", "这是分享内容");
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
+
     }
 
     @Override
