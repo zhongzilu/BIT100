@@ -62,7 +62,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         // 选中的文字颜色
         mTabs.setSelectedTextColor(R.color.colorPrimary);
         mTabs.setViewPager(mViewPager);
-        
+
 
     }
 
