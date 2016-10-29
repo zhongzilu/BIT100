@@ -12,7 +12,7 @@ import me.gujun.android.taggroup.TagGroup;
  * 文章标签ViewHolder
  * Created by zhongzilu on 16-9-17.
  */
-public class TagsLayoutViewHolder extends BaseViewHolder {
+public class TagsLayoutViewHolder extends BaseViewHolder{
 
     public TagGroup mTagGroup;
 
@@ -23,5 +23,6 @@ public class TagsLayoutViewHolder extends BaseViewHolder {
         mTagGroup = (TagGroup) itemView.findViewById(R.id.tag_group);
 
     }
+
 }
 
