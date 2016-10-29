@@ -180,6 +180,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         intent.putExtra(GalleryActivity.EXTRA_IMAGES_LIST, imgSrc);
         intent.putExtra(GalleryActivity.EXTRA_CURRENT_IMAGE_POSITION, position);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_anim_in, R.anim.fade_anim_out);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.zhongzilu.bit100.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -29,6 +30,7 @@ import com.zhongzilu.bit100.model.bean.ItemDecoratorBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.model.bean.TagsBean;
 import com.zhongzilu.bit100.model.response.AllCategoriesResponse;
+import com.zhongzilu.bit100.view.activity.Bit100ArticleListActivity;
 import com.zhongzilu.bit100.view.adapter.CategoryRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
@@ -53,7 +55,7 @@ public class Bit100CategoryFragment extends Fragment
     private boolean isFirst = true;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         if (contentView == null)
             contentView = inflater.inflate(R.layout.fragment_category_layout, container, false);
         return contentView;
@@ -73,7 +75,10 @@ public class Bit100CategoryFragment extends Fragment
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
+                mPushList.clear();
+                addTagsTestData();
+                NetworkUtil.getAllCategories(Bit100CategoryFragment.this);
+//                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
 
@@ -133,10 +138,17 @@ public class Bit100CategoryFragment extends Fragment
             }
         });
 
-        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("标签", "")));
-        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(getResources().getStringArray(R.array.tags))));
+        addTagsTestData();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    // zhongzilu: 2016-10-27 添加标签的测试数据
+    private void addTagsTestData(){
+        String[] tags = getResources().getStringArray(R.array.tags);
+        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
+                new ItemDecoratorBean("标签", String.valueOf(tags.length)) ));
+        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(tags)));
     }
 
     @Override
@@ -182,7 +194,20 @@ public class Bit100CategoryFragment extends Fragment
 
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, View view, int position) {
+        int type = mPushList.get(position).getPushType();
+        switch (type){
+            //点击目录分类
+            case CategoryRecyclerViewAdapter.TYPE_CATEGORY:
+                CategoriesBean categoriesBean = (CategoriesBean) mPushList.get(position).getPushObject();
+                Intent intent = new Intent(getActivity(), Bit100ArticleListActivity.class);
+                intent.putExtra(Bit100ArticleListActivity.EXTRA_CATEGORY_BEAN, categoriesBean);
+                startActivity(intent);
+                break;
+            //点击标签分类
+            case CategoryRecyclerViewAdapter.TYPE_TAGS:
 
+                break;
+        }
     }
 
     @Override
@@ -211,7 +236,7 @@ public class Bit100CategoryFragment extends Fragment
         return new OnResponseListener<String>() {
             @Override
             public void onStart(int what) {
-                mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("目录", "")));
+
             }
 
             @Override
@@ -220,22 +245,29 @@ public class Bit100CategoryFragment extends Fragment
                 AllCategoriesResponse result = new Gson().fromJson(response.get(),
                         new TypeToken<AllCategoriesResponse>(){}.getType());
                 if ("ok".equals(result.status)){
+                    mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
+                            new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+
                     for (CategoriesBean cb : result.categories){
                         mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
                     }
 
-                    mAdapter.notifyDataSetChanged();
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    if (mRefresh.isRefreshing())
-                        mRefresh.setRefreshing(false);
                 } else {
                     Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
                 }
+
+                mAdapter.notifyDataSetChanged();
+                mRecyclerView.setVisibility(View.VISIBLE);
+                if (mRefresh.isRefreshing())
+                    mRefresh.setRefreshing(false);
             }
 
             @Override
             public void onFailed(int what, Response<String> response) {
                 Toast.makeText(getActivity(), response.get(), Toast.LENGTH_SHORT).show();
+                mRecyclerView.setVisibility(View.VISIBLE);
+                if (mRefresh.isRefreshing())
+                    mRefresh.setRefreshing(false);
             }
 
             @Override

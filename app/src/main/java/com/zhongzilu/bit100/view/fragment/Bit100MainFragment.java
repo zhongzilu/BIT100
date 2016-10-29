@@ -28,7 +28,10 @@ import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
+import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
+import com.zhongzilu.bit100.model.bean.TagBean;
+import com.zhongzilu.bit100.model.response.AllPostsByCategoryResponse;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleDetailActivity;
 import com.zhongzilu.bit100.view.activity.Bit100MainActivity;
@@ -53,6 +56,10 @@ public class Bit100MainFragment extends Fragment
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout mRefresh;
+
+    //Value
+    private static CategoriesBean mCategories;
+    private static TagBean mTagBean;
 
     //other
     private ArrayList<PushModel> mPushList = new ArrayList<>();
@@ -105,6 +112,26 @@ public class Bit100MainFragment extends Fragment
         }
     };
 
+    public static Bit100MainFragment newInstance(CategoriesBean bean) {
+
+        Bundle args = new Bundle();
+        args.putParcelable("categories", bean);
+        mCategories = bean;
+        Bit100MainFragment fragment = new Bit100MainFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Bit100MainFragment newInstance(TagBean bean) {
+
+        Bundle args = new Bundle();
+        args.putParcelable("tags", bean);
+        mTagBean = bean;
+        Bit100MainFragment fragment = new Bit100MainFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (contentView == null)
@@ -128,6 +155,9 @@ public class Bit100MainFragment extends Fragment
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                mPushList.clear();
+                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
+                NetworkUtil.getAllPosts(Bit100MainFragment.this);
 //                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
@@ -199,6 +229,27 @@ public class Bit100MainFragment extends Fragment
         if (isVisibleToUser && isFirst) {
             NetworkUtil.getAllPosts(this);
 //            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
+            isFirst = false;
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        LogUtil.d(TAG, "onHiddenChanged: " + hidden);
+        if (hidden && isFirst){
+            if (mCategories == null && mTagBean == null){
+                LogUtil.e(TAG, "onHiddenChanged: mCategoriesBean & mTagBean is both null");
+                throw new NullPointerException("mCategoriesBean & mTagBean is both null");
+            }
+
+            if (mCategories != null){
+                //根据目录请求文章列表
+                NetworkUtil.getAllPostsByCategoryId(mCategories, this);
+            } else {
+                //根据标签请求文章列表
+            }
+
             isFirst = false;
         }
     }
@@ -306,26 +357,14 @@ public class Bit100MainFragment extends Fragment
 
             @Override
             public void onSucceed(int what, Response<String> response) {
-                LogUtil.d(TAG, "onSucceed: response==>" + response);
-
-                AllPostsResponse allPosts = new Gson().fromJson(response.get(),
-                        new TypeToken<AllPostsResponse>(){}.getType());
-                try {
-                    if ("ok".equals(allPosts.status)){
-
-                        for (ArticleDetailBean bean : allPosts.posts){
-                            mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
-                        }
-
-                        mRecyclerView.setVisibility(View.VISIBLE);
-                        if (mRefresh.isRefreshing())
-                            mRefresh.setRefreshing(false);
-                    } else {
-                        if (!TextUtils.isEmpty(allPosts.error))
-                            Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                LogUtil.d(TAG, "onSucceed: response==>" + response.get());
+                switch (what){
+                    case NetworkUtil.TAG_GET_POSTS_BY_CATEGORIES:
+                        handleAllPostsByCategoryResponse(response.get());
+                        break;
+                    case NetworkUtil.TAG_GET_ALL_POSTS:
+                        handleAllPostsResponse(response.get());
+                        break;
                 }
 
             }
@@ -333,6 +372,9 @@ public class Bit100MainFragment extends Fragment
             @Override
             public void onFailed(int what, Response<String> response) {
                 Toast.makeText(getActivity(), response.get(), Toast.LENGTH_SHORT).show();
+                mRecyclerView.setVisibility(View.VISIBLE);
+                if (mRefresh.isRefreshing())
+                    mRefresh.setRefreshing(false);
             }
 
             @Override
@@ -340,5 +382,64 @@ public class Bit100MainFragment extends Fragment
 
             }
         };
+    }
+
+    /**
+     * 处理获取全部文章的网络请求返回数据
+     * @param json 请求响应返回的JSON数据
+     */
+    private void handleAllPostsResponse(String json){
+        AllPostsResponse allPosts = new Gson().fromJson(json,
+                new TypeToken<AllPostsResponse>(){}.getType());
+        try {
+            if ("ok".equals(allPosts.status)){
+
+                for (ArticleDetailBean bean : allPosts.posts){
+                    mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
+                }
+
+                if (allPosts.posts.length < 5)
+                    mAdapter.setMoreVisible(false);
+
+            } else {
+                if (!TextUtils.isEmpty(allPosts.error))
+                    Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
+            }
+
+            mAdapter.notifyDataSetChanged();
+            mRecyclerView.setVisibility(View.VISIBLE);
+            if (mRefresh.isRefreshing())
+                mRefresh.setRefreshing(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 处理根据目录获取文章列表的网络请求返回数据
+     * @param json 请求响应返回的JSON数据
+     */
+    private void handleAllPostsByCategoryResponse(String json){
+        AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
+                new TypeToken<AllPostsByCategoryResponse>(){}.getType());
+
+        if ("ok".equals(allPosts.status)){
+
+            for (ArticleDetailBean bean : allPosts.posts){
+                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
+            }
+
+            if (allPosts.posts.length < 5)
+                mAdapter.setMoreVisible(false);
+
+        } else {
+            if (!TextUtils.isEmpty(allPosts.error))
+                Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
+        }
+
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        if (mRefresh.isRefreshing())
+            mRefresh.setRefreshing(false);
     }
 }

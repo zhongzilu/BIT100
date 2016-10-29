@@ -1,20 +1,26 @@
 package com.zhongzilu.bit100.view.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.FileUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.widget.TouchImageView;
 
@@ -22,7 +28,7 @@ import com.zhongzilu.bit100.widget.TouchImageView;
  * 图片画廊，用于查看网页上的图片
  * Created by zhongzilu on 2016-09-16.
  */
-public class GalleryActivity extends AppCompatActivity {
+public class GalleryActivity extends BaseActivity {
     private static final String TAG = "GalleryActivity==>";
 
     //Extra Tag
@@ -53,6 +59,11 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        Toolbar toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        setupActionBar();
+
         mViewPager = (ViewPager) findViewById(R.id.container);
 
         Intent intent = getIntent();
@@ -75,26 +86,29 @@ public class GalleryActivity extends AppCompatActivity {
         mViewPager.setCurrentItem(mChosePosition, true);
     }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_gallery, menu);
-        return true;
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_settings:
-
+            case android.R.id.home:
+                finish();
+                overridePendingTransition(R.anim.fade_anim_in, R.anim.fade_anim_out);
                 break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    /**
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode){
+            case KeyEvent.KEYCODE_BACK:
+                finish();
+                overridePendingTransition(R.anim.fade_anim_in, R.anim.fade_anim_out);
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**==========================================================================================
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
@@ -105,6 +119,7 @@ public class GalleryActivity extends AppCompatActivity {
          */
         private static final String ARG_IMAGE_URL = "image_url";
         private View contentView;
+        private TouchImageView imageView;
 
         public PlaceholderFragment() {}
 
@@ -131,8 +146,9 @@ public class GalleryActivity extends AppCompatActivity {
         @Override
         public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
+            setHasOptionsMenu(true);
 
-            TouchImageView imageView = (TouchImageView) view.findViewById(R.id.img_touch_image);
+            imageView = (TouchImageView) view.findViewById(R.id.img_touch_image);
             String url = getArguments().getString(ARG_IMAGE_URL);
             LogUtil.d(TAG, "onViewCreated: url==>" + url);
             Glide.with(getContext())
@@ -141,9 +157,35 @@ public class GalleryActivity extends AppCompatActivity {
                     .error(R.drawable.image_default)
                     .into(imageView);
         }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.menu_gallery, menu);
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()){
+                case R.id.action_save_image:
+                    imageView.setDrawingCacheEnabled(true);
+                    Bitmap bitmap = imageView.getDrawingCache();
+                    if (bitmap == null){
+                        LogUtil.d(TAG, "onOptionsItemSelected: get bitmap is null");
+                        break;
+                    }
+                    String path = FileUtil.saveImage(bitmap);
+                    imageView.setDrawingCacheEnabled(false);
+                    //通知图库刷新保存的图片
+                    getActivity().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse(path)));
+                    Toast.makeText(getActivity(), getString(R.string.toast_image_saved) + path, Toast.LENGTH_LONG).show();
+                    break;
+            }
+            return super.onOptionsItemSelected(item);
+        }
     }
 
-    /**
+    /**======================================================================================
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */

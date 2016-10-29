@@ -50,10 +50,15 @@
         <activity
             android:name=".view.activity.Bit100LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <!--图片浏览Activity-->
         <activity
             android:name=".view.activity.GalleryActivity"
-            android:label="@string/title_activity_gallery"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/label_gallery_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--文章列表页-->
+        <activity android:name=".view.activity.Bit100ArticleListActivity"
+            android:label="@string/label_article_list_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
