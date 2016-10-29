@@ -194,6 +194,14 @@ public abstract class BaseRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         this.mItemLongClickListener = listener;
     }
 
+    /**
+     * 设置是否显示【加载更多】的布局，为了解决当数据量少的时候，
+     * 界面上会一直出现【加载更多】布局的问题
+     */
+    public void setMoreVisible(boolean isVisible) {
+        this.isMoreVisible = isVisible;
+    }
+
     /**抽象方法，用于在子类中返回匹配类型的viewHolder*/
     abstract public RecyclerView.ViewHolder getViewHolder(ViewGroup parent, int viewType);
 }

@@ -1,13 +1,9 @@
 package com.zhongzilu.bit100.view.activity;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ConfigurationInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
@@ -18,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.application.particlesys.ParticleSystemRenderer;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.view.adapter.Bit100PagerAdapter;
@@ -34,9 +29,6 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG = "Bit100MainActivity==>";
 
     private ImageView mHeaderBgImage, mUserHeadImg;
-    private PagerSlidingTabStrip mTabs;
-    private ViewPager mViewPager;
-    private Bit100PagerAdapter mAdapter;
 
     //选择更换图片时的请求码
     private static final int REQUEST_IMAGE_CODE = 111;
@@ -45,7 +37,6 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     private Uri mCropImageUri;
     //获取图片标示
     private static final String IMAGE_TYPE = "image/*";
-    private GLSurfaceView mGlSurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,17 +48,10 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         setSupportActionBar(toolbar);
 
         mHeaderBgImage = (ImageView) findViewById(R.id.img_header_change_bg_image);
-        mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs_organization_info_main);
-        mViewPager = (ViewPager) findViewById(R.id.pager_organization_info_main);
+        PagerSlidingTabStrip mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs_organization_info_main);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.pager_organization_info_main);
         mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
-        mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
-//        mGlSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
-
-//        View mChangeImageBtn = findViewById(R.id.btn_change_bg_image);
-//        mChangeImageBtn.setOnClickListener(this);
-
-        // 选中的文字颜色
-        mTabs.setSelectedTextColor(R.color.colorPrimary);
+        Bit100PagerAdapter mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
 
         String path = SharePreferenceUtil.getImagePath();
         if (path != null){
@@ -75,26 +59,11 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         }
 
         mViewPager.setAdapter(mAdapter);
+        // 选中的文字颜色
+        mTabs.setSelectedTextColor(R.color.colorPrimary);
         mTabs.setViewPager(mViewPager);
-    }
+        
 
-    public void initGLSurfaceView(){
-        // Check if the system supports OpenGL ES 2.0.
-        final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-        final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
-
-        if (supportsEs2) {
-            // Request an OpenGL ES 2.0 compatible context.
-            mGlSurfaceView.setEGLContextClientVersion(2);
-
-            // Set the renderer to our demo renderer, defined below.
-            ParticleSystemRenderer mRenderer = new ParticleSystemRenderer(mGlSurfaceView);
-            mGlSurfaceView.setRenderer(mRenderer);
-            mGlSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-        } else {
-            throw new UnsupportedOperationException();
-        }
     }
 
     @Override
@@ -104,23 +73,8 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-//        mGlSurfaceView.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        mGlSurfaceView.onResume();
-    }
-
-    @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.btn_change_bg_image:
-//                chooseFile(REQUEST_IMAGE_CODE, IMAGE_TYPE);
-//                break;
             case R.id.img_user_header_image:
                 startActivity(new Intent(this, Bit100LoginActivity.class));
                 break;

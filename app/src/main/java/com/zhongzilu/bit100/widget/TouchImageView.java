@@ -396,11 +396,11 @@ public class TouchImageView extends ImageView {
     	fixTrans();
     	setImageMatrix(matrix);
     }
-    
+
     /**
      * Set zoom parameters equal to another TouchImageView. Including scale, position,
      * and ScaleType.
-     * @param TouchImageView
+     * @param img
      */
     public void setZoom(TouchImageView img) {
     	PointF center = img.getScrollPosition();

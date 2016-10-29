@@ -1,33 +1,34 @@
 <resources>
-    <string name="app_name">比特壹百</string>
+    <string name="app_name">比特壹佰</string>
 
     <!--menu action title-->
-    <string name="action_settings">设置</string>
-    <string name="action_change_skin">更换背景</string>
+    <string name="action_settings">設置</string>
+    <string name="action_change_skin">更換背景</string>
     <string name="action_search">搜索</string>
-    <string name="action_gift">隐藏任务</string>
-    <string name="action_share_app">分享应用</string>
+    <string name="action_gift">隱藏任務</string>
+    <string name="action_share_app">分享應用</string>
     <string name="action_share">分享</string>
+    <string name="action_download_image">保存圖片</string>
 
     <!--activity name-->
-    <string name="activity_login">登录</string>
-    <string name="activity_forgotPwd">忘记密码</string>
-    <string name="activity_register">注册</string>
-    <string name="activity_forgotPwd_next">找回密码</string>
+    <string name="activity_login">登錄</string>
+    <string name="activity_forgotPwd">忘記密碼</string>
+    <string name="activity_register">註冊</string>
+    <string name="activity_forgotPwd_next">找回密碼</string>
 
     <!--any error alert text-->
-    <string name="error_account_null">账号不能为空</string>
-    <string name="error_account_error">账号错误</string>
-    <string name="error_password_null">密码不能为空</string>
-    <string name="error_password_error">密码错误</string>
-    <string name="error_password_length_error">密码不能少于6位</string>
-    <string name="error_password_confirm_error">两次密码不匹配</string>
-    <string name="error_code_null">验证码不能为空</string>
-    <string name="error_code_error">验证码错误</string>
+    <string name="error_account_null">賬號不能為空</string>
+    <string name="error_account_error">賬號錯誤</string>
+    <string name="error_password_null">密碼不能為空</string>
+    <string name="error_password_error">密碼錯誤</string>
+    <string name="error_password_length_error">密碼不能少於6位</string>
+    <string name="error_password_confirm_error">兩次密碼不匹配</string>
+    <string name="error_code_null">驗證碼不能為空</string>
+    <string name="error_code_error">驗證碼錯誤</string>
 
-    <string name="str_loading_data">正在加载中…</string>
+    <string name="str_loading_data">正在加載中…</string>
 
-    <string name="test_str">如果你不能用一句话描述问题，说明你对他还不够了解</string>
+    <string name="test_str">如果你不能用一句話描述問題，說明你對他還不夠了解</string>
     <string-array name="tags">
         <item>Android</item>
         <item>Android Studio</item>
@@ -44,20 +45,20 @@
         <item>MVP</item>
         <item>SEO</item>
         <item>WordPress</item>
-        <item>代码性能优化</item>
-        <item>优化</item>
+        <item>代碼性能優化</item>
+        <item>優化</item>
         <item>作者</item>
-        <item>动画</item>
+        <item>動畫</item>
         <item>吉他</item>
-        <item>微表情心理学</item>
-        <item>心理学</item>
+        <item>微表情心理學</item>
+        <item>心理學</item>
         <item>文章</item>
-        <item>杂货铺</item>
-        <item>热修复</item>
-        <item>百度指数</item>
-        <item>百度权重</item>
-        <item>裁剪图片</item>
-        <item>问题集</item>
+        <item>雜貨鋪</item>
+        <item>熱修復</item>
+        <item>百度指數</item>
+        <item>百度權重</item>
+        <item>裁剪圖片</item>
+        <item>問題集</item>
     </string-array>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -209,12 +210,12 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
-    <string name="share_application">推荐给大家一款很好的博客应用【比特壹佰】,简单即美好!\n下载请戳这里：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
-    <string name="toast_no_more">没有更多了</string>
-    <string name="toast_can_not_deal">不存在处理的应用</string>
-    <string name="title_chooser">选择方式</string>
-    <string name="title_chooser_share">选择分享</string>
-    <string name="toast_can_not_deal_download_intent">请安装浏览器或下载软件</string>
-    <string name="toast_invoking_share">正在启动分享</string>
+    <string name="share_application">推薦給大家一款很好的博客應用【比特壹佰】，簡單即美好!\n下載請戳這裡：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
+    <string name="toast_no_more">沒有更多了</string>
+    <string name="toast_can_not_deal">不存在處理的應用程序</string>
+    <string name="title_chooser">選擇方式</string>
+    <string name="title_chooser_share">選擇分享</string>
+    <string name="toast_can_not_deal_download_intent">請安裝瀏覽器或下載軟件</string>
+    <string name="toast_invoking_share">正在啟動分享</string>
 
 </resources>

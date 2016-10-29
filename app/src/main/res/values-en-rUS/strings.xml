@@ -8,6 +8,7 @@
     <string name="action_gift">Hide Function</string>
     <string name="action_share_app">Share Application</string>
     <string name="action_share">Share</string>
+    <string name="action_download_image">Save</string>
 
     <!--activity name-->
     <string name="activity_login">Login</string>

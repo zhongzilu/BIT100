@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?android:attr/selectableItemBackground">
@@ -14,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:text="标题" />
+        tools:text="标题" />
 
     <TextView
         android:id="@+id/tv_item_decorator_subtitle"
@@ -22,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/tv_item_decorator_title"
-        android:text="子标题"
         android:textColor="#aaa"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        tools:text="子标题" />
 
 </RelativeLayout>

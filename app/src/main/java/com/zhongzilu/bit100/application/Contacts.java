@@ -19,5 +19,8 @@ public interface Contacts {
     GET_POST_BY_ID = HOST + "?json=get_post",
 
     // zhongzilu: 2016-10-21 获取全部目录分类数据
-    GET_ALL_CATEGORIES = HOST + "?json=get_category_index";
+    GET_ALL_CATEGORIES = HOST + "?json=get_category_index",
+
+    // zhongzilu: 2016-10-27 根据目录Id来查询所有文章列表
+    GET_ALL_POSTS_BY_CATEGORY_ID = HOST + "?json=get_category_posts";
 }
