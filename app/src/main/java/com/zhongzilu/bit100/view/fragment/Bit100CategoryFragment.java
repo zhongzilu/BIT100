@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,7 +25,7 @@ import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
-import com.zhongzilu.bit100.application.util.NetworkUtil;
+import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.ItemDecoratorBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
  * Created by zhongzilu on 2016-09-17.
  */
 public class Bit100CategoryFragment extends Fragment
-        implements MyItemClickListener, MyItemLongClickListener, NetworkUtil.NetworkCallback{
+        implements MyItemClickListener, MyItemLongClickListener, RequestUtil.RequestCallback {
     private static final String TAG = "Bit100CategoryFragment==>";
 
     private View contentView;
@@ -77,7 +78,7 @@ public class Bit100CategoryFragment extends Fragment
             public void onRefresh() {
                 mPushList.clear();
                 addTagsTestData();
-                NetworkUtil.getAllCategories(Bit100CategoryFragment.this);
+                RequestUtil.getAllCategories(Bit100CategoryFragment.this);
 //                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
@@ -156,7 +157,7 @@ public class Bit100CategoryFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst){
 //            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
-            NetworkUtil.getAllCategories(this);
+            RequestUtil.getAllCategories(this);
             isFirst = false;
         }
     }
@@ -264,7 +265,11 @@ public class Bit100CategoryFragment extends Fragment
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                Toast.makeText(getActivity(), response.get(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        TextUtils.isEmpty(response.get())
+                                ? getString(R.string.error_network_failed)
+                                : response.get()
+                        , Toast.LENGTH_SHORT).show();
                 mRecyclerView.setVisibility(View.VISIBLE);
                 if (mRefresh.isRefreshing())
                     mRefresh.setRefreshing(false);

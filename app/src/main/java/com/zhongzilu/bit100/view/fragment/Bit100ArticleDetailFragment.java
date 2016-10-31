@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +24,7 @@ import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
-import com.zhongzilu.bit100.application.util.NetworkUtil;
+import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
 import com.zhongzilu.bit100.view.activity.GalleryActivity;
@@ -38,7 +39,7 @@ import org.json.JSONObject;
  */
 public class Bit100ArticleDetailFragment extends Fragment
         implements DownloadListener, CustomLoadingWebView.OnReLoadListener,
-        NetworkUtil.NetworkCallback {
+        RequestUtil.RequestCallback {
 
     private static final String TAG = "Bit100ArticleDetailFragment==>";
 
@@ -118,7 +119,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.d(TAG, "setUserVisibleHint: " + isVisibleToUser);
         if (isVisibleToUser && isFirst){
-            NetworkUtil.getRecentPost(this);
+            RequestUtil.getRecentPost(this);
             isFirst = false;
         }
     }
@@ -129,7 +130,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
             if (mBean == null)return;
-            NetworkUtil.getPostById(mBean, this);
+            RequestUtil.getPostById(mBean, this);
             isFirst = false;
         }
     }
@@ -228,7 +229,7 @@ public class Bit100ArticleDetailFragment extends Fragment
                     String status = response.get().getString("status");
                     if ("ok".equals(status)) {
                         switch (what){
-                            case NetworkUtil.TAG_GET_RECENT_POST:
+                            case RequestUtil.TAG_GET_RECENT_POST:
                                 AllPostsResponse result = new Gson()
                                         .fromJson(response.get().toString(), AllPostsResponse.class);
                                 //注意：
@@ -243,7 +244,7 @@ public class Bit100ArticleDetailFragment extends Fragment
                                 }
                                 break;
 
-                            case NetworkUtil.TAG_GET_POST_BY_ID:
+                            case RequestUtil.TAG_GET_POST_BY_ID:
                                 JSONObject obj = response.get().getJSONObject("post");
                                 String content = obj.getString("content");
                                 mContent = formatContent(content);
@@ -262,7 +263,11 @@ public class Bit100ArticleDetailFragment extends Fragment
 
             @Override
             public void onFailed(int what, Response<JSONObject> response) {
-                Toast.makeText(getActivity(), response.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        TextUtils.isEmpty(response.toString())
+                                ? getString(R.string.error_network_failed)
+                                : response.toString()
+                        , Toast.LENGTH_SHORT).show();
             }
 
             @Override

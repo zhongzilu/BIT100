@@ -26,7 +26,7 @@ import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
-import com.zhongzilu.bit100.application.util.NetworkUtil;
+import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * Created by zhongzilu on 2016-09-16.
  */
 public class Bit100MainFragment extends Fragment
-        implements MyItemClickListener, MyItemLongClickListener, NetworkUtil.NetworkCallback{
+        implements MyItemClickListener, MyItemLongClickListener, RequestUtil.RequestCallback {
 
     private static final String TAG = "Bit100MainFragment==>";
 
@@ -157,7 +157,7 @@ public class Bit100MainFragment extends Fragment
             public void onRefresh() {
                 mPushList.clear();
                 mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
-                NetworkUtil.getAllPosts(Bit100MainFragment.this);
+                RequestUtil.getAllPosts(Bit100MainFragment.this);
 //                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
@@ -227,7 +227,7 @@ public class Bit100MainFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser){
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst) {
-            NetworkUtil.getAllPosts(this);
+            RequestUtil.getAllPosts(this);
 //            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             isFirst = false;
         }
@@ -245,7 +245,7 @@ public class Bit100MainFragment extends Fragment
 
             if (mCategories != null){
                 //根据目录请求文章列表
-                NetworkUtil.getAllPostsByCategoryId(mCategories, this);
+                RequestUtil.getAllPostsByCategoryId(mCategories, this);
             } else {
                 //根据标签请求文章列表
             }
@@ -359,10 +359,10 @@ public class Bit100MainFragment extends Fragment
             public void onSucceed(int what, Response<String> response) {
                 LogUtil.d(TAG, "onSucceed: response==>" + response.get());
                 switch (what){
-                    case NetworkUtil.TAG_GET_POSTS_BY_CATEGORIES:
+                    case RequestUtil.TAG_GET_POSTS_BY_CATEGORIES:
                         handleAllPostsByCategoryResponse(response.get());
                         break;
-                    case NetworkUtil.TAG_GET_ALL_POSTS:
+                    case RequestUtil.TAG_GET_ALL_POSTS:
                         handleAllPostsResponse(response.get());
                         break;
                 }
@@ -371,7 +371,11 @@ public class Bit100MainFragment extends Fragment
 
             @Override
             public void onFailed(int what, Response<String> response) {
-                Toast.makeText(getActivity(), response.get(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        TextUtils.isEmpty(response.get())
+                                ? getString(R.string.error_network_failed)
+                                : response.get()
+                        , Toast.LENGTH_SHORT).show();
                 mRecyclerView.setVisibility(View.VISIBLE);
                 if (mRefresh.isRefreshing())
                     mRefresh.setRefreshing(false);
