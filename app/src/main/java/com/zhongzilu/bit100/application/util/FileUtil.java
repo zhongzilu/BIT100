@@ -30,15 +30,15 @@ public class FileUtil {
             localFile.delete();
     }
 
-    public static String readFile(String paramString) {
+    private static String readFile(String paramString) {
         return "";
     }
 
-    public static void save(String paramString) {
+    private static void save(String paramString) {
         save(LOGFILE, paramString, true);
     }
 
-    public static void save(String paramString1, String paramString2, boolean paramBoolean) {
+    private static void save(String paramString1, String paramString2, boolean paramBoolean) {
 
     }
 

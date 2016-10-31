@@ -223,5 +223,6 @@
     <string name="hint_password">请输入密码</string>
     <string name="login_text">登录</string>
     <string name="label_article_list_activity">文章列表页</string>
+    <string name="error_network_failed">网络繁忙，请稍后再试~~</string>
 
 </resources>
