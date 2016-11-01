@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.model.bean.TagBean;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -35,6 +36,26 @@ public class MainItemViewHolder extends BaseViewHolder{
 
         itemView.findViewById(R.id.img_article_share).setOnClickListener(this);
         itemView.findViewById(R.id.img_article_up).setOnClickListener(this);
+    }
+
+    public void initTag(){
+        if (mArticleTagsWrapper != null){
+            int childCount = mArticleTagsWrapper.getChildCount();
+            mArticleTagsWrapper.removeViews(1, childCount - 1);
+        }
+    }
+
+    public void addTag(Context context, TagBean[] tags){
+        if (context == null) {
+            LogUtil.d(TAG, "addTag: context is null");
+            return;
+        }
+
+        initTag();
+
+        for (TagBean t : tags) {
+            addTag(context, t.title);
+        }
     }
 
     public void addTag(Context context, String name){

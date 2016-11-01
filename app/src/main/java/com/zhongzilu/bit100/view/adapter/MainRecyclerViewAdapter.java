@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.view.viewholder.MainItemViewHolder;
@@ -52,16 +54,16 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 mainItemViewHolder.mArticleTitle.setText(articleDetailBean.title);
 
                 // zhongzilu: 2016-10-21 如果存在缩略图，则加载缩略图
-//                if (!TextUtils.isEmpty(articleDetailBean.thumbnail)) {
-//                    Glide.with(context).load(articleDetailBean.thumbnail).into(mainItemViewHolder.mArticleThumb);
-//                    mainItemViewHolder.mArticleThumb.setVisibility(View.VISIBLE);
-//                } else {
-//                    LogUtil.d(TAG, "onBindViewHolder: thumbnail is null");
-//                }
+                if (articleDetailBean.thumbnail_images != null) {
+                    Glide.with(context)
+                            .load(articleDetailBean.thumbnail_images.medium.url)
+                            .into(mainItemViewHolder.mArticleThumb);
+                    mainItemViewHolder.mArticleThumb.setVisibility(View.VISIBLE);
+                } else {
+                    mainItemViewHolder.mArticleThumb.setVisibility(View.GONE);
+                }
                 // zhongzilu: 2016-10-21 加载标签
-//                for (TagBean t : articleDetailBean.tags) {
-//                    mainItemViewHolder.addTag(context, t.title);
-//                }
+                mainItemViewHolder.addTag(context, articleDetailBean.tags);
 
                 break;
         }
