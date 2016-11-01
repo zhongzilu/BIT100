@@ -33,21 +33,21 @@ public class App extends Application {
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkBroadcastReceiver();
-        registerReceiver(receiver, filter);
+//        registerReceiver(receiver, filter);
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
         // 程序结束时
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
         // 内存回收时
-        unregisterReceiver(receiver);
+//        unregisterReceiver(receiver);
     }
 
     public static Context getAppContext(){
