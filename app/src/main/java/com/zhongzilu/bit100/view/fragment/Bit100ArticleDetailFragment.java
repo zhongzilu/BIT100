@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
@@ -100,18 +101,6 @@ public class Bit100ArticleDetailFragment extends Fragment
 
 //        mWebView.setInitialScale(0); // 改变这个值可以设定初始大小
 
-        //重要,用于与页面交互!
-//        mWebView.addJavascriptInterface(new Object() {
-//            @SuppressWarnings("unused")
-//            public void oneClick(final String locX, final String locY) {//此处的参数可传入作为js参数
-//                mHandler.post(new Runnable() {
-//                    public void run() {
-//                        mWebView.loadUrl("javascript:shows(" + locX + "," + locY + ")");
-//                    }
-//                });
-//            }
-//        }, "demo");//此名称在页面中被调用,方法如下:
-        //<body onClick="window.demo.clickOnAndroid(event.pageX,event.pageY)">
     }
 
     @Override
@@ -119,8 +108,20 @@ public class Bit100ArticleDetailFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.d(TAG, "setUserVisibleHint: " + isVisibleToUser);
         if (isVisibleToUser && isFirst){
+            loadLocalRecentPostsCache();
             RequestUtil.getRecentPost(this);
             isFirst = false;
+        }
+    }
+
+    private void loadLocalRecentPostsCache() {
+        try {
+            String json = CacheHelper.getRecentPosts();
+            if (!TextUtils.isEmpty(json)){
+                handleRecentPostsResponse(new JSONObject(json));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -224,40 +225,14 @@ public class Bit100ArticleDetailFragment extends Fragment
 
             @Override
             public void onSucceed(int what, Response<JSONObject> response) {
-
-                try {
-                    String status = response.get().getString("status");
-                    if ("ok".equals(status)) {
-                        switch (what){
-                            case RequestUtil.TAG_GET_RECENT_POST:
-                                AllPostsResponse result = new Gson()
-                                        .fromJson(response.get().toString(), AllPostsResponse.class);
-                                //注意：
-                                // 之所以要判断result.posts.length > 1，是因为获取首页的数据时，返回了置顶的
-                                // 一篇文章，如果后台取消了置顶的文章，这里的Gson解析会出错
-                                if (result.posts.length > 1){
-                                    mBean = result.posts[1];
-                                    mContent = formatContent(mBean.content);
-                                } else {
-                                    mBean = result.posts[0];
-                                    mContent = formatContent(mBean.content);
-                                }
-                                break;
-
-                            case RequestUtil.TAG_GET_POST_BY_ID:
-                                JSONObject obj = response.get().getJSONObject("post");
-                                String content = obj.getString("content");
-                                mContent = formatContent(content);
-                                break;
-                        }
-                        mWebView.loadUrl("file:///android_asset/index.html");
-
-                    } else {
-                        Toast.makeText(getActivity(), response.get().getString("error"), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                switch (what){
+                    case RequestUtil.TAG_GET_RECENT_POST:
+                        handleRecentPostsResponse(response.get());
+                        CacheHelper.saveRecentPosts(response.get().toString());
+                        break;
+                    case RequestUtil.TAG_GET_POST_BY_ID:
+                        handlePostByIdResponse(response.get());
+                        break;
                 }
             }
 
@@ -277,5 +252,52 @@ public class Bit100ArticleDetailFragment extends Fragment
 
     private String formatContent(String content){
         return "\"" + content.replaceAll("\"", "'") + "\"";
+    }
+
+    private void handleRecentPostsResponse(JSONObject object){
+        try {
+            String status = object.getString("status");
+            if ("ok".equals(status)) {
+
+                AllPostsResponse result = new Gson()
+                        .fromJson(object.toString(), AllPostsResponse.class);
+                //注意：
+                // 之所以要判断result.posts.length > 1，是因为获取首页的数据时，返回了置顶的
+                // 一篇文章，如果后台取消了置顶的文章，这里的Gson解析会出错
+                if (result.posts.length > 1){
+                    mBean = result.posts[1];
+                    mContent = formatContent(mBean.content);
+                } else {
+                    mBean = result.posts[0];
+                    mContent = formatContent(mBean.content);
+                }
+
+                mWebView.loadUrl("file:///android_asset/index.html");
+
+            } else {
+                Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handlePostByIdResponse(JSONObject object){
+        try {
+            String status = object.getString("status");
+            if ("ok".equals(status)) {
+                JSONObject obj = object.getJSONObject("post");
+                String content = obj.getString("content");
+                mContent = formatContent(content);
+
+                mWebView.loadUrl("file:///android_asset/index.html");
+            } else {
+                Toast.makeText(getActivity(), object.getString("error"), Toast.LENGTH_SHORT).show();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

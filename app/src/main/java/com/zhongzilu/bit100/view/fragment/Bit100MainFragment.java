@@ -3,8 +3,6 @@ package com.zhongzilu.bit100.view.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -25,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
@@ -66,51 +65,6 @@ public class Bit100MainFragment extends Fragment
     private boolean isLoadMore = false;
     private boolean isFirst = true;
     private LinearLayoutManager mLayoutManager;
-    private Handler simulationNetWorkDataHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            //添加数据
-//            if (mPushList.isEmpty()) {
-                mPushList.clear();
-
-                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        try {
-                            Thread.sleep(1000);
-                            mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_TOAST, new Object()), 1);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Thread.sleep(3000);
-                            mAdapter.remove(1);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
-
-                addTestDate();
-//            }
-
-            mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setVisibility(View.VISIBLE);
-            if (mRefresh.isRefreshing())
-                mRefresh.setRefreshing(false);
-        }
-    };
 
     public static Bit100MainFragment newInstance(CategoriesBean bean) {
 
@@ -158,7 +112,6 @@ public class Bit100MainFragment extends Fragment
                 mPushList.clear();
                 mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
                 RequestUtil.getAllPosts(Bit100MainFragment.this);
-//                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
 
@@ -198,11 +151,7 @@ public class Bit100MainFragment extends Fragment
 //                        return;
 //                    }
 //
-//                    addTestDate();
-//                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-//                    mAdapter.notifyDataSetChanged();
                     isLoadMore = false;
-
                 }
             }
 
@@ -227,8 +176,8 @@ public class Bit100MainFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser){
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst) {
+            loadLocalAllPostsCache();
             RequestUtil.getAllPosts(this);
-//            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             isFirst = false;
         }
     }
@@ -238,31 +187,35 @@ public class Bit100MainFragment extends Fragment
         super.onHiddenChanged(hidden);
         LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
-            if (mCategories == null && mTagBean == null){
-                LogUtil.e(TAG, "onHiddenChanged: mCategoriesBean & mTagBean is both null");
-                throw new NullPointerException("mCategoriesBean & mTagBean is both null");
-            }
-
-            if (mCategories != null){
-                //根据目录请求文章列表
-                RequestUtil.getAllPostsByCategoryId(mCategories, this);
-            } else {
-                //根据标签请求文章列表
-            }
-
+            switchGetPostsRequest();
             isFirst = false;
         }
     }
 
-    /**
-     * 添加测试数据
-     */
-    private void addTestDate() {
-
-        for (int i = 0; i < 5; i++) {
-            mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, new Object()));
+    private void switchGetPostsRequest() {
+        if (mCategories == null && mTagBean == null){
+            LogUtil.e(TAG, "onHiddenChanged: mCategoriesBean & mTagBean is both null");
+            throw new NullPointerException("mCategoriesBean & mTagBean is both null");
         }
 
+        if (mCategories != null){
+            //根据目录请求文章列表
+            RequestUtil.getAllPostsByCategoryId(mCategories, this);
+        } else {
+            //根据标签请求文章列表
+        }
+    }
+
+    private void loadLocalAllPostsCache(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String json = CacheHelper.getPostsAll();
+                if (!TextUtils.isEmpty(json)) {
+                    handleAllPostsResponse(json);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -356,13 +309,14 @@ public class Bit100MainFragment extends Fragment
             }
 
             @Override
-            public void onSucceed(int what, Response<String> response) {
+            public void onSucceed(int what, final Response<String> response) {
                 LogUtil.d(TAG, "onSucceed: response==>" + response.get());
                 switch (what){
                     case RequestUtil.TAG_GET_POSTS_BY_CATEGORIES:
                         handleAllPostsByCategoryResponse(response.get());
                         break;
                     case RequestUtil.TAG_GET_ALL_POSTS:
+                        CacheHelper.savePostsAll(response.get());
                         handleAllPostsResponse(response.get());
                         break;
                 }
@@ -397,6 +351,7 @@ public class Bit100MainFragment extends Fragment
                 new TypeToken<AllPostsResponse>(){}.getType());
         try {
             if ("ok".equals(allPosts.status)){
+                mPushList.clear();
 
                 for (ArticleDetailBean bean : allPosts.posts){
                     mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
@@ -445,5 +400,9 @@ public class Bit100MainFragment extends Fragment
         mRecyclerView.setVisibility(View.VISIBLE);
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
+    }
+
+    private void handleAllPostsByTagResponse(String json) {
+
     }
 }
