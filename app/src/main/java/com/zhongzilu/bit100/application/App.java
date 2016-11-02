@@ -33,7 +33,7 @@ public class App extends Application {
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         receiver = new NetworkBroadcastReceiver();
-        //registerReceiver(receiver, filter);
+//        registerReceiver(receiver, filter);
     }
 
     @Override

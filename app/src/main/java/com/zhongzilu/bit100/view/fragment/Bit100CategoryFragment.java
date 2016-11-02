@@ -2,8 +2,6 @@ package com.zhongzilu.bit100.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
@@ -33,6 +32,7 @@ import com.zhongzilu.bit100.model.bean.TagsBean;
 import com.zhongzilu.bit100.model.response.AllCategoriesResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleListActivity;
 import com.zhongzilu.bit100.view.adapter.CategoryRecyclerViewAdapter;
+import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -79,7 +79,6 @@ public class Bit100CategoryFragment extends Fragment
                 mPushList.clear();
                 addTagsTestData();
                 RequestUtil.getAllCategories(Bit100CategoryFragment.this);
-//                simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
             }
         });
 
@@ -118,12 +117,6 @@ public class Bit100CategoryFragment extends Fragment
                         isLoadMore = false;
 //                        return;
 //                    }
-
-//                    addTestDate();
-//                    mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-//                    mAdapter.notifyDataSetChanged();
-//                    isLoadMore = false;
-
                 }
             }
 
@@ -139,7 +132,7 @@ public class Bit100CategoryFragment extends Fragment
             }
         });
 
-        addTagsTestData();
+        mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -156,42 +149,18 @@ public class Bit100CategoryFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst){
-//            simulationNetWorkDataHandler.sendEmptyMessageDelayed(0, 2000);
+            loadLocalCategoriesCache();
             RequestUtil.getAllCategories(this);
             isFirst = false;
         }
     }
 
-    private void addTestDate() {
-        for (int i = 0; i < 10; i++){
-            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, new Object()));
-        }
+    private void loadLocalCategoriesCache(){
+//        String json = CacheHelper.getAllCategories();
+//        if (!TextUtils.isEmpty(json)){
+//            handleCategoryResponse(json);
+//        }
     }
-
-    private Handler simulationNetWorkDataHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-
-            //添加数据
-//            if (mPushList.isEmpty()) {
-//            mPushList.clear();
-//
-//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("标签", "")));
-//
-//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(getResources().getStringArray(R.array.tags))));
-//
-//            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR, new ItemDecoratorBean("目录", "")));
-
-//            addTestDate();
-//            }
-
-//            mRecyclerView.setAdapter(mAdapter);
-//            mRecyclerView.setVisibility(View.VISIBLE);
-            if (mRefresh.isRefreshing())
-                mRefresh.setRefreshing(false);
-        }
-    };
 
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, View view, int position) {
@@ -243,24 +212,12 @@ public class Bit100CategoryFragment extends Fragment
             @Override
             public void onSucceed(int what, Response<String> response) {
                 LogUtil.d(TAG, "onSucceed: " + response);
-                AllCategoriesResponse result = new Gson().fromJson(response.get(),
-                        new TypeToken<AllCategoriesResponse>(){}.getType());
-                if ("ok".equals(result.status)){
-                    mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
-                            new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
-
-                    for (CategoriesBean cb : result.categories){
-                        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
-                    }
-
-                } else {
-                    Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
+                switch (what){
+                    case RequestUtil.TAG_GET_ALL_CATEGORIES:
+                        handleCategoryResponse(response.get());
+                        CacheHelper.saveAllCategories(response.get());
+                        break;
                 }
-
-                mAdapter.notifyDataSetChanged();
-                mRecyclerView.setVisibility(View.VISIBLE);
-                if (mRefresh.isRefreshing())
-                    mRefresh.setRefreshing(false);
             }
 
             @Override
@@ -280,5 +237,29 @@ public class Bit100CategoryFragment extends Fragment
 
             }
         };
+    }
+
+    private void handleCategoryResponse(String json){
+        AllCategoriesResponse result = new Gson().fromJson(json,
+                new TypeToken<AllCategoriesResponse>(){}.getType());
+        if ("ok".equals(result.status)){
+            mPushList.clear();
+            addTagsTestData();
+
+            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
+                    new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+
+            for (CategoriesBean cb : result.categories){
+                mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
+            }
+
+        } else {
+            Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
+        }
+
+        mAdapter.notifyDataSetChanged();
+        mRecyclerView.setVisibility(View.VISIBLE);
+        if (mRefresh.isRefreshing())
+            mRefresh.setRefreshing(false);
     }
 }
