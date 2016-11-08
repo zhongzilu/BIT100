@@ -25,8 +25,11 @@ import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.RequestMood;
+import com.zhongzilu.bit100.application.util.RequestMoodHandler;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
+import com.zhongzilu.bit100.model.bean.CardMoodModel;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.model.bean.TagBean;
@@ -34,12 +37,14 @@ import com.zhongzilu.bit100.model.response.AllPostsByCategoryResponse;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleDetailActivity;
 import com.zhongzilu.bit100.view.activity.Bit100MainActivity;
+import com.zhongzilu.bit100.view.activity.MoodCardActivity;
 import com.zhongzilu.bit100.view.activity.SettingsActivity;
 import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 【主页】版块的子Fragment
@@ -112,6 +117,7 @@ public class Bit100MainFragment extends Fragment
                 mPushList.clear();
                 mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
                 RequestUtil.getAllPosts(Bit100MainFragment.this);
+                requestMoodPosts();
             }
         });
 
@@ -163,7 +169,6 @@ public class Bit100MainFragment extends Fragment
                 if (lastItem == totalItem - 1 && dy > 0) {
                     isLoadMore = true;
                 }
-
             }
         });
 
@@ -178,6 +183,7 @@ public class Bit100MainFragment extends Fragment
         if (isVisibleToUser && isFirst) {
             loadLocalAllPostsCache();
             RequestUtil.getAllPosts(this);
+            requestMoodPosts();
             isFirst = false;
         }
     }
@@ -223,7 +229,7 @@ public class Bit100MainFragment extends Fragment
         int type = mAdapter.getItemViewType(position);
         ArticleDetailBean bean;
         switch (type) {
-            case MainRecyclerViewAdapter.TYPE_MAIN_ITEM:
+            case MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM:
                 switch (view.getId()){
                     //点击分享按钮
                     case R.id.img_article_share:
@@ -244,6 +250,12 @@ public class Bit100MainFragment extends Fragment
                         startActivity(intent);
                         break;
                 }
+                break;
+            case MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM:
+                CardMoodModel mood = (CardMoodModel) mPushList.get(position).getPushObject();
+                Intent intent = new Intent(getActivity(), MoodCardActivity.class);
+                intent.putExtra(MoodCardActivity.EXTRA_MOOD_OBJECT, mood);
+                startActivity(intent);
                 break;
         }
     }
@@ -351,10 +363,9 @@ public class Bit100MainFragment extends Fragment
                 new TypeToken<AllPostsResponse>(){}.getType());
         try {
             if ("ok".equals(allPosts.status)){
-                mPushList.clear();
 
                 for (ArticleDetailBean bean : allPosts.posts){
-                    mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
+                    mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
                 }
 
                 if (allPosts.posts.length < 5)
@@ -385,7 +396,7 @@ public class Bit100MainFragment extends Fragment
         if ("ok".equals(allPosts.status)){
 
             for (ArticleDetailBean bean : allPosts.posts){
-                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ITEM, bean));
+                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
             }
 
             if (allPosts.posts.length < 5)
@@ -405,4 +416,19 @@ public class Bit100MainFragment extends Fragment
     private void handleAllPostsByTagResponse(String json) {
 
     }
+
+    private void requestMoodPosts() {
+        new RequestMood()
+        .addRequestMoodHandler(new RequestMoodHandler() {
+            @Override
+            public void onResponse(List<CardMoodModel> paramList) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mPushList.clear();
+                for (CardMoodModel mood : paramList){
+                    mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
+                }
+            }
+        }).start();
+    }
+
 }

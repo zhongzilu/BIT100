@@ -26,7 +26,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/tv_author_name"
+                android:id="@+id/tv_mood_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -37,7 +37,7 @@
                 tools:text="钟子路" />
 
             <TextView
-                android:id="@+id/tv_article_time"
+                android:id="@+id/tv_mood_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -48,7 +48,7 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/img_article_thumb"
+            android:id="@+id/img_mood_thumb"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
@@ -56,7 +56,7 @@
             android:visibility="gone" />
 
         <TextView
-            android:id="@+id/tv_article_title"
+            android:id="@+id/tv_mood_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="marquee"
@@ -65,71 +65,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:padding="10dp"
             android:singleLine="true"
-            android:textSize="16sp"
             tools:text="程序调用系统裁剪之后直接闪退" />
-
-        <LinearLayout
-            android:id="@+id/layout_article_tags_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipChildren="true">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginStart="10dp"
-                android:src="@drawable/ic_tag_multiple_24dp" />
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:layout_marginStart="5dp"-->
-            <!--android:background="@drawable/tag_border"-->
-            <!--android:paddingBottom="2dp"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="4dp"-->
-            <!--android:paddingTop="2dp"-->
-            <!--android:text="标签"-->
-            <!--android:textColor="@color/hint"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:background="@drawable/tag_border"-->
-            <!--android:paddingBottom="2dp"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="4dp"-->
-            <!--android:paddingTop="2dp"-->
-            <!--android:text="标签"-->
-            <!--android:textColor="@color/hint"-->
-            <!--android:textSize="12sp" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:background="@drawable/tag_border"-->
-            <!--android:paddingBottom="2dp"-->
-            <!--android:paddingLeft="4dp"-->
-            <!--android:paddingRight="4dp"-->
-            <!--android:paddingTop="2dp"-->
-            <!--android:text="标签"-->
-            <!--android:textColor="@color/hint"-->
-            <!--android:textSize="12sp" />-->
-
-        </LinearLayout>
-
-
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1px"-->
-        <!--android:background="#aaa"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="10dp"/>-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -140,7 +76,7 @@
             android:paddingTop="5dp">
 
             <ImageView
-                android:id="@+id/img_article_up"
+                android:id="@+id/img_mood_up"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_centerVertical="true"
@@ -148,7 +84,7 @@
                 android:src="@drawable/ic_thumb_up_outline" />
 
             <ImageView
-                android:id="@+id/img_article_share"
+                android:id="@+id/img_mood_share"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_alignParentRight="true"

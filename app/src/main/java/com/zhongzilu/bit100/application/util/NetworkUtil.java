@@ -19,8 +19,7 @@ public class NetworkUtil {
      * @return 返回true/false，true表示有可用的网络，false表示无可用的网络
      */
     public static boolean getNetworkState() {
-        Type type = getNetworkType(App.getAppContext());
-        return type != Type.NULL;
+        return getNetworkType(App.getAppContext()) != Type.NULL;
     }
 
     /**
