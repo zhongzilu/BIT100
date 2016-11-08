@@ -22,5 +22,8 @@ public interface Contacts {
     GET_ALL_CATEGORIES = HOST + "?json=get_category_index",
 
     // zhongzilu: 2016-10-27 根据目录Id来查询所有文章列表
-    GET_ALL_POSTS_BY_CATEGORY_ID = HOST + "?json=get_category_posts";
+    GET_ALL_POSTS_BY_CATEGORY_ID = HOST + "?json=get_category_posts",
+
+    // zhongzilu: 2016-11-07 获取心情签名
+    GET_MOOD_SIGN = "http://common.nineton.cn/CommonProject/sign/m/index/normal";
 }
