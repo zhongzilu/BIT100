@@ -302,14 +302,11 @@ public class Bit100MainFragment extends Fragment
     }
 
     private void shareAction(String text){
-
         Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
-        Intent localIntent = new Intent("android.intent.action.SEND");
+        Intent localIntent = new Intent(Intent.ACTION_SEND);
         localIntent.setType("text/plain");
-        localIntent.putExtra("android.intent.extra.TEXT", text);
-        localIntent.putExtra("android.intent.extra.SUBJECT", "这是分享内容");
+        localIntent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
-
     }
 
     @Override
