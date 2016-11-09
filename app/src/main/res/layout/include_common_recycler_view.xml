@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             android:longClickable="true"
-            android:background="#fff"
+            android:background="#FDFDFE"
             android:visibility="gone"/>
 
     </FrameLayout>
