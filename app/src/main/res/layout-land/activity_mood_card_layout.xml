@@ -37,10 +37,14 @@
                     <TextView
                         android:id="@+id/tv_mood_content"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_centerInParent="true"
                         android:padding="20dp"
-                        android:text="单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。"
+                        android:gravity="center"
+                        android:fontFamily="sans-serif-light"
+                        android:lineSpacingExtra="5dp"
+                        android:textSize="16sp"
+                        tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。"
                         android:textColor="#6e6f8e" />
 
                     <TextView
@@ -59,7 +63,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/bg_header" />
+                    tools:src="@drawable/bg_header" />
 
             </LinearLayout>
         </android.support.design.widget.CollapsingToolbarLayout>

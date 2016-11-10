@@ -252,12 +252,19 @@ public class Bit100MainFragment extends Fragment
                 }
                 break;
             case MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM:
-                CardMoodModel mood = (CardMoodModel) mPushList.get(position).getPushObject();
-                Intent intent = new Intent(getActivity(), MoodCardActivity.class);
-                intent.putExtra(MoodCardActivity.EXTRA_MOOD_OBJECT, mood);
-                startActivity(intent);
+                goMoodCardActivity(position);
+                break;
+            case MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM2:
+                goMoodCardActivity(position);
                 break;
         }
+    }
+
+    private void goMoodCardActivity(int position){
+        CardMoodModel mood = (CardMoodModel) mPushList.get(position).getPushObject();
+        Intent intent = new Intent(getActivity(), MoodCardActivity.class);
+        intent.putExtra(MoodCardActivity.EXTRA_MOOD_OBJECT, mood);
+        startActivity(intent);
     }
 
     @Override
@@ -319,7 +326,6 @@ public class Bit100MainFragment extends Fragment
 
             @Override
             public void onSucceed(int what, final Response<String> response) {
-                LogUtil.d(TAG, "onSucceed: response==>" + response.get());
                 switch (what){
                     case RequestUtil.TAG_GET_POSTS_BY_CATEGORIES:
                         handleAllPostsByCategoryResponse(response.get());
@@ -329,7 +335,6 @@ public class Bit100MainFragment extends Fragment
                         handleAllPostsResponse(response.get());
                         break;
                 }
-
             }
 
             @Override
@@ -422,8 +427,10 @@ public class Bit100MainFragment extends Fragment
                 mRecyclerView.setVisibility(View.VISIBLE);
                 mPushList.clear();
                 for (CardMoodModel mood : paramList){
-                    mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
+                    mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM2, mood));
                 }
+                if (mRefresh.isRefreshing())
+                    mRefresh.setRefreshing(false);
             }
         }).start();
     }

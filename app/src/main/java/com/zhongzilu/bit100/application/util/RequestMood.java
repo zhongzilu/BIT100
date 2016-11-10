@@ -18,6 +18,7 @@ import java.util.Random;
  * Created by zhongzilu on 2016-11-07.
  */
 public class RequestMood extends Thread {
+    private static final String TAG = "RequestMood==>";
     private RequestMoodHandler mHandler;
     private List<CardMoodModel> mList = new ArrayList<>();
     private int mTotalNum = 52973;
@@ -55,7 +56,7 @@ public class RequestMood extends Thread {
                     String content = imageElements.get(0).attr("alt");
                     String imageId = parseImgId(imageElements.get(0).attr("id"));
                     String imageUrl = imageElements.get(0).attr("src");
-                    System.out.print(
+                    LogUtil.d(TAG,
                             "title==>" + title
                             + "\ntime==>" + time
                             + "\ncontent==>" + content

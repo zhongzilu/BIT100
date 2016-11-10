@@ -17,18 +17,18 @@
     <string name="activity_forgotPwd_next">Retrieve password</string>
 
     <!--any error alert text-->
-    <string name="error_account_null">账号不能为空</string>
-    <string name="error_account_error">账号错误</string>
-    <string name="error_password_null">密码不能为空</string>
-    <string name="error_password_error">密码错误</string>
-    <string name="error_password_length_error">密码不能少于6位</string>
-    <string name="error_password_confirm_error">两次密码不匹配</string>
-    <string name="error_code_null">验证码不能为空</string>
-    <string name="error_code_error">验证码错误</string>
+    <string name="error_account_null">Account can not be null</string>
+    <string name="error_account_error">Account error</string>
+    <string name="error_password_null">Password can not be not null</string>
+    <string name="error_password_error">Password error</string>
+    <string name="error_password_length_error">Password length can not be less than 6 </string>
+    <string name="error_password_confirm_error">Confirm password not match</string>
+    <string name="error_code_null">Verification Code can not be null</string>
+    <string name="error_code_error">Verification Code Error</string>
 
     <string name="str_loading_data">Loading…</string>
 
-    <string name="test_str">如果你不能用一句话描述问题，说明你对他还不够了解</string>
+    <string name="test_str">Sometimes you have to jump out the window and grow wings on the way down</string>
     <string-array name="tags">
         <item>Android</item>
         <item>Android Studio</item>
@@ -217,5 +217,14 @@
     <string name="title_chooser_share">Choose Share</string>
     <string name="toast_can_not_deal_download_intent">Please install Browser or Download software</string>
     <string name="toast_invoking_share">Loading Share Function</string>
+    <string name="label_gallery_activity">Image Gallery Page</string>
+    <string name="toast_image_saved">Image save to：</string>
+    <string name="hint_account">Please input account</string>
+    <string name="hint_password">Please input password</string>
+    <string name="login_text">Login</string>
+    <string name="label_article_list_activity">Article List Page</string>
+    <string name="error_network_failed">Network busy, Please try a later~~</string>
+    <string name="action_copy_content">Copy to clipboard</string>
+    <string name="action_capture">Save to image</string>
 
 </resources>
