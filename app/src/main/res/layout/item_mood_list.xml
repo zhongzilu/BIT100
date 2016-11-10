@@ -16,7 +16,6 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -52,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/cover1"
+            tools:src="@drawable/cover1"
             android:visibility="gone" />
 
         <TextView
@@ -62,10 +61,12 @@
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:fontFamily="sans-serif-light"
+            android:lineSpacingExtra="2dp"
             android:marqueeRepeatLimit="marquee_forever"
+            android:lines="3"
             android:padding="10dp"
-            android:maxLines="3"
-            tools:text="程序调用系统裁剪之后直接闪退" />
+            tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -92,12 +93,12 @@
                 android:src="@drawable/ic_share" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="#ddd" />
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:layout_marginRight="10dp"-->
+        <!--android:background="#ddd" />-->
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

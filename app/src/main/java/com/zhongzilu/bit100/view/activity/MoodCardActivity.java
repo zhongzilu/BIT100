@@ -18,7 +18,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.application.util.FileUtil;
+import com.zhongzilu.bit100.application.App;
+import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 
@@ -134,22 +135,10 @@ public class MoodCardActivity extends BaseActivity
     }
 
     private String saveCaptureAndReturnPath(){
-        Bitmap bitmap = captureImage(findViewById(R.id.layout_mood_parent_wrap));
-        String path = FileUtil.saveImage(bitmap);
+        Bitmap bitmap = BitmapUtil.getViewBitmap(findViewById(R.id.layout_mood_parent_wrap));
+        String path = BitmapUtil.saveBitmap(bitmap);
         addToGallery(path);
         return path;
-    }
-
-    /**
-     * 保存任意View为图片
-     * @param view
-     * @return view bitmap
-     */
-    private Bitmap captureImage(View view){
-        view.setDrawingCacheEnabled(true);
-        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
-        view.setDrawingCacheEnabled(false);
-        return bitmap;
     }
 
     /**
@@ -159,7 +148,7 @@ public class MoodCardActivity extends BaseActivity
     private void addToGallery(String path){
         Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         localIntent.setData(Uri.fromFile(new File(path)));
-        sendBroadcast(localIntent);
+        App.getAppContext().sendBroadcast(localIntent);
     }
 
     /**
@@ -175,8 +164,7 @@ public class MoodCardActivity extends BaseActivity
             File f = new File(imgPath);
             if (f.exists() && f.isFile()){
                 intent.setType("image/*");
-                Uri u = Uri.fromFile(f);
-                intent.putExtra(Intent.EXTRA_STREAM, u);
+                intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
             }
         }
         intent.putExtra(Intent.EXTRA_TEXT, text);
