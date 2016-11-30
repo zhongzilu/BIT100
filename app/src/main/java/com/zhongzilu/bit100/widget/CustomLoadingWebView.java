@@ -2,6 +2,7 @@ package com.zhongzilu.bit100.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class CustomLoadingWebView extends WebView {
     private ProgressBar progressbar;
     private View loadingLayout;
     private OnReLoadListener listener;
+    protected String WebTitle;
 
     public CustomLoadingWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,6 +68,11 @@ public class CustomLoadingWebView extends WebView {
             super.onProgressChanged(view, newProgress);
         }
 
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            WebTitle = TextUtils.isEmpty(title) ? "" :title;
+        }
     }
 
     public class WebViewClient extends android.webkit.WebViewClient{
@@ -91,6 +98,10 @@ public class CustomLoadingWebView extends WebView {
         lp.y = t;
         loadingLayout.setLayoutParams(lp);
         super.onScrollChanged(l, t, oldl, oldt);
+    }
+
+    public String getWebTitle(){
+        return WebTitle;
     }
 
     public interface OnReLoadListener{

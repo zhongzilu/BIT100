@@ -226,5 +226,8 @@
     <string name="error_network_failed">网络繁忙，请稍后再试~~</string>
     <string name="action_copy_content">复制文字</string>
     <string name="action_capture">生成图片</string>
+    <string name="label_setting_activity">设置</string>
+    <string name="label_about_me_activity">关于我</string>
+    <string name="label_feedback_activity">意见反馈</string>
 
 </resources>

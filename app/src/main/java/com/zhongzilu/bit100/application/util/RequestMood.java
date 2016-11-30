@@ -2,7 +2,10 @@ package com.zhongzilu.bit100.application.util;
 
 import android.os.Message;
 
-import com.zhongzilu.bit100.application.Contacts;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.zhongzilu.bit100.application.data.Contacts;
+import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 
 import org.jsoup.Jsoup;
@@ -69,6 +72,8 @@ public class RequestMood extends Thread {
             }
 
             if (mHandler != null){
+                CacheHelper.saveMoodList(new Gson().toJson(mList,
+                        new TypeToken<List<CardMoodModel>>(){}.getType())); //保存为缓存
                 Message localMessage = mHandler.obtainMessage(0, mList);
                 mHandler.sendMessage(localMessage);
             }

@@ -10,9 +10,12 @@ import com.zhongzilu.bit100.application.App;
 public class CacheHelper {
 
     private static final String CACHE_FILE = "POSTS_CACHE",
-    ITEM_POSTS_ALL = "posts_all",
-    ITEM_POSTS_RECENT = "posts_recent",
-    ITEM_ALL_CATEGORIES = "all_categories";
+            ITEM_POSTS_ALL = "posts_all",
+            ITEM_POSTS_RECENT = "posts_recent",
+            ITEM_ALL_CATEGORIES = "all_categories";
+
+    private static final String MOOD_CACHE_FILE = "MOOD_CACHE",
+            ITEM_MOOD_LIST = "mood_list";
 
     public static void savePostsAll(final String json){
         new Thread(new Runnable() {
@@ -69,5 +72,24 @@ public class CacheHelper {
         return App.getAppContext()
                 .getSharedPreferences(CACHE_FILE, Context.MODE_PRIVATE)
                 .getString(ITEM_ALL_CATEGORIES, null);
+    }
+
+    public static void saveMoodList(final String json){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                App.getAppContext()
+                        .getSharedPreferences(MOOD_CACHE_FILE, Context.MODE_PRIVATE)
+                        .edit()
+                        .putString(ITEM_MOOD_LIST, json)
+                        .apply();
+            }
+        }).start();
+    }
+
+    public static String getMoodList(){
+        return App.getAppContext()
+                .getSharedPreferences(MOOD_CACHE_FILE, Context.MODE_PRIVATE)
+                .getString(ITEM_MOOD_LIST, null);
     }
 }

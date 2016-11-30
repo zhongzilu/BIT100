@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
@@ -148,7 +147,7 @@ public class MoodCardActivity extends BaseActivity
     private void addToGallery(String path){
         Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         localIntent.setData(Uri.fromFile(new File(path)));
-        App.getAppContext().sendBroadcast(localIntent);
+        sendBroadcast(localIntent);
     }
 
     /**

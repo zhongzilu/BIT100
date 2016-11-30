@@ -2,19 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground">
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#eee" />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ffd6a7">
 
     <ImageView
         android:id="@+id/img_toast_icon"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_margin="10dp"
-        android:src="@drawable/icon_activities_small" />
+        android:src="@drawable/ic_error_red_24dp" />
 
     <TextView
         android:id="@+id/tv_toast_text"
@@ -22,12 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/img_toast_icon"
-        android:text="吉他上门教学优惠进行中" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/img_toast_icon"
-        android:background="#eee" />
+        android:text="网络不给力，请检查网络设置。" />
 
 </RelativeLayout>
