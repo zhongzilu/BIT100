@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIMAX_STATE"/>
 
     <application
         android:name=".application.App"
@@ -62,6 +63,21 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--心情签名卡片-->
         <activity android:name=".view.activity.MoodCardActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--设置界面-->
+        <activity android:name=".view.activity.Bit100SettingActivity"
+            android:label="@string/label_setting_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--关于软件-->
+        <activity android:name=".view.activity.AboutMeActivity"
+            android:label="@string/label_about_me_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--意见反馈-->
+        <activity android:name=".view.activity.FeedbackActivity"
+            android:label="@string/label_feedback_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--自定义网页浏览器-->
+        <activity android:name=".view.activity.CustomWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

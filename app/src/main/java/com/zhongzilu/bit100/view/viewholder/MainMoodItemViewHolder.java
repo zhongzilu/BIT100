@@ -15,19 +15,14 @@ import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 public class MainMoodItemViewHolder extends BaseViewHolder{
 
     //UI
-    public TextView mMoodName,mMoodTime, mMoodContent;
+    public TextView mMoodContent;
     public ImageView mMoodThumb;
 
     public MainMoodItemViewHolder(View itemView, MyItemClickListener itemClickListener,
-                                  MyItemLongClickListener longClickListener) {
+                                   MyItemLongClickListener longClickListener) {
         super(itemView, itemClickListener, longClickListener);
 
-        mMoodName = (TextView) itemView.findViewById(R.id.tv_mood_name);
-        mMoodTime = (TextView) itemView.findViewById(R.id.tv_mood_time);
         mMoodContent = (TextView) itemView.findViewById(R.id.tv_mood_content);
         mMoodThumb = (ImageView) itemView.findViewById(R.id.img_mood_thumb);
-
-        itemView.findViewById(R.id.img_mood_share).setOnClickListener(this);
-        itemView.findViewById(R.id.img_mood_up).setOnClickListener(this);
     }
 }

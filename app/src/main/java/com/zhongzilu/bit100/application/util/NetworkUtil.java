@@ -47,7 +47,7 @@ public class NetworkUtil {
         NetworkInfo.State mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
         NetworkInfo.State mobile4G = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).getState();
 
-        if (wifiState == null && mobileState == null && mobile4G == null) {
+        if (wifiState == null && mobileState == null) {
             //wifi和数据流量都没有打开，提示没有可用网络，引导用户打开任意网络
             App.setNetworkType(Type.NULL);
             return Type.NULL;
@@ -59,12 +59,12 @@ public class NetworkUtil {
             return Type.WIFI;
         }
 
-        if (NetworkInfo.State.CONNECTED == mobile4G) {
-            //4G网络可用，这时可以加载比较耗流量的内容，同时也通过缓存机制和其他机制
-            //优化网络请求频率以及数据加载以减少流量消耗
-            App.setNetworkType(Type.MOBILE4G);
-            return Type.MOBILE4G;
-        }
+//        if (NetworkInfo.State.CONNECTED == mobile4G) {
+//            //4G网络可用，这时可以加载比较耗流量的内容，同时也通过缓存机制和其他机制
+//            //优化网络请求频率以及数据加载以减少流量消耗
+//            App.setNetworkType(Type.MOBILE4G);
+//            return Type.MOBILE4G;
+//        }
 
         if (NetworkInfo.State.CONNECTED == mobileState) {
             //数据流量可用，这时避免加载比较耗流量的内容，同时，可以通过缓存机制和其他机制

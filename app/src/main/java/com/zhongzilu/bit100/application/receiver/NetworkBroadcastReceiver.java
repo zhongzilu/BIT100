@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.zhongzilu.bit100.application.App;
+import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.NetworkUtil;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class NetworkBroadcastReceiver extends BroadcastReceiver {
     }
 
     private void push(){
+        LogUtil.d(TAG, "push: listSize" + list.size());
         Observable
                 .fromIterable(list)
                 .subscribe(new Consumer<OnNetworkStateListener>() {

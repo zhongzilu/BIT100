@@ -1,13 +1,17 @@
 package com.zhongzilu.bit100.application.util;
 
+import android.util.Log;
+
 import com.yolanda.nohttp.NoHttp;
 import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.RequestQueue;
-import com.zhongzilu.bit100.application.Contacts;
+import com.zhongzilu.bit100.application.data.Contacts;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
+
+import java.util.TreeMap;
 
 /**
  * 网络请求工具类，除了修改{@method sendRequest(what, request, listener)}
@@ -15,14 +19,19 @@ import com.zhongzilu.bit100.model.bean.CategoriesBean;
  * Created by zhongzilu on 2016-10-20.
  */
 public class RequestUtil {
+    private static final String TAG = "RequestUtil==>";
+    private static final String API_KEY = "android";
+    private static final String API_SECRET = "7763079ba6abf342a99ab5a1dfa87ba8";
+
+    private static RequestQueue requestQueue = NoHttp.newRequestQueue();
+
 
     public static final int TAG_GET_ALL_POSTS = 1110,
             TAG_GET_RECENT_POST = 1111,
             TAG_GET_POST_BY_ID = 1112,
             TAG_GET_ALL_CATEGORIES = 1113,
-            TAG_GET_POSTS_BY_CATEGORIES = 1114;
-
-    private static RequestQueue requestQueue = NoHttp.newRequestQueue();
+            TAG_GET_POSTS_BY_CATEGORIES = 1114,
+            TAG_GET_INIT_VIDEO = 1115;
 
     /**
      * 获取第一页的文章数据的请求对象
@@ -117,8 +126,104 @@ public class RequestUtil {
         addIncludeCommand(request, Command.AllPostsCommand);
         sendRequest(TAG_GET_POSTS_BY_CATEGORIES, request, listener);
     }
+
+    public static void getInitVideoData(int animeCount,int featureCount,int advertiseCount, RequestCallback listener){
+        long timeStamp = System.currentTimeMillis()/1000L;
+        TreeMap<String,String> params = new TreeMap<>();
+        params.put("api_key",API_KEY);
+        params.put("timestamp",String.valueOf(timeStamp));
+        params.put("anime",String.valueOf(animeCount));
+        params.put("feature",String.valueOf(featureCount));
+        params.put("advert",String.valueOf(advertiseCount));
+        String access_token = ApiUtils.getAccessToken(params,API_SECRET);
+        String url = String.format(Contacts.GET_INIT_REQUEST_URL, API_KEY,timeStamp,animeCount,featureCount,advertiseCount,access_token);
+        Log.d(TAG, "getInitData: InitDataUrl" + url);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(TAG_GET_INIT_VIDEO, request, listener);
+    }
+
+    public static void getList(int page, RequestCallback listener) {
+        long timeStamp = System.currentTimeMillis() / 1000L;
+        TreeMap<String, String> params = new TreeMap<String, String>();
+        params.put("api_key", API_KEY);
+        params.put("timestamp", String.valueOf(timeStamp));
+        params.put("page", String.valueOf(page));
+        String access_token = ApiUtils.getAccessToken(params, API_SECRET);
+        String url = String.format(Contacts.GET_ANIMATION_REQUEST_URL, API_KEY, timeStamp,
+                page, access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+
+    public static void getRandom(int count, RequestCallback listener) {
+        long timeStamp = System.currentTimeMillis() / 1000L;
+        TreeMap<String, String> params = new TreeMap<String, String>();
+        params.put("api_key", API_KEY);
+        params.put("timestamp", String.valueOf(timeStamp));
+        params.put("order", "random");
+        params.put("limit", String.valueOf(count));
+        String access_token = ApiUtils.getAccessToken(params, API_SECRET);
+        String url = String.format(Contacts.GET_ANIMATION_RANDOM_URL, API_KEY, timeStamp,
+                count, access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+
+    public static void getDetail(int vid,RequestCallback listener){
+        long timestamp = System.currentTimeMillis()/1000L;
+        TreeMap<String,String> params = new TreeMap<String,String>();
+        params.put("api_key",API_KEY);
+        params.put("timestamp",String.valueOf(timestamp));
+        params.put("vid",String.valueOf(vid));
+        String access_token = ApiUtils.getAccessToken(params,API_SECRET);
+        String url = String.format(Contacts.GET_ANIMATION_DETAIL_URL,API_KEY,timestamp,vid,access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+
+    public static void getCategory(int categoryId,int page,int count,RequestCallback listener){
+        long timeStamp = System.currentTimeMillis() / 1000L;
+        TreeMap<String,String> params = new TreeMap<String, String>();
+        params.put("api_key",API_KEY);
+        params.put("timestamp",String.valueOf(timeStamp));
+        params.put("page",String.valueOf(page));
+        params.put("category",String.valueOf(categoryId));
+        params.put("limit",String.valueOf(count));
+        String access_token = ApiUtils.getAccessToken(params,API_SECRET);
+        String url = String.format(Contacts.GET_CATEGORY_REQUEST_URL,API_KEY,timeStamp,page,categoryId,count,access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+
+    public static void getALLRecommend(int count,RequestCallback listener){
+        long timestamp = System.currentTimeMillis()/1000L;
+        TreeMap<String,String> params = new TreeMap<String, String>();
+        params.put("api_key",API_KEY);
+        params.put("timestamp",String.valueOf(timestamp));
+        params.put("limit",String.valueOf(count));
+        params.put("feature",String.valueOf(1));
+        String access_token = ApiUtils.getAccessToken(params,API_SECRET);
+        String url = String.format(Contacts.GET_RECOMMEND_ALL_REQUEST,API_KEY,timestamp,count,access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+
+    public static void getCategoryRecommend(int categoryId,int count,RequestCallback listener){
+        long timestamp = System.currentTimeMillis()/1000L;
+        TreeMap<String,String> params = new TreeMap<String, String>();
+        params.put("api_key",API_KEY);
+        params.put("timestamp",String.valueOf(timestamp));
+        params.put("limit",String.valueOf(count));
+        params.put("feature",String.valueOf(1));
+        params.put("category",String.valueOf(categoryId));
+        String access_token = ApiUtils.getAccessToken(params,API_SECRET);
+        String url = String.format(Contacts.GET_RECOMMEND_CATEGORY_REQUEST,API_KEY,timestamp,categoryId,count,access_token);
+        Request request = NoHttp.createJsonObjectRequest(url, RequestMethod.GET);
+        sendRequest(request, listener);
+    }
+    
     /**
-     * 以上是封装的请求类的方法，新增了网络请求，请添加到上面
+     * 以上是封装的请求类的方法，新增的网络请求，请添加到上面
      * ======================================================================
      * 以下是最基础的封装方法，如非必须，请不要修改
      */

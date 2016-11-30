@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="200dp"
     android:layout_centerInParent="true"
     android:layout_margin="5dp"
     android:foreground="?android:attr/selectableItemBackground"
@@ -12,93 +12,28 @@
     app:cardPreventCornerOverlap="false"
     tools:ignore="hardCode">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ImageView
+        android:id="@+id/img_mood_thumb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/bg_header"
+        android:visibility="visible" />
 
-        <RelativeLayout
-            android:id="@+id/layout_userInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp">
+    <TextView
+        android:id="@+id/tv_mood_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#50000000"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:lineSpacingExtra="2dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:padding="10dp"
+        android:textColor="#ddd"
+        tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。" />
 
-            <TextView
-                android:id="@+id/tv_mood_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:ellipsize="marquee"
-                android:lines="1"
-                android:textColor="#616161"
-                android:textSize="14sp"
-                tools:text="钟子路" />
-
-            <TextView
-                android:id="@+id/tv_mood_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/hint"
-                android:textSize="12sp"
-                tools:text="2016-09-16" />
-
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/img_mood_thumb"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/cover1"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/tv_mood_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:fontFamily="sans-serif-light"
-            android:lineSpacingExtra="2dp"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:lines="3"
-            android:padding="10dp"
-            tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp">
-
-            <ImageView
-                android:id="@+id/img_mood_up"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_centerVertical="true"
-                android:background="@null"
-                android:src="@drawable/ic_thumb_up_outline" />
-
-            <ImageView
-                android:id="@+id/img_mood_share"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:background="@null"
-                android:src="@drawable/ic_share" />
-        </RelativeLayout>
-
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1px"-->
-        <!--android:layout_marginLeft="10dp"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:background="#ddd" />-->
-
-    </LinearLayout>
 </android.support.v7.widget.CardView>

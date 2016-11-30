@@ -18,10 +18,33 @@ public class FileUtil {
     public static final String FILE_SAVE_PATH = Environment.getExternalStorageDirectory() + File.separator + "BIT100/";
     public static final String IMAGE_SAVE_PATH = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "BIT100/";
 
-    public static void deleteFile(String paramString) {
-        File localFile = new File(FILE_SAVE_PATH + paramString);
+    public static void deleteFile(String fileName) {
+        File localFile = new File(FILE_SAVE_PATH + fileName);
         if (localFile.exists())
             localFile.delete();
+    }
+
+    public static boolean deleteFile(File file){
+        if (file == null)
+            throw new NullPointerException("Parameter file is null");
+        if (file.isDirectory()){
+            deleteDirectory(file);
+        }
+
+        return file.delete();
+    }
+
+    public static boolean deleteDirectory(File directory){
+        if (!directory.isDirectory()){
+            throw new IllegalArgumentException("Parameter file is not a directory!");
+        }
+        File[] files = directory.listFiles();
+        for (File f : files){
+            if (!deleteFile(f)){
+                return false;
+            }
+        }
+        return true;
     }
 
     private static String readFile(String paramString) {

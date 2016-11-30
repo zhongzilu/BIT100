@@ -100,7 +100,6 @@ public abstract class BaseRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)){
-            case TYPE_TOAST:break;
             case TYPE_ITEM_DECORATOR:
                 ItemDecoratorBean itemDecoratorBean =
                         (ItemDecoratorBean) mPushList.get(position).getPushObject();

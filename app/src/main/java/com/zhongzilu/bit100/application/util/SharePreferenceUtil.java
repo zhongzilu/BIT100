@@ -9,7 +9,11 @@ import android.content.SharedPreferences;
 public class SharePreferenceUtil {
 
 
-    public static final String FILE_NAME = "Settings";
+    public static final String FILE_NAME = "Settings",
+            LOADVIDEO = "LOADVIDEO",
+            LOADHD = "LOADHD",
+            NOIMAGE = "NOIMAGE",
+            SHOW_NOTIFY = "SHOW_NOTIFY";
 
     public static final String IMG_PATH = "localImage";
     private static SharedPreferences.Editor editor;
@@ -20,6 +24,62 @@ public class SharePreferenceUtil {
         editor = share.edit();
         editor.apply();
 
+    }
+
+    public static void setLoadVideoOnWifi(final boolean isLoad){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                editor.putBoolean(LOADVIDEO, isLoad).apply();
+            }
+        }).start();
+    }
+
+    /**获取是否加载在Wifi下加载视频的设置，默认为true*/
+    public static boolean getLoadVideoOnWifi(){
+        return share.getBoolean(LOADVIDEO, true);
+    }
+
+    public static void setLoadHDVideo(final boolean isLoad){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                editor.putBoolean(LOADHD, isLoad).apply();
+            }
+        }).start();
+    }
+
+    /**获取是否加载高清视频的设置，默认为true*/
+    public static boolean getLoadHD(){
+        return share.getBoolean(LOADHD, true);
+    }
+
+    public static void setNoImage(final boolean isImage){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                editor.putBoolean(NOIMAGE, isImage).apply();
+            }
+        }).start();
+    }
+
+    /**获取是否不加载图片的设置，默认为false*/
+    public static boolean getNoImage(){
+        return share.getBoolean(NOIMAGE, false);
+    }
+
+    public static void setShowNotify(final boolean isShow){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                editor.putBoolean(SHOW_NOTIFY, isShow).apply();
+            }
+        }).start();
+    }
+
+    /**获取是否显示通知的设置，默认为true*/
+    public static boolean getShowNotify(){
+        return share.getBoolean(SHOW_NOTIFY, true);
     }
 
     public static void saveImagePath(String path) {

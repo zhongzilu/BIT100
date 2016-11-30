@@ -158,11 +158,10 @@ public class Bit100ArticleDetailFragment extends Fragment
         if (mBean == null)return;
 
         Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
-        Intent localIntent = new Intent("android.intent.action.SEND");
+        Intent localIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         localIntent.setType("text/plain");
-        localIntent.putExtra("android.intent.extra.TEXT", mBean.title +
+        localIntent.putExtra(Intent.EXTRA_TEXT, mBean.title +
                 "【来自"+getString(R.string.app_name)+"App】\n" + mBean.url);
-        localIntent.putExtra("android.intent.extra.SUBJECT", "这是分享内容");
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
     }
 
