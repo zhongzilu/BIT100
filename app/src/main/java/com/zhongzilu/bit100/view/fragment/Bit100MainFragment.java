@@ -26,6 +26,8 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
+import com.zhongzilu.bit100.application.helper.AnimateHelper;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.receiver.NetworkBroadcastReceiver;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
@@ -34,6 +36,7 @@ import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.application.util.RequestMood;
 import com.zhongzilu.bit100.application.util.RequestMoodHandler;
 import com.zhongzilu.bit100.application.util.RequestUtil;
+import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
@@ -41,6 +44,7 @@ import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.model.bean.TagBean;
 import com.zhongzilu.bit100.model.response.AllPostsByCategoryResponse;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
+import com.zhongzilu.bit100.model.response.VideoResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleDetailActivity;
 import com.zhongzilu.bit100.view.activity.Bit100MainActivity;
 import com.zhongzilu.bit100.view.activity.Bit100SettingActivity;
@@ -70,6 +74,7 @@ public class Bit100MainFragment extends Fragment
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout mRefresh;
+    private View mLoadingView;
 
     //Value
     private static CategoriesBean mCategories;
@@ -127,6 +132,9 @@ public class Bit100MainFragment extends Fragment
             mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_common_recyclerView);
         if (mRefresh == null)
             mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
+        if (mLoadingView == null){
+            mLoadingView = view.findViewById(R.id.layout_refresh_parent_layout);
+        }
 
         mRefresh.setColorSchemeResources(R.color.colorPrimary);
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -225,16 +233,24 @@ public class Bit100MainFragment extends Fragment
         if (isVisibleToUser && isFirst) {
 
             boolean haveNetwork = NetworkUtil.getNetworkState();
-            if (!haveNetwork){
-                Toast.makeText(getContext(), getString(R.string.error_network_failed), Toast.LENGTH_LONG).show();
-                return;
+            if (haveNetwork){
+                RequestUtil.getAllPosts(this);
+                if (shouldLoadVideo()) {
+                    RequestUtil.getInitVideoData(20, 5, 2, videoCallback);
+                }
+                requestMoodPosts();
+                isFirst = false;
             }
 
-            RequestUtil.getAllPosts(this);
-            RequestUtil.getInitVideoData(20, 5, 2, videoCallback);
-            requestMoodPosts();
-            isFirst = false;
         }
+    }
+
+    /**判断是否加载视频数据*/
+    private boolean shouldLoadVideo(){
+        if (SharePreferenceUtil.getLoadVideoOnWifi()){
+            return NetworkUtil.getNetworkType(App.getAppContext()) == NetworkUtil.Type.WIFI;
+        }
+        return true;
     }
 
     RequestUtil.RequestCallback videoCallback = new RequestUtil.RequestCallback() {
@@ -259,9 +275,7 @@ public class Bit100MainFragment extends Fragment
                 public void onFailed(int what, Response<JSONObject> response) {
                     Toast.makeText(getActivity(), getString(R.string.error_network_failed),
                             Toast.LENGTH_SHORT).show();
-                    mRecyclerView.setVisibility(View.VISIBLE);
-                    if (mRefresh.isRefreshing())
-                        mRefresh.setRefreshing(false);
+                    endLoading();
                 }
 
                 @Override
@@ -481,9 +495,7 @@ public class Bit100MainFragment extends Fragment
                                 ? getString(R.string.error_network_failed)
                                 : response.get()
                         , Toast.LENGTH_SHORT).show();
-                mRecyclerView.setVisibility(View.VISIBLE);
-                if (mRefresh.isRefreshing())
-                    mRefresh.setRefreshing(false);
+                endLoading();
             }
 
             @Override
@@ -498,9 +510,11 @@ public class Bit100MainFragment extends Fragment
      * @param json 请求响应返回的JSON数据
      */
     private void handleAllPostsResponse(String json){
-        AllPostsResponse allPosts = new Gson().fromJson(json,
-                new TypeToken<AllPostsResponse>(){}.getType());
+
         try {
+            AllPostsResponse allPosts = new Gson().fromJson(json,
+                    new TypeToken<AllPostsResponse>(){}.getType());
+
             if ("ok".equals(allPosts.status)){
 
                 for (ArticleDetailBean bean : allPosts.posts){
@@ -515,12 +529,16 @@ public class Bit100MainFragment extends Fragment
                     Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
             }
 
-            mAdapter.notifyDataSetChanged();
-            mRecyclerView.setVisibility(View.VISIBLE);
-            if (mRefresh.isRefreshing())
-                mRefresh.setRefreshing(false);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                    endLoading();
+                }
+            });
         }
     }
 
@@ -528,46 +546,91 @@ public class Bit100MainFragment extends Fragment
      * 处理根据目录获取文章列表的网络请求返回数据
      * @param json 请求响应返回的JSON数据
      */
-    private void handleAllPostsByCategoryResponse(String json){
-        AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
-                new TypeToken<AllPostsByCategoryResponse>(){}.getType());
+    private void handleAllPostsByCategoryResponse(final String json){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
+                            new TypeToken<AllPostsByCategoryResponse>(){}.getType());
 
-        if ("ok".equals(allPosts.status)){
+                    if ("ok".equals(allPosts.status)){
 
-            for (ArticleDetailBean bean : allPosts.posts){
-                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
+                        for (ArticleDetailBean bean : allPosts.posts){
+                            mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
+                        }
+
+                        if (allPosts.posts.length < 5)
+                            mAdapter.setMoreVisible(false);
+
+                    } else {
+                        if (!TextUtils.isEmpty(allPosts.error))
+                            Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                } finally {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                            endLoading();
+                        }
+                    });
+                }
             }
-
-            if (allPosts.posts.length < 5)
-                mAdapter.setMoreVisible(false);
-
-        } else {
-            if (!TextUtils.isEmpty(allPosts.error))
-                Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
-        }
-
-        mAdapter.notifyDataSetChanged();
-        mRecyclerView.setVisibility(View.VISIBLE);
-        if (mRefresh.isRefreshing())
-            mRefresh.setRefreshing(false);
+        }).start();
     }
 
     private void handleAllPostsByTagResponse(String json) {
 
     }
 
-    private void handleMoodResponse(List<CardMoodModel> paramList){
-        mRecyclerView.setVisibility(View.VISIBLE);
-        for (CardMoodModel mood : paramList){
-            mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
-        }
-        if (mRefresh.isRefreshing())
-            mRefresh.setRefreshing(false);
+    private void handleMoodResponse(final List<CardMoodModel> paramList){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                for (CardMoodModel mood : paramList){
+                    mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
+                }
+                endLoading();
+            }
+        });
     }
 
-    private void handleInitVideoResponse(Response<JSONObject> response) {
-        
+    private void handleInitVideoResponse(final Response<JSONObject> response) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                if (response.get().has("data")){
+                    try {
+                        JSONObject list = response.get().getJSONObject("data").getJSONObject("list");
+//                        JSONArray animations = list.getJSONArray("anime");
+//                        JSONArray category = list.getJSONArray("category");
+//                        JSONArray feature = list.getJSONArray("recommend");
+                        LogUtil.d(TAG, "run: videoList==>" + list);
+                        VideoResponse result = new Gson().fromJson(list.toString(),
+                                new TypeToken<VideoResponse>(){}.getType());
+
+                        mPushList.addAll(AnimateHelper.build(result.anime));
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    } finally {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAdapter.notifyDataSetChanged();
+                                endLoading();
+                            }
+                        });
+                    }
+                }
+            }
+        }).start();
     }
+
 
     @Override
     public void state(NetworkUtil.Type type) {
@@ -592,5 +655,12 @@ public class Bit100MainFragment extends Fragment
         //当输入的文字发生变化的时候,会触发这个方法.在这里做匹配提示的操作等
         LogUtil.d(TAG, "onQueryTextChange: " + newText);
         return true;
+    }
+
+    private void endLoading(){
+        mLoadingView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        if (mRefresh.isRefreshing())
+            mRefresh.setRefreshing(false);
     }
 }

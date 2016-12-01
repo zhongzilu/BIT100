@@ -1,39 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<?xml version="1.0" encoding="utf-8"?><!--<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:app="http://schemas.android.com/apk/res-auto"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="match_parent"--><!--android:layout_height="200dp"--><!--android:layout_centerInParent="true"--><!--android:layout_margin="5dp"--><!--android:foreground="?android:attr/selectableItemBackground"--><!--app:cardCornerRadius="2dp"--><!--app:cardElevation="2dp"--><!--app:cardPreventCornerOverlap="false"--><!--tools:ignore="hardCode">-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_centerInParent="true"
-    android:layout_margin="5dp"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="2dp"
-    app:cardElevation="2dp"
-    app:cardPreventCornerOverlap="false"
-    tools:ignore="hardCode">
+    android:layout_marginBottom="5dp"
+    android:background="?android:attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/img_mood_thumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
-        tools:src="@drawable/bg_header"
-        android:visibility="visible" />
+        tools:src="@drawable/bg_header" />
 
     <TextView
         android:id="@+id/tv_mood_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#50000000"
-        android:ellipsize="marquee"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
-        android:marqueeRepeatLimit="marquee_forever"
         android:padding="10dp"
         android:textColor="#ddd"
         tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。" />
 
-</android.support.v7.widget.CardView>
+</RelativeLayout>
+
+
+    <!--</android.support.v7.widget.CardView>-->

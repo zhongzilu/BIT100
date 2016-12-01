@@ -47,6 +47,7 @@ public class Bit100CategoryFragment extends Fragment
     private static final String TAG = "Bit100CategoryFragment==>";
 
     private View contentView;
+    private View mLoadingView;
     private SwipeRefreshLayout mRefresh;
     private RecyclerView mRecyclerView;
     private CategoryRecyclerViewAdapter mAdapter;
@@ -68,6 +69,8 @@ public class Bit100CategoryFragment extends Fragment
 
         setHasOptionsMenu(true);
 
+        if (mLoadingView == null)
+            mLoadingView = view.findViewById(R.id.layout_refresh_parent_layout);
         if (mRecyclerView == null)
             mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_common_recyclerView);
         if (mRefresh == null)
@@ -134,7 +137,6 @@ public class Bit100CategoryFragment extends Fragment
 
         mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     // zhongzilu: 2016-10-27 添加标签的测试数据
@@ -156,10 +158,10 @@ public class Bit100CategoryFragment extends Fragment
     }
 
     private void loadLocalCategoriesCache(){
-//        String json = CacheHelper.getAllCategories();
-//        if (!TextUtils.isEmpty(json)){
-//            handleCategoryResponse(json);
-//        }
+        String json = CacheHelper.getAllCategories();
+        if (!TextUtils.isEmpty(json)){
+            handleCategoryResponse(json);
+        }
     }
 
     @Override
@@ -227,9 +229,7 @@ public class Bit100CategoryFragment extends Fragment
                                 ? getString(R.string.error_network_failed)
                                 : response.get()
                         , Toast.LENGTH_SHORT).show();
-                mRecyclerView.setVisibility(View.VISIBLE);
-                if (mRefresh.isRefreshing())
-                    mRefresh.setRefreshing(false);
+                endLoadingData();
             }
 
             @Override
@@ -239,25 +239,43 @@ public class Bit100CategoryFragment extends Fragment
         };
     }
 
-    private void handleCategoryResponse(String json){
-        AllCategoriesResponse result = new Gson().fromJson(json,
-                new TypeToken<AllCategoriesResponse>(){}.getType());
-        if ("ok".equals(result.status)){
-            mPushList.clear();
-            addTagsTestData();
+    private void handleCategoryResponse(final String json){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-            mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
-                    new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+                AllCategoriesResponse result = new Gson().fromJson(json,
+                        new TypeToken<AllCategoriesResponse>(){}.getType());
+                if ("ok".equals(result.status)){
+                    mPushList.clear();
+                    addTagsTestData();
 
-            for (CategoriesBean cb : result.categories){
-                mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
+                    mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
+                            new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+
+                    for (CategoriesBean cb : result.categories){
+                        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyDataSetChanged();
+                        endLoadingData();
+                    }
+                });
+
             }
+        }).start();
 
-        } else {
-            Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
-        }
+    }
 
-        mAdapter.notifyDataSetChanged();
+    private void endLoadingData(){
+        mLoadingView.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
