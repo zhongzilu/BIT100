@@ -55,11 +55,11 @@ public class App extends Application {
     }
 
     public static void setNetworkType(NetworkUtil.Type type){
+        networkType = type;
         if (type == NetworkUtil.Type.NULL) {
             isNetworkOK = false;
             return;
         }
-        networkType = type;
         isNetworkOK = true;
     }
 

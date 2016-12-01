@@ -12,8 +12,10 @@ import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 import com.zhongzilu.bit100.model.bean.PushModel;
+import com.zhongzilu.bit100.model.bean.VideoBean;
 import com.zhongzilu.bit100.view.viewholder.MainArticleItemViewHolder;
 import com.zhongzilu.bit100.view.viewholder.MainMoodItemViewHolder;
+import com.zhongzilu.bit100.view.viewholder.VideoViewHolder;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
     //主页item布局类型
     public static final int TYPE_MAIN_ARTICLE_ITEM = 100;
     public static final int TYPE_MAIN_MOOD_ITEM = 101;
+    public static final int TYPE_MAIN_VIDEO_ITEM = 102;
 
     public MainRecyclerViewAdapter(Context context, ArrayList<PushModel> mPushList) {
         super(context, mPushList);
@@ -44,6 +47,9 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 //心情签名
                 view = LayoutInflater.from(context).inflate(R.layout.item_mood_list, parent, false);
                 return new MainMoodItemViewHolder(view, mItemClickListener, mItemLongClickListener);
+            case TYPE_MAIN_VIDEO_ITEM:
+                view = LayoutInflater.from(context).inflate(R.layout.item_video_layout, parent, false);
+                return new VideoViewHolder(view, mItemClickListener, mItemLongClickListener);
         }
         return null;
     }
@@ -75,7 +81,25 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
             case TYPE_MAIN_MOOD_ITEM:
                 bindMoodItemStyle(holder, position);
                 break;
+
+            case TYPE_MAIN_VIDEO_ITEM:
+                hindVideoData(holder, position);
+                break;
         }
+    }
+
+    private void hindVideoData(RecyclerView.ViewHolder holder, int position) {
+        VideoBean videoBean = (VideoBean) mPushList.get(position).getPushObject();
+        VideoViewHolder videoViewHolder = (VideoViewHolder) holder;
+
+        videoViewHolder.mVideoName.setText(videoBean.Name);
+        videoViewHolder.mVideoContent.setText(videoBean.Brief);
+        videoViewHolder.mVideoAuthor.setText(videoBean.Author);
+        videoViewHolder.mVideoDuration.setText(new StringBuilder("时长：" + videoBean.Duration));
+        Glide.with(context)
+                .load(videoBean.DetailPic)
+                .into(videoViewHolder.mVideoImage);
+
     }
 
     private void bindMoodItemStyle(RecyclerView.ViewHolder holder, int position){
