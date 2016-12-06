@@ -26,8 +26,6 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.application.App;
-import com.zhongzilu.bit100.application.helper.AnimateHelper;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.receiver.NetworkBroadcastReceiver;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
@@ -36,24 +34,19 @@ import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.application.util.RequestMood;
 import com.zhongzilu.bit100.application.util.RequestMoodHandler;
 import com.zhongzilu.bit100.application.util.RequestUtil;
-import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
-import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
-import com.zhongzilu.bit100.model.bean.TagBean;
-import com.zhongzilu.bit100.model.response.AllPostsByCategoryResponse;
+import com.zhongzilu.bit100.model.bean.VideoBean;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
-import com.zhongzilu.bit100.model.response.VideoResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleDetailActivity;
 import com.zhongzilu.bit100.view.activity.Bit100MainActivity;
 import com.zhongzilu.bit100.view.activity.Bit100SettingActivity;
+import com.zhongzilu.bit100.view.activity.CustomWebViewActivity;
 import com.zhongzilu.bit100.view.activity.MoodCardActivity;
 import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -74,11 +67,6 @@ public class Bit100MainFragment extends Fragment
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private SwipeRefreshLayout mRefresh;
-    private View mLoadingView;
-
-    //Value
-    private static CategoriesBean mCategories;
-    private static TagBean mTagBean;
 
     //other
     private ArrayList<PushModel> mPushList = new ArrayList<>();
@@ -87,26 +75,6 @@ public class Bit100MainFragment extends Fragment
     private LinearLayoutManager mLayoutManager;
     private NetworkBroadcastReceiver receiver;
     private SearchView mSearchView;
-
-    public static Bit100MainFragment newInstance(CategoriesBean bean) {
-
-        Bundle args = new Bundle();
-        args.putParcelable("categories", bean);
-        mCategories = bean;
-        Bit100MainFragment fragment = new Bit100MainFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public static Bit100MainFragment newInstance(TagBean bean) {
-
-        Bundle args = new Bundle();
-        args.putParcelable("tags", bean);
-        mTagBean = bean;
-        Bit100MainFragment fragment = new Bit100MainFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,7 +85,7 @@ public class Bit100MainFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (contentView == null)
-            contentView = inflater.inflate(R.layout.fragment_main_layout, container, false);
+            contentView = inflater.inflate(R.layout.include_common_recycler_view, container, false);
         return contentView;
     }
 
@@ -132,9 +100,6 @@ public class Bit100MainFragment extends Fragment
             mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_common_recyclerView);
         if (mRefresh == null)
             mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
-        if (mLoadingView == null){
-            mLoadingView = view.findViewById(R.id.layout_refresh_parent_layout);
-        }
 
         mRefresh.setColorSchemeResources(R.color.colorPrimary);
         mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -235,9 +200,6 @@ public class Bit100MainFragment extends Fragment
             boolean haveNetwork = NetworkUtil.getNetworkState();
             if (haveNetwork){
                 RequestUtil.getAllPosts(this);
-                if (shouldLoadVideo()) {
-                    RequestUtil.getInitVideoData(20, 5, 2, videoCallback);
-                }
                 requestMoodPosts();
                 isFirst = false;
             }
@@ -245,75 +207,12 @@ public class Bit100MainFragment extends Fragment
         }
     }
 
-    /**判断是否加载视频数据*/
-    private boolean shouldLoadVideo(){
-        if (SharePreferenceUtil.getLoadVideoOnWifi()){
-            return NetworkUtil.getNetworkType(App.getAppContext()) == NetworkUtil.Type.WIFI;
-        }
-        return true;
-    }
-
-    RequestUtil.RequestCallback videoCallback = new RequestUtil.RequestCallback() {
-        @Override
-        public OnResponseListener<JSONObject> callback() {
-            return new OnResponseListener<JSONObject>() {
-                @Override
-                public void onStart(int what) {
-
-                }
-
-                @Override
-                public void onSucceed(int what, Response<JSONObject> response) {
-                    switch (what){
-                        case RequestUtil.TAG_GET_INIT_VIDEO:
-                            handleInitVideoResponse(response);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onFailed(int what, Response<JSONObject> response) {
-                    Toast.makeText(getActivity(), getString(R.string.error_network_failed),
-                            Toast.LENGTH_SHORT).show();
-                    endLoading();
-                }
-
-                @Override
-                public void onFinish(int what) {
-
-                }
-            };
-        }
-    };
-
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
-            switchGetPostsRequest();
             isFirst = false;
-        }
-    }
-
-    private void switchGetPostsRequest() {
-
-        boolean haveNetwork = NetworkUtil.getNetworkState();
-        if (!haveNetwork){
-            Toast.makeText(getContext(), getString(R.string.error_network_failed), Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (mCategories == null && mTagBean == null){
-            LogUtil.e(TAG, "onHiddenChanged: mCategoriesBean & mTagBean is both null");
-            throw new NullPointerException("mCategoriesBean & mTagBean is both null");
-        }
-
-        if (mCategories != null){
-            //根据目录请求文章列表
-            RequestUtil.getAllPostsByCategoryId(mCategories, this);
-        } else {
-            //根据标签请求文章列表
         }
     }
 
@@ -349,7 +248,7 @@ public class Bit100MainFragment extends Fragment
     @Override
     public void onItemClick(RecyclerView.ViewHolder holder, View view, int position) {
         int type = mAdapter.getItemViewType(position);
-        ArticleDetailBean bean;
+        final ArticleDetailBean bean;
         switch (type) {
             case MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM:
                 switch (view.getId()){
@@ -376,7 +275,18 @@ public class Bit100MainFragment extends Fragment
             case MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM:
                 goMoodCardActivity(position);
                 break;
+            case MainRecyclerViewAdapter.TYPE_MAIN_VIDEO_ITEM:
+                goVideoDetailActivity(position);
+                break;
         }
+    }
+
+    private void goVideoDetailActivity(int position) {
+        VideoBean videoBean = (VideoBean) mPushList.get(position).getPushObject();
+        Intent intent = new Intent(getActivity(), CustomWebViewActivity.class);
+        intent.putExtra(CustomWebViewActivity.EXTRA_URL, videoBean.VideoUrl);
+        intent.putExtra(CustomWebViewActivity.EXTRA_TITLE, videoBean.Name);
+        startActivity(intent);
     }
 
     private void goMoodCardActivity(int position){
@@ -384,6 +294,7 @@ public class Bit100MainFragment extends Fragment
         Intent intent = new Intent(getActivity(), MoodCardActivity.class);
         intent.putExtra(MoodCardActivity.EXTRA_MOOD_OBJECT, mood);
         startActivity(intent);
+        getActivity().overridePendingTransition(R.anim.fade_anim_in, R.anim.fade_anim_out);
     }
 
     @Override
@@ -412,14 +323,14 @@ public class Bit100MainFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        mSearchView = (SearchView) searchItem.getActionView();
-//        mSearchView.setIconifiedByDefault(false);
-        mSearchView.setOnQueryTextListener(this);
-//        mSearchView.setSubmitButtonEnabled(true);
-        mSearchView.setBackgroundColor(0x30000000);
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+//                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+//        mSearchView = (SearchView) searchItem.getActionView();
+////        mSearchView.setIconifiedByDefault(false);
+//        mSearchView.setOnQueryTextListener(this);
+////        mSearchView.setSubmitButtonEnabled(true);
+//        mSearchView.setBackgroundColor(0x30000000);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -477,15 +388,8 @@ public class Bit100MainFragment extends Fragment
 
             @Override
             public void onSucceed(int what, final Response<String> response) {
-                switch (what){
-                    case RequestUtil.TAG_GET_POSTS_BY_CATEGORIES:
-                        handleAllPostsByCategoryResponse(response.get());
-                        break;
-                    case RequestUtil.TAG_GET_ALL_POSTS:
-                        CacheHelper.savePostsAll(response.get());
-                        handleAllPostsResponse(response.get());
-                        break;
-                }
+                CacheHelper.savePostsAll(response.get());
+                handleAllPostsResponse(response.get());
             }
 
             @Override
@@ -542,95 +446,13 @@ public class Bit100MainFragment extends Fragment
         }
     }
 
-    /**
-     * 处理根据目录获取文章列表的网络请求返回数据
-     * @param json 请求响应返回的JSON数据
-     */
-    private void handleAllPostsByCategoryResponse(final String json){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
-                            new TypeToken<AllPostsByCategoryResponse>(){}.getType());
-
-                    if ("ok".equals(allPosts.status)){
-
-                        for (ArticleDetailBean bean : allPosts.posts){
-                            mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
-                        }
-
-                        if (allPosts.posts.length < 5)
-                            mAdapter.setMoreVisible(false);
-
-                    } else {
-                        if (!TextUtils.isEmpty(allPosts.error))
-                            Toast.makeText(getActivity(), allPosts.error, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e){
-                    e.printStackTrace();
-                } finally {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                            endLoading();
-                        }
-                    });
-                }
-            }
-        }).start();
+    private void handleMoodResponse(List<CardMoodModel> paramList){
+        mRecyclerView.setVisibility(View.VISIBLE);
+        for (CardMoodModel mood : paramList){
+            mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
+        }
+        endLoading();
     }
-
-    private void handleAllPostsByTagResponse(String json) {
-
-    }
-
-    private void handleMoodResponse(final List<CardMoodModel> paramList){
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                mRecyclerView.setVisibility(View.VISIBLE);
-                for (CardMoodModel mood : paramList){
-                    mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
-                }
-                endLoading();
-            }
-        });
-    }
-
-    private void handleInitVideoResponse(final Response<JSONObject> response) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                if (response.get().has("data")){
-                    try {
-                        JSONObject list = response.get().getJSONObject("data").getJSONObject("list");
-//                        JSONArray animations = list.getJSONArray("anime");
-//                        JSONArray category = list.getJSONArray("category");
-//                        JSONArray feature = list.getJSONArray("recommend");
-                        LogUtil.d(TAG, "run: videoList==>" + list);
-                        VideoResponse result = new Gson().fromJson(list.toString(),
-                                new TypeToken<VideoResponse>(){}.getType());
-
-                        mPushList.addAll(AnimateHelper.build(result.anime));
-                    } catch (Exception e){
-                        e.printStackTrace();
-                    } finally {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                                endLoading();
-                            }
-                        });
-                    }
-                }
-            }
-        }).start();
-    }
-
 
     @Override
     public void state(NetworkUtil.Type type) {
@@ -658,9 +480,13 @@ public class Bit100MainFragment extends Fragment
     }
 
     private void endLoading(){
-        mLoadingView.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
+    }
+
+    @Override
+    public void onDestroy() {
+        RequestUtil.cancelAllRequest();
+        super.onDestroy();
     }
 }

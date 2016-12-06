@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 
 import java.io.File;
@@ -38,14 +40,17 @@ public class MoodCardActivity extends BaseActivity
 
     //Extra Tag
     public static final String EXTRA_MOOD_OBJECT = "mood_object";
+    public static final String EXTRA_IMAGE_BITMAP = "image_bitmap";
 
     //Extra Value
     private CardMoodModel mMoodObject;
+    private Bitmap mImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood_card_layout);
+        setToolbar();
 
         mMoodContent = (TextView) findViewById(R.id.tv_mood_content);
         Typeface face = Typeface.createFromAsset(getAssets(), "font/FZYTK.ttf");
@@ -58,21 +63,45 @@ public class MoodCardActivity extends BaseActivity
         initData();
     }
 
+    private void setToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        StatusBarUtils.from(this)
+                //沉浸状态栏
+                .setTransparentStatusbar(true)
+                //白底黑字状态栏
+                .setLightStatusBar(false)
+                //设置toolbar,actionbar等view
+                .setActionbarView(toolbar)
+                .process();
+        setupActionBar();
+    }
+
     private void initData() {
         if (mMoodObject != null){
             mMoodContent.setText(mMoodObject.mood_text);
-            Glide.with(this)
-                    .load(mMoodObject.mood_img)
-                    .into(mMoodImage);
+            if (mImageBitmap != null){
+                mMoodImage.setImageBitmap(mImageBitmap);
+            } else {
+                Glide.with(this)
+                        .load(mMoodObject.mood_img)
+                        .into(mMoodImage);
+            }
         }
     }
 
     private void getIntentData() {
-        Intent intent = getIntent();
-        if (intent != null){
-            Object obj = intent.getParcelableExtra(EXTRA_MOOD_OBJECT);
+        if (getIntent().hasExtra(EXTRA_MOOD_OBJECT)){
+            Object obj = getIntent().getParcelableExtra(EXTRA_MOOD_OBJECT);
             if (obj instanceof CardMoodModel){
                 mMoodObject = (CardMoodModel) obj;
+            }
+        }
+        if (getIntent().hasExtra(EXTRA_IMAGE_BITMAP)){
+            Object obj = getIntent().getParcelableExtra(EXTRA_IMAGE_BITMAP);
+            if (obj instanceof Bitmap){
+                mImageBitmap = (Bitmap) obj;
             }
         }
     }
@@ -172,4 +201,13 @@ public class MoodCardActivity extends BaseActivity
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
 }

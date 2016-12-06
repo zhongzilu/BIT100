@@ -229,5 +229,9 @@
     <string name="label_setting_activity">设置</string>
     <string name="label_about_me_activity">关于我</string>
     <string name="label_feedback_activity">意见反馈</string>
+    <string name="action_refresh_title">刷新</string>
+    <string name="remember_pwd_text">记住密码?</string>
+    <string name="forgot_pwd_text">忘记密码?</string>
+    <string name="label_forgot_activity">忘记密码</string>
 
 </resources>

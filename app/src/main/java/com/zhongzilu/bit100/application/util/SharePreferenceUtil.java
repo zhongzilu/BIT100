@@ -36,7 +36,7 @@ public class SharePreferenceUtil {
     }
 
     /**获取是否加载在Wifi下加载视频的设置，默认为true*/
-    public static boolean getLoadVideoOnWifi(){
+    public static boolean isLoadVideoOnWifi(){
         return share.getBoolean(LOADVIDEO, true);
     }
 
@@ -50,11 +50,11 @@ public class SharePreferenceUtil {
     }
 
     /**获取是否加载高清视频的设置，默认为true*/
-    public static boolean getLoadHD(){
+    public static boolean isLoadHD(){
         return share.getBoolean(LOADHD, true);
     }
 
-    public static void setNoImage(final boolean isImage){
+    public static void setLoadImage(final boolean isImage){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -64,8 +64,8 @@ public class SharePreferenceUtil {
     }
 
     /**获取是否不加载图片的设置，默认为false*/
-    public static boolean getNoImage(){
-        return share.getBoolean(NOIMAGE, false);
+    public static boolean isLoadImage(){
+        return share.getBoolean(NOIMAGE, true);
     }
 
     public static void setShowNotify(final boolean isShow){
@@ -78,7 +78,7 @@ public class SharePreferenceUtil {
     }
 
     /**获取是否显示通知的设置，默认为true*/
-    public static boolean getShowNotify(){
+    public static boolean isShowNotify(){
         return share.getBoolean(SHOW_NOTIFY, true);
     }
 

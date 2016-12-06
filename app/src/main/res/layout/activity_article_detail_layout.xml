@@ -4,11 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:background="?attr/colorPrimary"
-        android:layout_height="@dimen/status_bar_height" />
-
     <include layout="@layout/include_collapsing_toolbar_layout" />
 
     <android.support.v4.widget.NestedScrollView

@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.widget.TouchImageView;
 
 /**
@@ -96,11 +97,7 @@ public class GalleryActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        setupActionBar();
+        setToolbar();
 
         mViewPager = (ViewPager) findViewById(R.id.container);
 
@@ -123,6 +120,22 @@ public class GalleryActivity extends BaseActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(mChosePosition, true);
     }
+
+    private void setToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        StatusBarUtils.from(this)
+                //沉浸状态栏
+                .setTransparentStatusbar(true)
+                //白底黑字状态栏
+                .setLightStatusBar(false)
+                //设置toolbar,actionbar等view
+                .setActionbarView(toolbar)
+                .process();
+        setupActionBar();
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

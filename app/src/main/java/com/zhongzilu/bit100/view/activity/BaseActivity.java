@@ -4,17 +4,15 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.StatusBarUtils;
 
 /**
  * Activity的抽象基类
  * Created by zhongzilu on 2016-10-27.
  */
 public abstract class BaseActivity extends AppCompatActivity {
-
-    private TextView titleView;
 
     /**
      * 给自定义Toolbar设置标题，在{@method setupCenterTitleToolbar}方法中，
@@ -24,10 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void setCenterTitleText(String title){
         if (TextUtils.isEmpty(title))
             throw new NullPointerException("title text is null");
-
-        if (titleView == null)
-            titleView = (TextView) findViewById(R.id.tv_toolbar_center_title);
-        titleView.setText(title);
+        setTitle(title);
     }
 
     /**
@@ -37,10 +32,15 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void setupCenterTitleToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.common_center_title_toolbar);
-        titleView = (TextView) findViewById(R.id.tv_toolbar_center_title);
-        titleView.setText(getTitle());
-        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        StatusBarUtils.from(this)
+                //沉浸状态栏
+                .setTransparentStatusbar(true)
+                //白底黑字状态栏
+                .setLightStatusBar(false)
+                //设置toolbar,actionbar等view
+                .setActionbarView(toolbar)
+                .process();
     }
 
     /**

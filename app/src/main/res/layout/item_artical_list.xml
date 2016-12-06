@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:lines="1"
             android:textColor="#616161"
             android:textSize="14sp"
@@ -34,13 +34,6 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/img_article_thumb"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone"
-        tools:src="@drawable/cover1" />
 
     <TextView
         android:id="@+id/tv_article_title"
@@ -52,13 +45,22 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:maxLines="2"
         android:padding="10dp"
-        android:textSize="16sp"
+        android:textSize="19sp"
         tools:text="程序调用系统裁剪之后直接闪退" />
+
+    <ImageView
+        android:id="@+id/img_article_thumb"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        tools:src="@drawable/cover1" />
 
     <LinearLayout
         android:id="@+id/layout_article_tags_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:clipChildren="true">
 
         <ImageView

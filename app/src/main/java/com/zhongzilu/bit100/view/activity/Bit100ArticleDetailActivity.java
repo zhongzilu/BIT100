@@ -3,8 +3,6 @@ package com.zhongzilu.bit100.view.activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -12,6 +10,7 @@ import android.widget.ImageView;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.view.fragment.Bit100ArticleDetailFragment;
 
@@ -27,7 +26,7 @@ import java.io.File;
  * <p/>
  * Created by zhongzilu on 2016-07-22.
  */
-public class Bit100ArticleDetailActivity extends AppCompatActivity {
+public class Bit100ArticleDetailActivity extends BaseActivity {
 
     private static final String TAG = "Bit100ArticleDetailActivity==>";
 
@@ -47,6 +46,14 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article_detail);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        StatusBarUtils.from(this)
+                //沉浸状态栏
+                .setTransparentStatusbar(true)
+                //白底黑字状态栏
+                .setLightStatusBar(false)
+                //设置toolbar,actionbar等view
+                .setActionbarView(toolbar)
+                .process();
         setupActionBar();
 
         mHeaderBgImage = (ImageView) findViewById(R.id.img_article_detail);
@@ -75,17 +82,6 @@ public class Bit100ArticleDetailActivity extends AppCompatActivity {
             transaction.show(mFragment);
         }
 
-    }
-
-    /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
-     */
-    private void setupActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // Show the Up button in the action bar.
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     @Override

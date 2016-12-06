@@ -16,6 +16,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIMAX_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
         android:name=".application.App"
@@ -38,6 +39,7 @@
         <!-- 主Activity -->
         <activity
             android:name=".view.activity.Bit100MainActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 文章详情Activity -->
@@ -51,6 +53,7 @@
         <!-- 登录Activity -->
         <activity
             android:name=".view.activity.Bit100LoginActivity"
+            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--图片浏览Activity-->
         <activity
@@ -79,6 +82,11 @@
         <!--自定义网页浏览器-->
         <activity android:name=".view.activity.CustomWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".view.activity.ForgotPasswordActivity"
+            android:label="@string/label_forgot_activity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <!--<service android:name="com.android.tedcoder.wkvideoplayer.dlna.service.DLNAService" />-->
     </application>
 
 </manifest>

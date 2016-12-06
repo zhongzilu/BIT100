@@ -7,6 +7,4 @@
 
     <include layout="@layout/include_login_header_layout"/>
 
-    <!--<include layout="@layout/content_login_layout"/>-->
-
 </android.support.design.widget.CoordinatorLayout>
