@@ -43,6 +43,8 @@ public class BitmapUtil {
         if (TextUtils.isEmpty(name)){
             String time = new SimpleDateFormat("yyyyMMddhhmmss", Locale.CHINA).format(new Date());
             name = time + ".jpg";
+        } else {
+            name += ".jpg";
         }
 
         File file = new File(IMAGE_SAVE_PATH);

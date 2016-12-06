@@ -51,7 +51,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:longClickable="true"
-            android:text="浏览\n2333" />
+            android:text="浏览\n0" />
 
         <TextView
             android:layout_width="0dp"
@@ -61,7 +61,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:longClickable="true"
-            android:text="文章\n100" />
+            android:text="文章\n0" />
 
         <TextView
             android:layout_width="0dp"
@@ -71,7 +71,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:longClickable="true"
-            android:text="消息\n23" />
+            android:text="消息\n0" />
 
     </LinearLayout>
 

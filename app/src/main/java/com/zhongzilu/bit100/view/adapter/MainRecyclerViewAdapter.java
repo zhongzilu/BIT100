@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 import com.zhongzilu.bit100.model.bean.PushModel;
@@ -67,7 +68,7 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
                 mainArticleItemViewHolder.mArticleTitle.setText(articleDetailBean.title);
 
                 // zhongzilu: 2016-10-21 如果存在缩略图，则加载缩略图
-                if (articleDetailBean.thumbnail_images != null) {
+                if (articleDetailBean.thumbnail_images != null && SharePreferenceUtil.isLoadImage()) {
                     Glide.with(context)
                             .load(articleDetailBean.thumbnail_images.medium.url)
                             .into(mainArticleItemViewHolder.mArticleThumb);
@@ -96,9 +97,11 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         videoViewHolder.mVideoContent.setText(videoBean.Brief);
         videoViewHolder.mVideoAuthor.setText(videoBean.Author);
         videoViewHolder.mVideoDuration.setText(new StringBuilder("时长：" + videoBean.Duration));
-        Glide.with(context)
-                .load(videoBean.DetailPic)
-                .into(videoViewHolder.mVideoImage);
+        if (SharePreferenceUtil.isLoadImage()) {
+            Glide.with(context)
+                    .load(videoBean.DetailPic)
+                    .into(videoViewHolder.mVideoImage);
+        }
 
     }
 
@@ -109,8 +112,10 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         Typeface face = Typeface.createFromAsset(context.getAssets(), "font/FZYTK.ttf");
         mainMoodItemViewHolder.mMoodContent.setTypeface(face);
         mainMoodItemViewHolder.mMoodContent.setText(cardMoodModel.mood_text);
-        Glide.with(context)
-                .load(cardMoodModel.mood_img)
-                .into(mainMoodItemViewHolder.mMoodThumb);
+        if (SharePreferenceUtil.isLoadImage()) {
+            Glide.with(context)
+                    .load(cardMoodModel.mood_img)
+                    .into(mainMoodItemViewHolder.mMoodThumb);
+        }
     }
 }

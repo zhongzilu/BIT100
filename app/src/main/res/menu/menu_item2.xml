@@ -6,4 +6,7 @@
         android:title="@string/action_share"
         android:icon="@drawable/ic_share"
         app:showAsAction="ifRoom"/>
+    <item android:id="@+id/action_refresh"
+        android:title="@string/action_refresh_title"
+        app:showAsAction="never"/>
 </menu>

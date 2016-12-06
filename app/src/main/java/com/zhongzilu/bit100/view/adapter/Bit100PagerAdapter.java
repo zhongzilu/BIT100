@@ -5,9 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.zhongzilu.bit100.view.fragment.Bit100ArticleDetailFragment;
-import com.zhongzilu.bit100.view.fragment.Bit100MainFragment;
 import com.zhongzilu.bit100.view.fragment.Bit100CategoryFragment;
-import com.zhongzilu.bit100.view.fragment.Bit100TextFragment;
+import com.zhongzilu.bit100.view.fragment.Bit100MainFragment;
 
 import java.util.HashMap;
 
@@ -46,7 +45,7 @@ public class Bit100PagerAdapter extends FragmentPagerAdapter {
             case 2:
                 return new Bit100CategoryFragment();
         }
-        return new Bit100TextFragment();
+        return null;
     }
 
 }

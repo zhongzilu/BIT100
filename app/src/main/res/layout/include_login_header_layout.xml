@@ -7,24 +7,21 @@
     android:background="@android:color/transparent"
     android:theme="@style/AppTheme.AppBarOverlay">
 
+    <include layout="@layout/include_login_layout"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_collapseMode="pin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:popupTheme="@style/AppTheme.PopupOverlay" />
+
     <!--如果要滚动，就在collapsingToolbarLayout加上这就话
         app:layout_scrollFlags="scroll|exitUntilCollapsed"-->
-    <android.support.design.widget.CollapsingToolbarLayout
-        android:id="@+id/toolbar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:title="">
-
-        <include layout="@layout/include_login_layout"/>
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_collapseMode="pin"
-            android:nestedScrollingEnabled="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </android.support.design.widget.CollapsingToolbarLayout>
+    <!--<android.support.design.widget.CollapsingToolbarLayout-->
+        <!--android:id="@+id/toolbar_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:title="">-->
 </android.support.design.widget.AppBarLayout>

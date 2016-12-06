@@ -23,9 +23,11 @@ import com.google.gson.Gson;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
+import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
 import com.zhongzilu.bit100.view.activity.GalleryActivity;
@@ -98,6 +100,7 @@ public class Bit100ArticleDetailFragment extends Fragment
         mWebSettings.setDomStorageEnabled(true);
         //支持内容重新布局
         mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        mWebSettings.setLoadsImagesAutomatically(SharePreferenceUtil.isLoadImage());
 
 //        mWebView.setInitialScale(0); // 改变这个值可以设定初始大小
 
@@ -148,6 +151,10 @@ public class Bit100ArticleDetailFragment extends Fragment
         switch (item.getItemId()){
             case R.id.action_share:
                 shareArticle();
+                break;
+            case R.id.action_refresh:
+                initWebView();
+                mWebView.reload();
                 break;
         }
         return true;
@@ -237,7 +244,7 @@ public class Bit100ArticleDetailFragment extends Fragment
 
             @Override
             public void onFailed(int what, Response<JSONObject> response) {
-                Toast.makeText(getActivity(),
+                Toast.makeText(App.getAppContext(),
                         TextUtils.isEmpty(response.toString())
                                 ? getString(R.string.error_network_failed)
                                 : response.toString()
@@ -263,13 +270,9 @@ public class Bit100ArticleDetailFragment extends Fragment
                 //注意：
                 // 之所以要判断result.posts.length > 1，是因为获取首页的数据时，返回了置顶的
                 // 一篇文章，如果后台取消了置顶的文章，这里的Gson解析会出错
-                if (result.posts.length > 1){
-                    mBean = result.posts[1];
-                    mContent = formatContent(mBean.content);
-                } else {
-                    mBean = result.posts[0];
-                    mContent = formatContent(mBean.content);
-                }
+
+                mBean = result.posts[result.posts.length > 1 ? 1 : 0];
+                mContent = formatContent(mBean.content);
 
                 mWebView.loadUrl("file:///android_asset/index.html");
 

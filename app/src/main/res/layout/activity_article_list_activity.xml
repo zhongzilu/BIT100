@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,10 +8,6 @@
 
     <include layout="@layout/include_center_title_toolbar_layout" />
 
-    <FrameLayout
-        android:id="@+id/layout_article_fragment_wrap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <include layout="@layout/include_common_recycler_view"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</LinearLayout>

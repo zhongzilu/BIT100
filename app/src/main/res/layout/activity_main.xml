@@ -5,23 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        android:layout_width="match_parent"
-        android:background="?attr/colorPrimary"
-        android:layout_height="@dimen/status_bar_height" />
-
     <include layout="@layout/include_header_page_toolbar_layout"/>
 
     <include layout="@layout/content_scrolling" />
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@android:drawable/ic_dialog_email"-->
-        <!--android:visibility="gone"-->
-        <!--app:layout_anchor="@id/app_bar"-->
-        <!--app:layout_anchorGravity="bottom|end" />-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_new_publish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_mode_edit_white_24dp"
+        android:visibility="gone"
+        android:layout_gravity="bottom|end"
+        app:layout_anchorGravity="bottom|end" />
 
 </android.support.design.widget.CoordinatorLayout>

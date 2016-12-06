@@ -47,7 +47,6 @@ public class Bit100CategoryFragment extends Fragment
     private static final String TAG = "Bit100CategoryFragment==>";
 
     private View contentView;
-    private View mLoadingView;
     private SwipeRefreshLayout mRefresh;
     private RecyclerView mRecyclerView;
     private CategoryRecyclerViewAdapter mAdapter;
@@ -59,7 +58,7 @@ public class Bit100CategoryFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
         if (contentView == null)
-            contentView = inflater.inflate(R.layout.fragment_category_layout, container, false);
+            contentView = inflater.inflate(R.layout.include_common_recycler_view, container, false);
         return contentView;
     }
 
@@ -69,8 +68,6 @@ public class Bit100CategoryFragment extends Fragment
 
         setHasOptionsMenu(true);
 
-        if (mLoadingView == null)
-            mLoadingView = view.findViewById(R.id.layout_refresh_parent_layout);
         if (mRecyclerView == null)
             mRecyclerView = (RecyclerView) view.findViewById(R.id.rv_common_recyclerView);
         if (mRefresh == null)
@@ -275,8 +272,7 @@ public class Bit100CategoryFragment extends Fragment
     }
 
     private void endLoadingData(){
-        mLoadingView.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+//        mLoadingView.setVisibility(View.GONE);
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
     }

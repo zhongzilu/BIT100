@@ -28,7 +28,7 @@ public class App extends Application {
 
         SharePreferenceUtil.config(this);
         NoHttp.initialize(this);
-        Logger.setDebug(false);
+        Logger.setDebug(true);
         Logger.setTag("BIT100==>");
 
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);

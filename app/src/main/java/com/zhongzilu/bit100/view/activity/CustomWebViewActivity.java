@@ -21,9 +21,11 @@ public class CustomWebViewActivity extends BaseActivity {
 
     //Extra Tag
     public static final String EXTRA_URL = "load_url";
+    public static final String EXTRA_TITLE = "title";
 
     //Extra value
-    public String mLoadUrl;
+    private String mLoadUrl;
+    private String mLoadTitle = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +40,15 @@ public class CustomWebViewActivity extends BaseActivity {
             mLoadUrl = getIntent().getStringExtra(EXTRA_URL);
         }
 
+        if (getIntent().hasExtra(EXTRA_TITLE)){
+            mLoadTitle = getIntent().getStringExtra(EXTRA_TITLE);
+            if (!TextUtils.isEmpty(mLoadTitle)){
+                setCenterTitleText(mLoadTitle);
+            }
+        }
+
         if (!TextUtils.isEmpty(mLoadUrl)){
             mWebView.loadUrl(mLoadUrl);
-            setCenterTitleText(mWebView.getWebTitle());
         }
     }
 
@@ -83,7 +91,7 @@ public class CustomWebViewActivity extends BaseActivity {
         localIntent.setType("text/plain");
         localIntent.putExtra(Intent.EXTRA_TEXT, mWebView.getWebTitle() + "\n"+ mLoadUrl + "\n"+
                 "【来自"+getString(R.string.app_name)+"App】\n");
-        localIntent.putExtra(Intent.EXTRA_SUBJECT, "这是分享内容");
+        localIntent.putExtra(Intent.EXTRA_SUBJECT, mLoadTitle);
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
     }
 }

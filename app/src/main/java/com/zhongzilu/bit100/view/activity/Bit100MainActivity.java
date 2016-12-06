@@ -5,17 +5,25 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.application.util.StatusBarUtils;
+import com.zhongzilu.bit100.model.response.LoginResponse;
 import com.zhongzilu.bit100.view.adapter.Bit100PagerAdapter;
 import com.zhongzilu.bit100.widget.PagerSlidingTabStrip;
 
@@ -28,7 +36,9 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
 
     private static final String TAG = "Bit100MainActivity==>";
 
+    // UI
     private ImageView mHeaderBgImage, mUserHeadImg;
+    private TextView mUserName;
 
     //选择更换图片时的请求码
     private static final int REQUEST_IMAGE_CODE = 111;
@@ -38,38 +48,126 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     //获取图片标示
     private static final String IMAGE_TYPE = "image/*";
 
+    // Extra Tag
+    public static final String EXTRA_LOGIN_BEAN = "loginBean";
+
+    // Value
+    private LoginResponse mLoginInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
+        setToolbar();
 
         mHeaderBgImage = (ImageView) findViewById(R.id.img_header_change_bg_image);
+        FloatingActionButton mFab = (FloatingActionButton) findViewById(R.id.fab_new_publish);
+        mFab.setOnClickListener(this);
+
         PagerSlidingTabStrip mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs_organization_info_main);
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager_organization_info_main);
-        mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
-        Bit100PagerAdapter mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
+//        mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
+//        mUserName = (TextView) findViewById(R.id.tv_user_nick_name);
 
-        String path = SharePreferenceUtil.getImagePath();
-        if (path != null){
-            mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
-        }
+        Bit100PagerAdapter mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
 
         mViewPager.setAdapter(mAdapter);
         // 选中的文字颜色
         mTabs.setSelectedTextColor(R.color.colorPrimary);
         mTabs.setViewPager(mViewPager);
 
+        if (getIntent().hasExtra(EXTRA_LOGIN_BEAN)){
+            mLoginInfo = getIntent().getParcelableExtra(EXTRA_LOGIN_BEAN);
+        }
+
+//        initValue();
+    }
+
+    private void setToolbar(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        StatusBarUtils.from(this)
+                //沉浸状态栏
+                .setTransparentStatusbar(true)
+                //白底黑字状态栏
+                .setLightStatusBar(false)
+                //设置toolbar,actionbar等view
+                .setActionbarView(toolbar)
+                .process();
+    }
+
+    private void initValue(){
+        if (mLoginInfo != null){
+
+            Glide.with(this)
+                    .load(mLoginInfo.avatar)
+                    .into(mUserHeadImg);
+            mUserName.setText(mLoginInfo.displayName);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final String path = SharePreferenceUtil.getImagePath();
+                    if (!TextUtils.isEmpty(path)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
+                            }
+                        });
+
+                    }
+                }
+            }).start();
+
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    final String path = SharePreferenceUtil.getImagePath();
+                    final String avatar = CacheHelper.getUserAvatar();
+                    final String username = CacheHelper.getDisplayName();
+                    if (path != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
+                            }
+                        });
+
+                    }
+
+                    if (!TextUtils.isEmpty(avatar)) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Glide.with(Bit100MainActivity.this)
+                                        .load(avatar)
+                                        .into(mUserHeadImg);
+                            }
+                        });
+                    }
+
+                    if (!TextUtils.isEmpty(username)){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mUserName.setText(username);
+                            }
+                        });
+                    }
+                }
+            }).start();
+        }
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mUserHeadImg.setOnClickListener(this);
+//        mUserHeadImg.setOnClickListener(this);
+
     }
 
     @Override
@@ -168,5 +266,25 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
 
     public void changeSkin(){
         chooseFile(REQUEST_IMAGE_CODE, IMAGE_TYPE);
+    }
+
+    private boolean isExit = false;
+    @Override
+    public void onBackPressed() {
+        if (!isExit){
+            isExit = true;
+            Toast.makeText(this, "双击退出", Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    isExit = false;
+                }
+            }, 1000);
+            return;
+        }
+
+        finish();
+        System.exit(0);
+
     }
 }

@@ -66,10 +66,10 @@ public class Bit100SettingActivity extends BaseActivity
     }
 
     private void getSettingInfo(){
-        mLoadVideoOnWifiSwitch.setChecked(SharePreferenceUtil.getLoadVideoOnWifi());
-        mLoadHDVideoSwitch.setChecked(SharePreferenceUtil.getLoadHD());
-        mNoImageSwitch.setChecked(SharePreferenceUtil.getNoImage());
-        mShowNotifySwitch.setChecked(SharePreferenceUtil.getShowNotify());
+        mLoadVideoOnWifiSwitch.setChecked(SharePreferenceUtil.isLoadVideoOnWifi());
+        mLoadHDVideoSwitch.setChecked(SharePreferenceUtil.isLoadHD());
+        mNoImageSwitch.setChecked(SharePreferenceUtil.isLoadImage());
+        mShowNotifySwitch.setChecked(SharePreferenceUtil.isShowNotify());
     }
 
     private void checkCacheSize(){
@@ -162,7 +162,7 @@ public class Bit100SettingActivity extends BaseActivity
         }
 
         if (buttonView == mNoImageSwitch){
-            SharePreferenceUtil.setNoImage(isChecked);
+            SharePreferenceUtil.setLoadImage(isChecked);
             return;
         }
 
