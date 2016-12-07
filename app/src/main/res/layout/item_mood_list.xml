@@ -13,20 +13,16 @@
         android:scaleType="centerCrop"
         tools:src="@drawable/bg_header"/>
 
-    <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:background="#50000000" />-->
-
     <TextView
         android:id="@+id/tv_mood_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-light"
         android:gravity="center"
         android:lineSpacingExtra="2dp"
         android:padding="10dp"
+        android:background="#50000000"
         android:textColor="#ddd"
         tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。" />
 
