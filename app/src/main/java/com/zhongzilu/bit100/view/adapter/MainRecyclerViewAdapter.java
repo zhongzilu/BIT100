@@ -1,7 +1,6 @@
 package com.zhongzilu.bit100.view.adapter;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,8 +108,6 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         CardMoodModel cardMoodModel = (CardMoodModel) mPushList.get(position).getPushObject();
         MainMoodItemViewHolder mainMoodItemViewHolder = (MainMoodItemViewHolder) holder;
 
-        Typeface face = Typeface.createFromAsset(context.getAssets(), "font/FZYTK.ttf");
-        mainMoodItemViewHolder.mMoodContent.setTypeface(face);
         mainMoodItemViewHolder.mMoodContent.setText(cardMoodModel.mood_text);
         if (SharePreferenceUtil.isLoadImage()) {
             Glide.with(context)
