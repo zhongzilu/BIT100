@@ -42,6 +42,7 @@
                 tools:text="Version 1.0.0" />
 
             <android.support.v7.widget.CardView
+                android:id="@+id/cv_myInfo_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -59,7 +60,9 @@
                     <com.zhongzilu.bit100.widget.CircleImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@drawable/cover2" />
+                        android:src="@drawable/cover2"
+                        app:border_color="#eee"
+                        app:border_width="2dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -91,6 +94,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_myBlog"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
@@ -111,6 +115,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_myGithub"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
@@ -131,6 +136,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/tv_myEmail"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
@@ -213,12 +219,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="5dp"
                         android:text="Starwars星空特效库"
-                        android:textColor="@color/blue" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="AnimeTaste提供视频资源"
                         android:textColor="@color/blue" />
 
                 </LinearLayout>

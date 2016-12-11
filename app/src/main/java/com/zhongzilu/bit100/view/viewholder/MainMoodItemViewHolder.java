@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -28,7 +29,7 @@ public class MainMoodItemViewHolder extends BaseViewHolder{
         mMoodThumb = (ImageView) itemView.findViewById(R.id.img_mood_thumb);
 
         if (mFace == null)
-            mFace = Typeface.createFromFile("file:///android_asset/font/FZYTK.ttf");
+            mFace = Typeface.createFromAsset(App.getAppContext().getAssets(), "font/FZYTK.ttf");
         mMoodContent.setTypeface(mFace);
     }
 }

@@ -4,4 +4,33 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include layout="@layout/include_center_title_toolbar_layout" />
+
+    <EditText
+        android:id="@+id/et_feed_contact"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@null"
+        android:gravity="center"
+        android:hint="联系方式 QQ/微信/电话/邮箱"
+        android:lines="1"
+        android:padding="10dp"
+        android:textColorHint="#ddd" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ddd" />
+
+    <EditText
+        android:id="@+id/et_feed_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:gravity="start"
+        android:hint="写下您宝贵的意见，我将及时联系您"
+        android:padding="10dp"
+        android:textColorHint="#ddd"
+        android:textSize="14sp" />
+
 </LinearLayout>
