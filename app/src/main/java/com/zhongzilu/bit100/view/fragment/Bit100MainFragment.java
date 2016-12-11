@@ -357,10 +357,6 @@ public class Bit100MainFragment extends Fragment
         return true;
     }
 
-    private void requestPermission(){
-
-    }
-
     private void shareAction(String text){
         Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
         Intent localIntent = new Intent(Intent.ACTION_SEND);

@@ -1,14 +1,17 @@
 package com.zhongzilu.bit100.view.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
@@ -82,6 +86,28 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         }
 
 //        initValue();
+
+        requestPermission();
+    }
+
+
+    private void requestPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // 必须在初始化阶段调用,例如onCreate()方法中
+            RxPermissions.getInstance(this)
+                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .subscribe(granted -> {
+                        if (!granted) { // 在android 6.0之前会默认返回true
+                            // 未获取权限
+                            new AlertDialog.Builder(this)
+                                    .setMessage("没有权限我们将无法为您保存图片!")
+                                    .setNegativeButton("取消", null)
+                                    .setPositiveButton("确定", null)
+                                    .create()
+                                    .show();
+                        }
+                    });
+        }
     }
 
     private void setToolbar(){

@@ -1,11 +1,13 @@
 package com.zhongzilu.bit100.view.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -126,7 +128,14 @@ public class Bit100SettingActivity extends BaseActivity
 
     /**检查版本更新*/
     private void checkUpdateVersion() {
-
+        final ProgressDialog mWaitingDialog = ProgressDialog.show(this, null, "正在检查更新", true, true);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mWaitingDialog.dismiss();
+                Toast.makeText(Bit100SettingActivity.this, "已经是最新了~", Toast.LENGTH_SHORT).show();
+            }
+        }, 2000);
     }
 
     /**清除缓存*/
