@@ -110,9 +110,12 @@ public class MainRecyclerViewAdapter extends BaseRecyclerViewAdapter {
 
         mainMoodItemViewHolder.mMoodContent.setText(cardMoodModel.mood_text);
         if (SharePreferenceUtil.isLoadImage()) {
+            mainMoodItemViewHolder.mMoodThumb.setVisibility(View.VISIBLE);
             Glide.with(context)
                     .load(cardMoodModel.mood_img)
                     .into(mainMoodItemViewHolder.mMoodThumb);
+        } else {
+            mainMoodItemViewHolder.mMoodThumb.setVisibility(View.GONE);
         }
     }
 }

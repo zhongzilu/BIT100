@@ -48,7 +48,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 设置Activity -->
-        <activity android:name=".view.activity.SettingsActivity" />
 
         <!-- 登录Activity -->
         <activity

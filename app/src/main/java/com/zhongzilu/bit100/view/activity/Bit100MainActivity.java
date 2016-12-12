@@ -14,16 +14,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.application.util.StatusBarUtils;
@@ -71,7 +68,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
 
         PagerSlidingTabStrip mTabs = (PagerSlidingTabStrip) findViewById(R.id.tabs_organization_info_main);
         ViewPager mViewPager = (ViewPager) findViewById(R.id.pager_organization_info_main);
-//        mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
+        mUserHeadImg = (ImageView) findViewById(R.id.img_user_header_image);
 //        mUserName = (TextView) findViewById(R.id.tv_user_nick_name);
 
         Bit100PagerAdapter mAdapter = new Bit100PagerAdapter(getSupportFragmentManager());
@@ -85,7 +82,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
             mLoginInfo = getIntent().getParcelableExtra(EXTRA_LOGIN_BEAN);
         }
 
-//        initValue();
+        initValue();
 
         requestPermission();
     }
@@ -101,8 +98,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
                             // 未获取权限
                             new AlertDialog.Builder(this)
                                     .setMessage("没有权限我们将无法为您保存图片!")
-                                    .setNegativeButton("取消", null)
-                                    .setPositiveButton("确定", null)
+                                    .setPositiveButton("知道了!", null)
                                     .create()
                                     .show();
                         }
@@ -125,67 +121,51 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initValue(){
-        if (mLoginInfo != null){
+//        if (mLoginInfo != null){
+//
+//            Glide.with(this)
+//                    .load(mLoginInfo.avatar)
+//                    .into(mUserHeadImg);
+//            mUserName.setText(mLoginInfo.displayName);
+//            new Thread(() -> {
+//                final String path = SharePreferenceUtil.getImagePath();
+//                if (!TextUtils.isEmpty(path)) {
+//                    runOnUiThread(() -> mHeaderBgImage.setImageURI(Uri.fromFile(new File(path))));
+//
+//                }
+//            }).start();
+//
+//        } else {
+            new Thread(() -> {
+                final String path = SharePreferenceUtil.getImagePath();
+//                    final String avatar = CacheHelper.getUserAvatar();
+//                    final String username = CacheHelper.getDisplayName();
+                if (path != null) {
+                    runOnUiThread(() -> mHeaderBgImage.setImageURI(Uri.fromFile(new File(path))));
 
-            Glide.with(this)
-                    .load(mLoginInfo.avatar)
-                    .into(mUserHeadImg);
-            mUserName.setText(mLoginInfo.displayName);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final String path = SharePreferenceUtil.getImagePath();
-                    if (!TextUtils.isEmpty(path)) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
-                            }
-                        });
-
-                    }
                 }
+
+//                    if (!TextUtils.isEmpty(avatar)) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Glide.with(Bit100MainActivity.this)
+//                                        .load(avatar)
+//                                        .into(mUserHeadImg);
+//                            }
+//                        });
+//                    }
+
+//                    if (!TextUtils.isEmpty(username)){
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mUserName.setText(username);
+//                            }
+//                        });
+//                    }
             }).start();
-
-        } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final String path = SharePreferenceUtil.getImagePath();
-                    final String avatar = CacheHelper.getUserAvatar();
-                    final String username = CacheHelper.getDisplayName();
-                    if (path != null) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
-                            }
-                        });
-
-                    }
-
-                    if (!TextUtils.isEmpty(avatar)) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Glide.with(Bit100MainActivity.this)
-                                        .load(avatar)
-                                        .into(mUserHeadImg);
-                            }
-                        });
-                    }
-
-                    if (!TextUtils.isEmpty(username)){
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mUserName.setText(username);
-                            }
-                        });
-                    }
-                }
-            }).start();
-        }
+//        }
 
     }
 

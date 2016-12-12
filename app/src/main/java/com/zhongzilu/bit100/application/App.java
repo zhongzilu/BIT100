@@ -3,6 +3,7 @@ package com.zhongzilu.bit100.application;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 
 import com.yolanda.nohttp.Logger;
@@ -17,6 +18,7 @@ import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 public class App extends Application {
 
     private static Context context;
+    private static Typeface mFace;
     private NetworkBroadcastReceiver receiver;
     private static NetworkUtil.Type networkType;
     private static boolean isNetworkOK;
@@ -73,6 +75,12 @@ public class App extends Application {
 
     public static boolean getNetworkStatus(){
         return isNetworkOK;
+    }
+
+    public static Typeface getTypeface(){
+        if (mFace == null)
+            mFace = Typeface.createFromAsset(context.getAssets(), "font/FZYTK.ttf");
+        return mFace;
     }
 
 

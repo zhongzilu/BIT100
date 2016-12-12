@@ -254,9 +254,9 @@ public class Bit100ArticleListActivity extends BaseActivity
                         shareAction(shareText);
                         break;
                     //点击点赞按钮
-                    case R.id.img_article_up:
-                        Snackbar.make(view, "点赞", Snackbar.LENGTH_SHORT).show();
-                        break;
+//                    case R.id.img_article_up:
+//                        Snackbar.make(view, "点赞", Snackbar.LENGTH_SHORT).show();
+//                        break;
                     //默认跳转文章详情页
                     default:
                         bean = (ArticleDetailBean) mPushList.get(position).getPushObject();
@@ -287,7 +287,7 @@ public class Bit100ArticleListActivity extends BaseActivity
                             mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
                         }
 
-                        if (allPosts.posts.length < 5)
+//                        if (allPosts.posts.length < 4)
                             mAdapter.setMoreVisible(false);
 
                     } else {
