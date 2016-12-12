@@ -260,9 +260,9 @@ public class Bit100MainFragment extends Fragment
                         shareAction(shareText);
                         break;
                     //点击点赞按钮
-                    case R.id.img_article_up:
-                        Snackbar.make(view, "点赞", Snackbar.LENGTH_SHORT).show();
-                        break;
+//                    case R.id.img_article_up:
+//                        Snackbar.make(view, "点赞", Snackbar.LENGTH_SHORT).show();
+//                        break;
                     //默认跳转文章详情页
                     default:
                         bean = (ArticleDetailBean) mPushList.get(position).getPushObject();

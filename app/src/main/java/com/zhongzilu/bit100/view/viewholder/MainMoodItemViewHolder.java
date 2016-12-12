@@ -1,6 +1,5 @@
 package com.zhongzilu.bit100.view.viewholder;
 
-import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +18,6 @@ public class MainMoodItemViewHolder extends BaseViewHolder{
     //UI
     public TextView mMoodContent;
     public ImageView mMoodThumb;
-    private Typeface mFace;
 
     public MainMoodItemViewHolder(View itemView, MyItemClickListener itemClickListener,
                                    MyItemLongClickListener longClickListener) {
@@ -28,8 +26,6 @@ public class MainMoodItemViewHolder extends BaseViewHolder{
         mMoodContent = (TextView) itemView.findViewById(R.id.tv_mood_content);
         mMoodThumb = (ImageView) itemView.findViewById(R.id.img_mood_thumb);
 
-        if (mFace == null)
-            mFace = Typeface.createFromAsset(App.getAppContext().getAssets(), "font/FZYTK.ttf");
-        mMoodContent.setTypeface(mFace);
+        mMoodContent.setTypeface(App.getTypeface());
     }
 }

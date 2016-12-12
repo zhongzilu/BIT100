@@ -35,7 +35,7 @@ public class MainArticleItemViewHolder extends BaseViewHolder{
         mArticleTagsWrapper = (LinearLayout) itemView.findViewById(R.id.layout_article_tags_wrapper);
 
         itemView.findViewById(R.id.img_article_share).setOnClickListener(this);
-        itemView.findViewById(R.id.img_article_up).setOnClickListener(this);
+//        itemView.findViewById(R.id.img_article_up).setOnClickListener(this);
     }
 
     public void initTag(){

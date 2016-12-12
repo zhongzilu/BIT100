@@ -94,13 +94,13 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp">
 
-        <ImageView
-            android:id="@+id/img_article_up"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:layout_centerVertical="true"
-            android:background="@null"
-            android:src="@drawable/ic_thumb_up_outline" />
+        <!--<ImageView-->
+            <!--android:id="@+id/img_article_up"-->
+            <!--android:layout_width="22dp"-->
+            <!--android:layout_height="22dp"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:background="@null"-->
+            <!--android:src="@drawable/ic_thumb_up_outline" />-->
 
         <ImageView
             android:id="@+id/img_article_share"
