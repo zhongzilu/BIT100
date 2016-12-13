@@ -87,5 +87,6 @@
     <string name="forgot_pwd_text">忘記密碼?</string>
     <string name="label_forgot_activity">忘記密碼</string>
     <string name="action_feedback_title">發送</string>
+    <string name="toast_check_network">请检查网络~~</string>
 
 </resources>

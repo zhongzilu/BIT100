@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
+import com.zhongzilu.bit100.application.util.ImageLoadUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
@@ -64,7 +64,7 @@ public class MoodCardActivity extends BaseActivity
     }
 
     private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_mood_card);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         StatusBarUtils.from(this)
@@ -84,9 +84,7 @@ public class MoodCardActivity extends BaseActivity
             if (mImageBitmap != null){
                 mMoodImage.setImageBitmap(mImageBitmap);
             } else {
-                Glide.with(this)
-                        .load(mMoodObject.mood_img)
-                        .into(mMoodImage);
+                ImageLoadUtil.loadImage(mMoodObject.mood_img, mMoodImage);
             }
         }
     }
@@ -210,4 +208,5 @@ public class MoodCardActivity extends BaseActivity
         }
         return true;
     }
+
 }

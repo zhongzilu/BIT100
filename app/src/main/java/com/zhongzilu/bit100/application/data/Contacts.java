@@ -28,7 +28,7 @@ public interface Contacts {
     GET_ALL_POSTS_BY_CATEGORY_ID = HOST + "?json=get_category_posts",
 
     // zhongzilu: 2016-12-03 根据关键字搜索查询文章
-    GET_SEARCH_RESULT = "?json=get_search_results&search=%s&count=-1",
+    GET_SEARCH_RESULT = HOST + "?json=get_search_results",
 
     // zhongzilu: 2016-12-03 新增登陆接口
     // {@param log} for login username

@@ -75,19 +75,19 @@ public class Bit100ArticleListActivity extends BaseActivity
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_common_recyclerView);
         mRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_common_refresh);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (mCategoryBean != null){
-                    if (isHaveNetwork()) {
-                        mPushList.clear();
-                        RequestUtil.getAllPostsByCategoryId(mCategoryBean, Bit100ArticleListActivity.this);
-                    }
-                } else if (mTagBean != null){
-
+        mRefresh.setOnRefreshListener(() -> {
+            LogUtil.d(TAG, "onRefresh: ");
+            if (mCategoryBean != null){
+                if (isHaveNetwork()) {
+                    mPushList.clear();
+                    RequestUtil.getAllPostsByCategoryId(mCategoryBean, Bit100ArticleListActivity.this);
                 }
+            } else if (mTagBean != null){
+
             }
         });
+
+        mRefresh.post(() -> mRefresh.setRefreshing(true));
 
         initRecyclerView();
 
@@ -234,7 +234,6 @@ public class Bit100ArticleListActivity extends BaseActivity
 
             @Override
             public void onFinish(int what) {
-
             }
         };
     }
@@ -287,7 +286,7 @@ public class Bit100ArticleListActivity extends BaseActivity
                             mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
                         }
 
-//                        if (allPosts.posts.length < 4)
+                        if (allPosts.posts.length < 4)
                             mAdapter.setMoreVisible(false);
 
                     } else {

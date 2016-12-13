@@ -1,10 +1,14 @@
 package com.zhongzilu.bit100.view.viewholder;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.ImageLoadUtil;
+import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.model.bean.VideoBean;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -28,5 +32,17 @@ public class VideoViewHolder extends BaseViewHolder {
         mVideoContent = (TextView) itemView.findViewById(R.id.tv_video_content);
         mVideoAuthor = (TextView) itemView.findViewById(R.id.tv_video_author);
         mVideoDuration = (TextView) itemView.findViewById(R.id.tv_video_duration);
+    }
+
+    @Override
+    public void bindValue(Context context, Object obj) {
+        VideoBean bean = (VideoBean) obj;
+        mVideoName.setText(bean.Name);
+        mVideoContent.setText(bean.Brief);
+        mVideoAuthor.setText(bean.Author);
+        mVideoDuration.setText(new StringBuilder("时长：" + bean.Duration));
+        if (SharePreferenceUtil.isLoadImage()) {
+            ImageLoadUtil.loadImage(bean.DetailPic, mVideoImage);
+        }
     }
 }

@@ -23,6 +23,7 @@
     <string name="label_setting_activity">設置</string>
     <string name="label_about_me_activity">關於我</string>
     <string name="label_feedback_activity">意見反饋</string>
+    <string name="toast_check_network">請檢查網絡~~</string>
 
     <string name="action_refresh_title">刷新</string>
     <string name="remember_pwd_text">记住密码?</string>

@@ -1,5 +1,6 @@
 package com.zhongzilu.bit100.view.viewholder;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,13 +27,13 @@ public class CategoryViewHolder extends BaseViewHolder{
         mPostCount = (TextView) itemView.findViewById(R.id.tv_category_post_count);
     }
 
-
-    // zhongzilu: 2016-10-21 给控件赋值
-    public void setValues(CategoriesBean bean){
-        if (bean == null){
-            LogUtil.d(TAG, "setValues: categories bean is null");
+    @Override
+    public void bindValue(Context context, Object obj) {
+        if (obj == null){
+            LogUtil.d(TAG, "bindValue: categories bean is null");
             return;
         }
+        CategoriesBean bean = (CategoriesBean) obj;
         mName.setText(bean.title);
         mPostCount.setText(bean.post_count);
     }

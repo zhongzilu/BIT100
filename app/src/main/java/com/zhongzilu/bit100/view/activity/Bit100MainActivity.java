@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.response.LoginResponse;
@@ -107,7 +108,7 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setToolbar(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         StatusBarUtils.from(this)
@@ -293,4 +294,12 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         System.exit(0);
 
     }
+
+
+    @Override
+    public void onDestroy() {
+        RequestUtil.cancelAllRequest();
+        super.onDestroy();
+    }
+
 }

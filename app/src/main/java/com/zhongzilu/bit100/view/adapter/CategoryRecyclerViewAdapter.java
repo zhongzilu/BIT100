@@ -7,9 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
-import com.zhongzilu.bit100.model.bean.TagsBean;
 import com.zhongzilu.bit100.view.viewholder.CategoryViewHolder;
 import com.zhongzilu.bit100.view.viewholder.TagsLayoutViewHolder;
 
@@ -51,16 +49,13 @@ public class CategoryRecyclerViewAdapter extends BaseRecyclerViewAdapter {
         super.onBindViewHolder(holder, position);
         switch (getItemViewType(position)){
             case TYPE_CATEGORY:
-                CategoriesBean categoriesBean = (CategoriesBean) mPushList.get(position).getPushObject();
-                CategoryViewHolder categoryViewHolder = (CategoryViewHolder) holder;
-                categoryViewHolder.setValues(categoriesBean);
+                ((CategoryViewHolder) holder)
+                        .bindValue(context, mPushList.get(position).getPushObject());
                 break;
 
             case TYPE_TAGS:
-                TagsBean tagsBean = (TagsBean) mPushList.get(position).getPushObject();
-                TagsLayoutViewHolder tagsLayoutViewHolder = (TagsLayoutViewHolder) holder;
-
-                tagsLayoutViewHolder.mTagGroup.setTags(tagsBean.getmList());
+                ((TagsLayoutViewHolder) holder)
+                        .bindValue(context, mPushList.get(position).getPushObject());
                 break;
         }
     }

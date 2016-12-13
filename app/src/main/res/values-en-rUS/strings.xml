@@ -19,6 +19,7 @@
     <string name="forgot_pwd_text">Forgot Password?</string>
     <string name="label_forgot_activity">Forgot Password</string>
     <string name="action_feedback_title">Send</string>
+    <string name="toast_check_network">Please check network~~</string>
 
     <!--activity name-->
     <string name="activity_login">Login</string>

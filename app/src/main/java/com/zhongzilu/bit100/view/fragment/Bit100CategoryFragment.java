@@ -22,8 +22,10 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;
 import com.zhongzilu.bit100.model.bean.ItemDecoratorBean;
@@ -32,7 +34,6 @@ import com.zhongzilu.bit100.model.bean.TagsBean;
 import com.zhongzilu.bit100.model.response.AllCategoriesResponse;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleListActivity;
 import com.zhongzilu.bit100.view.adapter.CategoryRecyclerViewAdapter;
-import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
 
@@ -73,12 +74,13 @@ public class Bit100CategoryFragment extends Fragment
         if (mRefresh == null)
             mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
 
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        mRefresh.setOnRefreshListener(() -> {
+            if (isNetwork()) {
                 mPushList.clear();
                 addTagsTestData();
                 RequestUtil.getAllCategories(Bit100CategoryFragment.this);
+            } else {
+                endLoading();
             }
         });
 
@@ -132,7 +134,6 @@ public class Bit100CategoryFragment extends Fragment
             }
         });
 
-        mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -148,9 +149,21 @@ public class Bit100CategoryFragment extends Fragment
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst){
-            loadLocalCategoriesCache();
-            RequestUtil.getAllCategories(this);
+            if (isNetwork()) {
+                RequestUtil.getAllCategories(this);
+            } else {
+                loadLocalCategoriesCache();
+            }
             isFirst = false;
+        }
+    }
+
+    private boolean isNetwork(){
+        if (NetworkUtil.getNetworkState()){
+            return true;
+        } else {
+            Toast.makeText(App.getAppContext(), R.string.toast_check_network,Toast.LENGTH_LONG).show();
+            return false;
         }
     }
 
@@ -226,7 +239,7 @@ public class Bit100CategoryFragment extends Fragment
                                 ? getString(R.string.error_network_failed)
                                 : response.get()
                         , Toast.LENGTH_SHORT).show();
-                endLoadingData();
+                endLoading();
             }
 
             @Override
@@ -237,42 +250,38 @@ public class Bit100CategoryFragment extends Fragment
     }
 
     private void handleCategoryResponse(final String json){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+        new Thread(() -> {
 
-                AllCategoriesResponse result = new Gson().fromJson(json,
-                        new TypeToken<AllCategoriesResponse>(){}.getType());
-                if ("ok".equals(result.status)){
-                    mPushList.clear();
-                    addTagsTestData();
+            AllCategoriesResponse result = new Gson().fromJson(json,
+                    new TypeToken<AllCategoriesResponse>(){}.getType());
+            if ("ok".equals(result.status)){
+                mPushList.clear();
+                addTagsTestData();
 
-                    mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
-                            new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+                mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
+                        new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
 
-                    for (CategoriesBean cb : result.categories){
-                        mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
-                    }
-
-                } else {
-                    Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
+                for (CategoriesBean cb : result.categories){
+                    mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
                 }
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                        endLoadingData();
-                    }
-                });
-
+            } else {
+                Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
             }
+
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                    endLoading();
+                }
+            });
+
         }).start();
 
     }
 
-    private void endLoadingData(){
-//        mLoadingView.setVisibility(View.GONE);
+    private void endLoading(){
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
     }
