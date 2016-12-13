@@ -5,25 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:background="@drawable/ic_bg_grandle"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/AppTheme.AppBarOverlay"/>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/layout_mood_parent_wrap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -35,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/bg_header" />
+            android:scaleType="centerCrop" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -48,13 +29,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerInParent="true"
-                android:padding="20dp"
-                android:gravity="center"
                 android:fontFamily="sans-serif-light"
+                android:gravity="center"
                 android:lineSpacingExtra="5dp"
+                android:padding="20dp"
+                android:textColor="#6e6f8e"
                 android:textSize="16sp"
-                tools:text="ABCDEFGHIJKLMNOPQRSTYUWXYZ单身也好，恋爱也罢，都只是人生中的某个阶段。没必要羡慕旁人，也别对现状抱不满。无论身边是否有人陪伴，前方是否有承诺一起努力的目标，生活中的喜怒哀乐都需要自己去经历并沉淀的。正确地活着，每个阶段都会带给你更好的自己。成长不是单纯地为了脱单，而是让自己有力量去体验任何可能。"
-                android:textColor="#6e6f8e" />
+                tools:text="@string/test_str" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -67,4 +48,20 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_bg_grandle"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_mood_card"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:theme="@style/AppTheme.AppBarOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
 </android.support.design.widget.CoordinatorLayout>

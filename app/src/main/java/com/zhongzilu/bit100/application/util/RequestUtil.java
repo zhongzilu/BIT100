@@ -27,7 +27,7 @@ public class RequestUtil {
             TAG_GET_POST_BY_ID = 1112,
             TAG_GET_ALL_CATEGORIES = 1113,
             TAG_GET_POSTS_BY_CATEGORIES = 1114,
-            TAG_GET_INIT_VIDEO = 1115;
+            TAG_GET_SEARCH_RESULT = 1115;
 
     /**
      * 获取第一页的文章数据的请求对象
@@ -121,6 +121,19 @@ public class RequestUtil {
         request.add("count", -1);
         addIncludeCommand(request, Command.AllPostsCommand);
         sendRequest(TAG_GET_POSTS_BY_CATEGORIES, request, listener);
+    }
+
+    /**
+     * 搜索关键字,获取文章列表
+     * @param search 搜索关键字
+     * @param listener
+     */
+    public static void getPostsBySearch(String search, RequestCallback listener){
+        Request request = NoHttp.createStringRequest(Contacts.GET_SEARCH_RESULT, RequestMethod.GET);
+        request.add("search", search);
+        request.add("count", -1);
+        addIncludeCommand(request, Command.AllPostsCommand);
+        sendRequest(TAG_GET_SEARCH_RESULT, request, listener);
     }
 
     /**

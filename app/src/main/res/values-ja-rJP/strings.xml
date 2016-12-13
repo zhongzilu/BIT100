@@ -27,6 +27,7 @@
     <string name="forgot_pwd_text">忘记密码?</string>
     <string name="label_forgot_activity">忘记密码</string>
     <string name="action_feedback_title">发送</string>
+    <string name="toast_check_network">请检查网络~~</string>
 
     <!--activity name-->
     <string name="activity_login">登录</string>

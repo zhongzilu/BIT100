@@ -87,7 +87,7 @@ public class Bit100LoginActivity extends BaseActivity
     }
 
     private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_login);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         StatusBarUtils.from(this)

@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zhongzilu.bit100.R;
-import com.zhongzilu.bit100.model.bean.IconItemDecoratorBean;
-import com.zhongzilu.bit100.model.bean.ItemDecoratorBean;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
@@ -101,21 +99,13 @@ public abstract class BaseRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)){
             case TYPE_ITEM_DECORATOR:
-                ItemDecoratorBean itemDecoratorBean =
-                        (ItemDecoratorBean) mPushList.get(position).getPushObject();
-                ItemDecoratorViewHolder itemDecoratorViewHolder = (ItemDecoratorViewHolder) holder;
-
-                itemDecoratorViewHolder.mTitle.setText(itemDecoratorBean.getmTitle());
-                itemDecoratorViewHolder.mSubTitle.setText(itemDecoratorBean.getmSubTitle());
+                ((ItemDecoratorViewHolder) holder)
+                        .bindValue(context, mPushList.get(position).getPushObject());
                 break;
 
             case TYPE_ICON_ITEM_DECORATOR:
-                IconItemDecoratorBean iconItemDecoratorBean =
-                        (IconItemDecoratorBean) mPushList.get(position).getPushObject();
-                IconDecoratorViewHolder iconDecoratorViewHolder = (IconDecoratorViewHolder) holder;
-
-                iconDecoratorViewHolder.mIcon.setImageResource(iconItemDecoratorBean.getmIconRes());
-                iconDecoratorViewHolder.mName.setText(iconItemDecoratorBean.getmTitle());
+                ((IconDecoratorViewHolder) holder)
+                        .bindValue(context, mPushList.get(position).getPushObject());
                 break;
         }
     }
@@ -157,11 +147,6 @@ public abstract class BaseRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             }
             notifyDataSetChanged();
         }
-    }
-
-    /**清除所有数据，通常在刷新需要替换全部数据的时候使用*/
-    public void clearAll(){
-        mPushList.clear();
     }
 
     public void remove(int position){

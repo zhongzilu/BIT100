@@ -28,6 +28,7 @@
         <!--<uses-library android:name="android.test.runner" />-->
         <activity
             android:name=".view.activity.Bit100LauncherActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/LauncherStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,6 +41,7 @@
         <activity
             android:name=".view.activity.Bit100MainActivity"
             android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- 文章详情Activity -->
@@ -52,6 +54,7 @@
         <!-- 登录Activity -->
         <activity
             android:name=".view.activity.Bit100LoginActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar" />
         <!--图片浏览Activity-->
@@ -61,6 +64,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--文章列表页-->
         <activity android:name=".view.activity.Bit100ArticleListActivity"
+            android:screenOrientation="portrait"
             android:label="@string/label_article_list_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--心情签名卡片-->
@@ -68,14 +72,17 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--设置界面-->
         <activity android:name=".view.activity.Bit100SettingActivity"
+            android:screenOrientation="portrait"
             android:label="@string/label_setting_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--关于软件-->
         <activity android:name=".view.activity.AboutMeActivity"
+            android:screenOrientation="portrait"
             android:label="@string/label_about_me_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--意见反馈-->
         <activity android:name=".view.activity.FeedbackActivity"
+            android:screenOrientation="portrait"
             android:label="@string/label_feedback_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--自定义网页浏览器-->
@@ -83,6 +90,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".view.activity.ForgotPasswordActivity"
+            android:screenOrientation="portrait"
             android:label="@string/label_forgot_activity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <!--<service android:name="com.android.tedcoder.wkvideoplayer.dlna.service.DLNAService" />-->

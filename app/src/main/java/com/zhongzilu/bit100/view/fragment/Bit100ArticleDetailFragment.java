@@ -26,6 +26,7 @@ import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
@@ -111,9 +112,21 @@ public class Bit100ArticleDetailFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         LogUtil.d(TAG, "setUserVisibleHint: " + isVisibleToUser);
         if (isVisibleToUser && isFirst){
-            loadLocalRecentPostsCache();
-            RequestUtil.getRecentPost(this);
+            if (isNetwork()){
+                RequestUtil.getRecentPost(this);
+            } else {
+                loadLocalRecentPostsCache();
+            }
             isFirst = false;
+        }
+    }
+
+    private boolean isNetwork(){
+        if (NetworkUtil.getNetworkState()){
+            return true;
+        } else {
+            Toast.makeText(App.getAppContext(), R.string.toast_check_network,Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 

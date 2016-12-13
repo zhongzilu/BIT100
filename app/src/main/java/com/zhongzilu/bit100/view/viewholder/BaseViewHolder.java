@@ -1,5 +1,6 @@
 package com.zhongzilu.bit100.view.viewholder;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -40,4 +41,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder
         }
         return true;
     }
+
+    public abstract void bindValue(Context context, Object obj);
 }

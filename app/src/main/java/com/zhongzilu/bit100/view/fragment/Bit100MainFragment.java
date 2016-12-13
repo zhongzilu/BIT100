@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.receiver.NetworkBroadcastReceiver;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
@@ -58,7 +60,8 @@ import java.util.List;
  */
 public class Bit100MainFragment extends Fragment
         implements MyItemClickListener, MyItemLongClickListener,
-        RequestUtil.RequestCallback, NetworkBroadcastReceiver.OnNetworkStateListener, SearchView.OnQueryTextListener {
+        RequestUtil.RequestCallback, NetworkBroadcastReceiver.OnNetworkStateListener,
+        SearchView.OnQueryTextListener,MenuItemCompat.OnActionExpandListener {
 
     private static final String TAG = "Bit100MainFragment==>";
 
@@ -70,11 +73,14 @@ public class Bit100MainFragment extends Fragment
 
     //other
     private ArrayList<PushModel> mPushList = new ArrayList<>();
+    private ArrayList<PushModel> mPushListClone;
     private boolean isLoadMore = false;
     private boolean isFirst = true;
     private LinearLayoutManager mLayoutManager;
     private NetworkBroadcastReceiver receiver;
     private SearchView mSearchView;
+    //标示是否正显示搜索结果
+    private boolean isSearching = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,26 +108,19 @@ public class Bit100MainFragment extends Fragment
             mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
 
         mRefresh.setColorSchemeResources(R.color.colorPrimary);
-        mRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!NetworkUtil.getNetworkState()){
-                    Toast.makeText(getContext(), getString(R.string.error_network_failed), Toast.LENGTH_LONG).show();
-                    return;
-                }
+        mRefresh.setOnRefreshListener(() -> {
+            if (isNetworkOk()) {
                 mPushList.clear();
-                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
+                mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, null));
                 RequestUtil.getAllPosts(Bit100MainFragment.this);
                 requestMoodPosts();
+            } else {
+                endLoading();
             }
         });
 
         initRecyclerView();
 
-        if (!NetworkUtil.getNetworkState()){
-            loadLocalMoodCache();
-            loadLocalAllPostsCache();
-        }
     }
 
     /**
@@ -173,7 +172,7 @@ public class Bit100MainFragment extends Fragment
         });
 
         //添加一个空布局，用来方便之后动态添加数据到position=1的位置
-        mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, new Object()));
+//        mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_NULL, null));
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -197,50 +196,45 @@ public class Bit100MainFragment extends Fragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isFirst) {
 
-            boolean haveNetwork = NetworkUtil.getNetworkState();
-            if (haveNetwork){
+            if (isNetworkOk()) {
                 RequestUtil.getAllPosts(this);
                 requestMoodPosts();
-                isFirst = false;
+            } else {
+                loadLocalMoodCache();
+                loadLocalAllPostsCache();
             }
 
+            isFirst = false;
         }
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
             isFirst = false;
         }
     }
 
     private void loadLocalAllPostsCache(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String json = CacheHelper.getPostsAll();
-                if (!TextUtils.isEmpty(json)) {
-                    handleAllPostsResponse(json);
-                }
+        new Thread(() -> {
+            String json = CacheHelper.getPostsAll();
+            if (!TextUtils.isEmpty(json)) {
+                handleAllPostsResponse(json);
             }
         }).start();
     }
 
     private void loadLocalMoodCache(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String json = CacheHelper.getMoodList();
-                LogUtil.d(TAG, "run: moodCache==>" + json);
+        new Thread(() -> {
+            String json = CacheHelper.getMoodList();
+            if (!TextUtils.isEmpty(json)) {
                 List<CardMoodModel> list = new Gson().fromJson(json,
-                        new TypeToken<List<CardMoodModel>>(){}.getType());
-                if (list != null){
-                    handleMoodResponse(list);
-                } else {
-                    LogUtil.e(TAG, "run: moodList is null");
-                }
+                        new TypeToken<List<CardMoodModel>>() {
+                        }.getType());
+                handleMoodResponse(list);
+            } else {
+                LogUtil.e(TAG, "loadLocalMoodCache: cache is null");
             }
         }).start();
     }
@@ -323,15 +317,13 @@ public class Bit100MainFragment extends Fragment
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_main, menu);
-//        MenuItem searchItem = menu.findItem(R.id.action_search);
-//        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-//                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-//        mSearchView = (SearchView) searchItem.getActionView();
-////        mSearchView.setIconifiedByDefault(false);
-//        mSearchView.setOnQueryTextListener(this);
-////        mSearchView.setSubmitButtonEnabled(true);
-//        mSearchView.setBackgroundColor(0x30000000);
-
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
+                | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setOnQueryTextListener(this);
+        mSearchView.setBackgroundColor(0x30000000);
+        MenuItemCompat.setOnActionExpandListener(searchItem, this);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -379,7 +371,14 @@ public class Bit100MainFragment extends Fragment
         return new OnResponseListener<String>() {
             @Override
             public void onStart(int what) {
-
+                if (!mRefresh.isRefreshing()) {
+                    mRefresh.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mRefresh.setRefreshing(true);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -400,7 +399,6 @@ public class Bit100MainFragment extends Fragment
 
             @Override
             public void onFinish(int what) {
-
             }
         };
     }
@@ -421,8 +419,10 @@ public class Bit100MainFragment extends Fragment
                     mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
                 }
 
-                if (allPosts.posts.length < 5)
+                if (allPosts.posts.length < 4) {
                     mAdapter.setMoreVisible(false);
+                    mRecyclerView.clearOnScrollListeners();
+                }
 
             } else {
                 if (!TextUtils.isEmpty(allPosts.error))
@@ -432,22 +432,21 @@ public class Bit100MainFragment extends Fragment
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.notifyDataSetChanged();
-                    endLoading();
-                }
+            getActivity().runOnUiThread(() -> {
+                mAdapter.notifyDataSetChanged();
+                endLoading();
             });
         }
     }
 
     private void handleMoodResponse(List<CardMoodModel> paramList){
-        mRecyclerView.setVisibility(View.VISIBLE);
-        for (CardMoodModel mood : paramList){
-            mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
-        }
-        endLoading();
+        getActivity().runOnUiThread(() -> {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            for (CardMoodModel mood : paramList){
+                mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_MOOD_ITEM, mood));
+            }
+            endLoading();
+        });
     }
 
     @Override
@@ -464,15 +463,29 @@ public class Bit100MainFragment extends Fragment
     public boolean onQueryTextSubmit(String query) {
         //当点击搜索按钮,输入法搜索按钮,会触发这个方法.在这里做相应的搜索事件,query为用户输入的值
         //当输入框为空或者""时,此方法没有被调用
-        LogUtil.d(TAG, "onQueryTextSubmit: " + query);
+        if (isNetworkOk()) {
+            mPushListClone = (ArrayList<PushModel>) mPushList.clone();
+            mPushList.clear();
+            isSearching = true;
+            RequestUtil.getPostsBySearch(query, Bit100MainFragment.this);
+        }
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         //当输入的文字发生变化的时候,会触发这个方法.在这里做匹配提示的操作等
-        LogUtil.d(TAG, "onQueryTextChange: " + newText);
+//        LogUtil.d(TAG, "onQueryTextChange: " + newText);
         return true;
+    }
+
+    private boolean isNetworkOk(){
+        if (NetworkUtil.getNetworkState()){
+            return true;
+        } else {
+            Toast.makeText(App.getAppContext(), R.string.toast_check_network,Toast.LENGTH_LONG).show();
+            return false;
+        }
     }
 
     private void endLoading(){
@@ -481,8 +494,19 @@ public class Bit100MainFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        RequestUtil.cancelAllRequest();
-        super.onDestroy();
+    public boolean onMenuItemActionExpand(MenuItem item) {
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemActionCollapse(MenuItem item) {
+        //当关闭搜索框时,恢复之前的数据
+        if (isSearching) {
+            mPushList.clear();
+            mPushList.addAll(mPushListClone);
+            mPushListClone = null;
+            mAdapter.notifyDataSetChanged();
+        }
+        return true;
     }
 }

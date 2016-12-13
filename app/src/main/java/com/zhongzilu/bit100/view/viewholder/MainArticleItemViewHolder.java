@@ -7,7 +7,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.util.ImageLoadUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
+import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.TagBean;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemLongClickListener;
@@ -36,6 +39,26 @@ public class MainArticleItemViewHolder extends BaseViewHolder{
 
         itemView.findViewById(R.id.img_article_share).setOnClickListener(this);
 //        itemView.findViewById(R.id.img_article_up).setOnClickListener(this);
+    }
+
+    @Override
+    public void bindValue(Context context, Object obj) {
+        ArticleDetailBean bean = (ArticleDetailBean) obj;
+        mAuthorName.setText(bean.author.nickname);
+        mArticleTime.setText(bean.date);
+        mArticleTitle.setText(bean.title);
+
+        // zhongzilu: 2016-10-21 如果存在缩略图，则加载缩略图
+        if (bean.thumbnail_images != null && SharePreferenceUtil.isLoadImage()) {
+            ImageLoadUtil.loadImage(bean.thumbnail_images.medium.url,
+                    mArticleThumb);
+
+            mArticleThumb.setVisibility(View.VISIBLE);
+        } else {
+            mArticleThumb.setVisibility(View.GONE);
+        }
+        // zhongzilu: 2016-10-21 加载标签
+        addTag(context, bean.tags);
     }
 
     public void initTag(){
