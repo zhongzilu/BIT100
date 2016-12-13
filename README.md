@@ -19,4 +19,4 @@ www.bit100.com client demo. create by zhongzilu.
 ![Capture04](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_04.png)![Capture05](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_05.png)![Capture06](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_06.png)
 
 ####DEMO下载
-[BIT100-V1.0.0-release.apk](https://github.com/zhongzilu/BIT100/blob/master/apk/BIT100-V1.0.0-release.apk)
+[BIT100-V1.0.0-release.apk](http://www.bit100.com/apk/BIT100-V1.0.0-release.apk)
