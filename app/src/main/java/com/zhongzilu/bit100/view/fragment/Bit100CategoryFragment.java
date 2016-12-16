@@ -74,6 +74,7 @@ public class Bit100CategoryFragment extends Fragment
         if (mRefresh == null)
             mRefresh = (SwipeRefreshLayout) view.findViewById(R.id.refresh_common_refresh);
 
+        mRefresh.post(() -> mRefresh.setRefreshing(true));
         mRefresh.setOnRefreshListener(() -> {
             if (isNetwork()) {
                 mPushList.clear();
@@ -141,7 +142,7 @@ public class Bit100CategoryFragment extends Fragment
     private void addTagsTestData(){
         String[] tags = getResources().getStringArray(R.array.tags);
         mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
-                new ItemDecoratorBean("标签", String.valueOf(tags.length)) ));
+                new ItemDecoratorBean(getString(R.string.decorator_tag_text), String.valueOf(tags.length)) ));
         mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_TAGS, new TagsBean(tags)));
     }
 
@@ -259,7 +260,7 @@ public class Bit100CategoryFragment extends Fragment
                 addTagsTestData();
 
                 mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_ITEM_DECORATOR,
-                        new ItemDecoratorBean("目录", String.valueOf(result.categories.length)) ));
+                        new ItemDecoratorBean(getString(R.string.decorator_category_text), String.valueOf(result.categories.length)) ));
 
                 for (CategoriesBean cb : result.categories){
                     mPushList.add(new PushModel(CategoryRecyclerViewAdapter.TYPE_CATEGORY, cb));
@@ -269,12 +270,9 @@ public class Bit100CategoryFragment extends Fragment
                 Toast.makeText(getActivity(), result.error, Toast.LENGTH_SHORT).show();
             }
 
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mAdapter.notifyDataSetChanged();
-                    endLoading();
-                }
+            getActivity().runOnUiThread(() -> {
+                mAdapter.notifyDataSetChanged();
+                endLoading();
             });
 
         }).start();

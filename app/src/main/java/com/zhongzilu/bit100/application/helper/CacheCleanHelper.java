@@ -5,7 +5,6 @@ import android.os.Environment;
 
 import com.zhongzilu.bit100.application.util.FileUtil;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 /**
@@ -16,42 +15,21 @@ public class CacheCleanHelper {
 
     /**清除所有缓存文件*/
     public static void cleanAllCache(final Context context){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                FileUtil.deleteFile(context.getCacheDir());
-                if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-                    FileUtil.deleteFile(context.getExternalCacheDir());
-                }
+        new Thread(() -> {
+            FileUtil.deleteFile(context.getCacheDir());
+            if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+                FileUtil.deleteFile(context.getExternalCacheDir());
             }
         }).start();
     }
 
-    /**获取目录下所有文件的总大小*/
-    public static long getFolderSize(File folder){
-        long size = 0L;
-        try {
 
-            File[] fileArray = folder.listFiles();
-            for (File f : fileArray){
-                if (f.isDirectory()){
-                    size += getFolderSize(f);
-                } else {
-                    size += f.length();
-                }
-
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-        return size;
-    }
 
     /**获取总共缓存大小*/
     public static String getTotalCacheSize(Context context){
-        long size = getFolderSize(context.getCacheDir());
+        long size = FileUtil.getFolderSize(context.getCacheDir());
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            size += getFolderSize(context.getExternalCacheDir());
+            size += FileUtil.getFolderSize(context.getExternalCacheDir());
         }
         return getFormatSize(size);
     }

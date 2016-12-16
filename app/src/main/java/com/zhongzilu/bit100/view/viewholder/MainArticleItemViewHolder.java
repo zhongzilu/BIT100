@@ -1,6 +1,7 @@
 package com.zhongzilu.bit100.view.viewholder;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -70,7 +71,7 @@ public class MainArticleItemViewHolder extends BaseViewHolder{
 
     public void addTag(Context context, TagBean[] tags){
         if (context == null) {
-            LogUtil.d(TAG, "addTag: context is null");
+            LogUtil.d(TAG, "addTag: getAppContext is null");
             return;
         }
 
@@ -83,7 +84,7 @@ public class MainArticleItemViewHolder extends BaseViewHolder{
 
     public void addTag(Context context, String name){
         if (context == null) {
-            LogUtil.d(TAG, "addTag: context is null");
+            LogUtil.d(TAG, "addTag: getAppContext is null");
             return;
         }
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -95,7 +96,11 @@ public class MainArticleItemViewHolder extends BaseViewHolder{
         textView.setPadding(4,2,4,2);
         textView.setTextSize(12);
         textView.setTextColor(context.getResources().getColor(R.color.hint));
-        textView.setBackground(context.getResources().getDrawable(R.drawable.tag_border));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            textView.setBackground(context.getResources().getDrawable(R.drawable.tag_border));
+        } else {
+            textView.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.tag_border));
+        }
         textView.setLayoutParams(params);
 
         mArticleTagsWrapper.addView(textView);

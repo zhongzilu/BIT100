@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3c3f41</color>
+    <color name="colorPrimary66">#663c3f41</color>
     <color name="colorPrimaryDark">#2a2a2a</color>
     <color name="colorAccent">#4b5276</color>
+
+    <color name="colorDivider">#B6B6B6</color>
 
     <color name="coinColor">#ffbf00</color>
     <color name="blue">#00AAFF</color>

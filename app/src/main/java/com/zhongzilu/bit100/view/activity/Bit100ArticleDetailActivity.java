@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
-import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 import com.zhongzilu.bit100.view.fragment.Bit100ArticleDetailFragment;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import java.io.File;
  * <p/>
  * Created by zhongzilu on 2016-07-22.
  */
-public class Bit100ArticleDetailActivity extends BaseActivity {
+public class Bit100ArticleDetailActivity extends BaseToolbarActivity {
 
     private static final String TAG = "Bit100ArticleDetailActivity==>";
 
@@ -37,40 +37,32 @@ public class Bit100ArticleDetailActivity extends BaseActivity {
 
     private ArticleDetailBean mBean; //文章bean
     public static final String EXTRA_ARTICLE_BEAN = "article_bean";
+    private Toolbar toolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_detail_layout);
+    public int getLayoutId() {
+        return R.layout.activity_article_detail_layout;
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_article_detail);
+    @Override
+    protected void initStatusBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar_article_detail);
         toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        StatusBarUtils.from(this)
-                //沉浸状态栏
-                .setTransparentStatusbar(true)
-                //白底黑字状态栏
-                .setLightStatusBar(false)
-                //设置toolbar,actionbar等view
-                .setActionbarView(toolbar)
-                .process();
-        setupActionBar();
+        initToolbar(toolbar);
+    }
 
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
         mHeaderBgImage = (ImageView) findViewById(R.id.img_article_detail);
 
         //获取其他界面传过来的值
-        if (getIntent() != null) {
+        if (getIntent().hasExtra(EXTRA_ARTICLE_BEAN)) {
             mBean = getIntent().getParcelableExtra(EXTRA_ARTICLE_BEAN);
             if (mBean != null) {
                 toolbar.setTitle(mBean.title);
             } else {
-                LogUtil.d(TAG, "onCreate: article intent extra is null");
+                LogUtil.e(TAG, "onCreate: article intent extra is null");
             }
-        }
-
-        String path = SharePreferenceUtil.getImagePath();
-        if (path != null){
-            mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
         }
 
         if (mFragment == null){
@@ -81,6 +73,16 @@ public class Bit100ArticleDetailActivity extends BaseActivity {
         } else {
             transaction.show(mFragment);
         }
+
+        String path = SharePreferenceUtil.getImagePath();
+        if (path != null){
+            mHeaderBgImage.setImageURI(Uri.fromFile(new File(path)));
+        }
+
+    }
+
+    @Override
+    public void initData() {
 
     }
 
@@ -94,15 +96,11 @@ public class Bit100ArticleDetailActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case android.R.id.home:
-                onBackPressed();
-                break;
-
             case R.id.action_share:
                 if (mFragment != null)
-                mFragment.onOptionsItemSelected(item);
-                break;
+                    mFragment.onOptionsItemSelected(item);
+                return true;
         }
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 }

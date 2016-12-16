@@ -7,24 +7,30 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 
 /**
  * Created by zhongzilu on 16-11-29.
  */
-public class FeedbackActivity extends BaseActivity {
+public class FeedbackActivity extends BaseToolbarActivity {
 
     private EditText mContact,mContent;
     private String contact, content;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_feedback_layout);
-        setupCenterTitleToolbar();
-        setupActionBar();
+    public int getLayoutId() {
+        return R.layout.activity_feedback_layout;
+    }
 
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
         mContact = (EditText) findViewById(R.id.et_feed_contact);
         mContent = (EditText) findViewById(R.id.et_feed_content);
+    }
+
+    @Override
+    public void initData() {
+
     }
 
     @Override
@@ -36,12 +42,9 @@ public class FeedbackActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
             case R.id.action_feedback:
                 sendFeedback();
-                break;
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -64,4 +67,5 @@ public class FeedbackActivity extends BaseActivity {
 
         return true;
     }
+
 }

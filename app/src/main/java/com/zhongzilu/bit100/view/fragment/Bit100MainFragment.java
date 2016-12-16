@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,10 +40,10 @@ import com.zhongzilu.bit100.model.bean.CardMoodModel;
 import com.zhongzilu.bit100.model.bean.PushModel;
 import com.zhongzilu.bit100.model.bean.VideoBean;
 import com.zhongzilu.bit100.model.response.AllPostsResponse;
+import com.zhongzilu.bit100.view.activity.BaseWebActivity;
 import com.zhongzilu.bit100.view.activity.Bit100ArticleDetailActivity;
 import com.zhongzilu.bit100.view.activity.Bit100MainActivity;
 import com.zhongzilu.bit100.view.activity.Bit100SettingActivity;
-import com.zhongzilu.bit100.view.activity.CustomWebViewActivity;
 import com.zhongzilu.bit100.view.activity.MoodCardActivity;
 import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
@@ -151,7 +150,7 @@ public class Bit100MainFragment extends Fragment
 
 //                    if (mPushList.size() > 11) {
                         mAdapter.notifyItemRemoved(mAdapter.getItemCount());
-                        Snackbar.make(recyclerView, R.string.toast_no_more, Snackbar.LENGTH_SHORT).show();
+                        App.showSnackbar(recyclerView, R.string.toast_no_more);
 //                        isLoadMore = false;
 //                        return;
 //                    }
@@ -249,8 +248,8 @@ public class Bit100MainFragment extends Fragment
                     //点击分享按钮
                     case R.id.img_article_share:
                         bean = (ArticleDetailBean) mPushList.get(position).getPushObject();
-                        String shareText = bean.title +
-                                "【来自"+getString(R.string.app_name)+"App】\n" + bean.url;
+                        String shareText = bean.title
+                                + getString(R.string.share_where_from_text) + bean.url;
                         shareAction(shareText);
                         break;
                     //点击点赞按钮
@@ -277,10 +276,7 @@ public class Bit100MainFragment extends Fragment
 
     private void goVideoDetailActivity(int position) {
         VideoBean videoBean = (VideoBean) mPushList.get(position).getPushObject();
-        Intent intent = new Intent(getActivity(), CustomWebViewActivity.class);
-        intent.putExtra(CustomWebViewActivity.EXTRA_URL, videoBean.VideoUrl);
-        intent.putExtra(CustomWebViewActivity.EXTRA_TITLE, videoBean.Name);
-        startActivity(intent);
+        BaseWebActivity.loadUrl(getActivity(), videoBean.VideoUrl, videoBean.Name);
     }
 
     private void goMoodCardActivity(int position){
@@ -299,7 +295,7 @@ public class Bit100MainFragment extends Fragment
                 Bitmap bitmap = BitmapUtil.getViewBitmap(view);
                 String path = BitmapUtil.saveBitmap(bitmap);
                 addToGallery(path);
-                Toast.makeText(getActivity(), "图片保存于：" + path, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.toast_image_saved) + path, Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -331,7 +327,6 @@ public class Bit100MainFragment extends Fragment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_change_skin:
-                LogUtil.d(TAG, "onOptionsItemSelected: click change skin");
                 Activity activity = getActivity();
                 if (activity instanceof Bit100MainActivity) {
                     ((Bit100MainActivity) activity).changeSkin();
@@ -350,7 +345,7 @@ public class Bit100MainFragment extends Fragment
     }
 
     private void shareAction(String text){
-        Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
+        App.showSnackbar(getView(), R.string.toast_invoking_share);
         Intent localIntent = new Intent(Intent.ACTION_SEND);
         localIntent.setType("text/plain");
         localIntent.putExtra(Intent.EXTRA_TEXT, text);
@@ -372,12 +367,7 @@ public class Bit100MainFragment extends Fragment
             @Override
             public void onStart(int what) {
                 if (!mRefresh.isRefreshing()) {
-                    mRefresh.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mRefresh.setRefreshing(true);
-                        }
-                    });
+                    mRefresh.post(() -> mRefresh.setRefreshing(true));
                 }
             }
 
@@ -451,7 +441,6 @@ public class Bit100MainFragment extends Fragment
 
     @Override
     public void state(NetworkUtil.Type type) {
-        LogUtil.d(TAG, "state: " + type.name());
         if (type == NetworkUtil.Type.NULL){
             mAdapter.addItem(new PushModel(MainRecyclerViewAdapter.TYPE_TOAST, ""), 1);
         } else {

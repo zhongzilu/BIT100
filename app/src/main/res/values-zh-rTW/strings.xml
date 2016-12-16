@@ -25,11 +25,31 @@
     <string name="label_feedback_activity">意見反饋</string>
     <string name="toast_check_network">請檢查網絡~~</string>
 
+    <string name="share_where_from_text">\n【來自比特100App】\n</string>
+    <string name="setting_load_image_option">加載圖片</string>
+    <string name="setting_show_notify_option">是否顯示通知</string>
+    <string name="setting_clear_cache_option">清除緩存</string>
+    <string name="setting_check_update_option">檢查更新</string>
+    <string name="setting_about_me_option">關於我</string>
+    <string name="setting_feedback_option">意見反饋</string>
+    <string name="dialog_checking_update_text">正在檢查更新</string>
+    <string name="toast_latest_version_text">已經最新了~</string>
+    <string name="confirm_clear_cache_message">確認清除緩存嗎?</string>
+    <string name="dialog_confirm_button_text">確定</string>
+    <string name="dialog_cancel_button_text">取消</string>
+    <string name="toast_clear_cache_success_text">清除成功</string>
+    <string name="toast_no_handle_application_text">沒有處理該請求的應用</string>
+    <string name="dialog_landing_text">正在登錄</string>
+    <string name="toast_exit_confirm_text">在此點擊退出應用</string>
+    <string name="dialog_storage_permission_fail_text">沒有權限我們將無法爲您保存圖片!</string>
+    <string name="toast_load_web_fail_text">爲加載任何網頁</string>
+    <string name="toast_copy_success">復製成功</string>
+    <string name="toast_copy_fail">複製失敗</string>
     <string name="action_refresh_title">刷新</string>
-    <string name="remember_pwd_text">记住密码?</string>
-    <string name="forgot_pwd_text">忘记密码?</string>
-    <string name="label_forgot_activity">忘记密码</string>
-    <string name="action_feedback_title">发送</string>
+    <string name="remember_pwd_text">記住密碼?</string>
+    <string name="forgot_pwd_text">忘記密碼?</string>
+    <string name="label_forgot_activity">忘記密碼</string>
+    <string name="action_feedback_title">發送</string>
 
     <!--activity name-->
     <string name="activity_login">登錄</string>
@@ -84,12 +104,17 @@
 
     <string name="title_activity_settings">Settings</string>
 
-    <string name="share_application">推薦給大家一款很好的博客應用【比特壹佰】，簡單即美好!\n下載請戳這裡：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
+    <string name="share_application">推薦給大家一款很好的博客應用【比特壹佰】，簡單即美好!\n下載請戳這裡：http://www.bit100.com/apk/BIT100-V1.0.0-release.apk</string>
     <string name="toast_no_more">沒有更多了</string>
     <string name="toast_can_not_deal">不存在處理的應用程序</string>
     <string name="title_chooser">選擇方式</string>
     <string name="title_chooser_share">選擇分享</string>
     <string name="toast_can_not_deal_download_intent">請安裝瀏覽器或下載軟件</string>
     <string name="toast_invoking_share">正在啟動分享</string>
+    <string name="decorator_tag_text">標籤</string>
+    <string name="decorator_category_text">目錄</string>
+    <string name="hint_feedback_contact_text">聯繫方式 QQ/微信/電話/郵箱</string>
+    <string name="hint_feedback_content">寫下您寶貴的意見，我將及時聯繫您</string>
+    <string name="share_mood_copyright_text">分享來自比特100 via BIT100</string>
 
 </resources>

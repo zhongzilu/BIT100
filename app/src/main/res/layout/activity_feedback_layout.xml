@@ -12,10 +12,9 @@
         android:layout_height="50dp"
         android:background="@null"
         android:gravity="center"
-        android:hint="联系方式 QQ/微信/电话/邮箱"
+        android:hint="@string/hint_feedback_contact_text"
         android:lines="1"
-        android:padding="10dp"
-        android:textColorHint="#ddd" />
+        android:padding="10dp" />
 
     <View
         android:layout_width="match_parent"
@@ -28,9 +27,8 @@
         android:layout_height="match_parent"
         android:background="@null"
         android:gravity="start"
-        android:hint="写下您宝贵的意见，我将及时联系您"
+        android:hint="@string/hint_feedback_content"
         android:padding="10dp"
-        android:textColorHint="#ddd"
         android:textSize="14sp" />
 
 </LinearLayout>

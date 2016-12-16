@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="加载图片" />
+                android:text="@string/setting_load_image_option" />
 
             <Switch
                 android:id="@+id/preference_on_image_switch"
@@ -138,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="是否显示通知" />
+                android:text="@string/setting_show_notify_option" />
 
             <Switch
                 android:id="@+id/preference_show_notify_switch"
@@ -169,7 +169,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="清除缓存"
+                android:text="@string/setting_clear_cache_option"
                 android:layout_centerVertical="true"/>
 
             <TextView
@@ -204,7 +204,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="检查更新" />
+                android:text="@string/setting_check_update_option" />
 
             <TextView
                 android:id="@+id/preference_update_info_text"
@@ -235,7 +235,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="10dp"
-            android:text="关于我" />
+            android:text="@string/setting_about_me_option" />
 
         <View
             android:layout_width="match_parent"
@@ -254,7 +254,7 @@
             android:background="?android:attr/selectableItemBackground"
             android:gravity="center_vertical"
             android:padding="10dp"
-            android:text="意见反馈" />
+            android:text="@string/setting_feedback_option" />
 
         <View
             android:layout_width="match_parent"

@@ -21,6 +21,27 @@
     <string name="action_feedback_title">Send</string>
     <string name="toast_check_network">Please check network~~</string>
 
+    <string name="share_where_from_text">\n【Shared from BIT100 App】\n</string>
+    <string name="setting_load_image_option">Load Image?</string>
+    <string name="setting_show_notify_option">Show Notify?</string>
+    <string name="setting_clear_cache_option">Clear Cache</string>
+    <string name="setting_check_update_option">Check Update</string>
+    <string name="setting_about_me_option">About Me</string>
+    <string name="setting_feedback_option">Feedback</string>
+    <string name="dialog_checking_update_text">Checking Update</string>
+    <string name="toast_latest_version_text">Already latest version</string>
+    <string name="confirm_clear_cache_message">Confirm Clear Cache?</string>
+    <string name="dialog_confirm_button_text">OK</string>
+    <string name="dialog_cancel_button_text">No</string>
+    <string name="toast_clear_cache_success_text">Clear Success</string>
+    <string name="toast_no_handle_application_text">No Application to handle</string>
+    <string name="dialog_landing_text">Landing</string>
+    <string name="toast_exit_confirm_text">Double Click to Exit</string>
+    <string name="dialog_storage_permission_fail_text">We need permission to save images.</string>
+    <string name="toast_load_web_fail_text">Load url failure</string>
+    <string name="toast_copy_success">Copy success!</string>
+    <string name="toast_copy_fail">Copy failure</string>
+
     <!--activity name-->
     <string name="activity_login">Login</string>
     <string name="activity_forgotPwd">Forgot Password?</string>
@@ -74,7 +95,7 @@
 
     <string name="title_activity_settings">Settings</string>
 
-    <string name="share_application">推荐给大家一款很好的博客应用【比特壹佰】,简单即美好!\n下载请戳这里：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
+    <string name="share_application">There is a nice application to recommend.It is named BIT100,Simple and beautiful!\nDownload：http://www.bit100.com/apk/BIT100-V1.0.0-release.apk</string>
     <string name="toast_no_more">No more</string>
     <string name="toast_can_not_deal">not existed deal applications</string>
     <string name="title_chooser">Choose Method</string>
@@ -90,5 +111,10 @@
     <string name="error_network_failed">Network busy, Please try a later~~</string>
     <string name="action_copy_content">Copy to clipboard</string>
     <string name="action_capture">Save to image</string>
+    <string name="decorator_tag_text">Tags</string>
+    <string name="decorator_category_text">Categories</string>
+    <string name="hint_feedback_contact_text">Contact QQ/Wechat/phone/Email</string>
+    <string name="hint_feedback_content">Some Suggestions</string>
+    <string name="share_mood_copyright_text">Shared from BIT100</string>
 
 </resources>

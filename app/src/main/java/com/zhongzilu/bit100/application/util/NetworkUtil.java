@@ -45,7 +45,7 @@ public class NetworkUtil {
     public static Type checkNetworkState(ConnectivityManager cm){
         NetworkInfo.State wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
         NetworkInfo.State mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
-        NetworkInfo.State mobile4G = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).getState();
+//        NetworkInfo.State mobile4G = cm.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).getState();
 
         if (wifiState == null && mobileState == null) {
             //wifi和数据流量都没有打开，提示没有可用网络，引导用户打开任意网络
