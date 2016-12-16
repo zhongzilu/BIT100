@@ -21,20 +21,27 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.AppManager;
 import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
 import com.zhongzilu.bit100.application.util.StatusBarUtils;
+import com.zhongzilu.bit100.model.bean.FileBean;
 import com.zhongzilu.bit100.model.response.LoginResponse;
+import com.zhongzilu.bit100.presenter.FolderManagerPresenter;
+import com.zhongzilu.bit100.presenter.IFolderManagerView;
 import com.zhongzilu.bit100.view.adapter.Bit100PagerAdapter;
 import com.zhongzilu.bit100.widget.PagerSlidingTabStrip;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhongzilu on 2016-09-16.
  */
-public class Bit100MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class Bit100MainActivity extends AppCompatActivity
+        implements View.OnClickListener, IFolderManagerView {
 
     private static final String TAG = "Bit100MainActivity==>";
 
@@ -55,6 +62,8 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
 
     // Value
     private LoginResponse mLoginInfo;
+    private FolderManagerPresenter mPresenter;
+    private List<FileBean> files = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +95,11 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
         initValue();
 
         requestPermission();
+
+        //初始化Presenter
+        mPresenter = new FolderManagerPresenter(files);
+        mPresenter.attachView(this);
+        mPresenter.initRoot(this);
     }
 
 
@@ -98,8 +112,8 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
                         if (!granted) { // 在android 6.0之前会默认返回true
                             // 未获取权限
                             new AlertDialog.Builder(this)
-                                    .setMessage("没有权限我们将无法为您保存图片!")
-                                    .setPositiveButton("知道了!", null)
+                                    .setMessage(R.string.dialog_storage_permission_fail_text)
+                                    .setPositiveButton(R.string.dialog_confirm_button_text, null)
                                     .create()
                                     .show();
                         }
@@ -183,8 +197,19 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
             case R.id.img_user_header_image:
                 startActivity(new Intent(this, Bit100LoginActivity.class));
                 break;
+            case R.id.fab_new_publish:
+                goEditNewArticle();
+                break;
             default:break;
         }
+    }
+
+    private void goEditNewArticle() {
+        Intent intent = new Intent(this, EditorActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+        //设置数据URI与数据类型匹配
+        intent.setDataAndType(Uri.fromFile(new File(mPresenter.currentPath())), "article");
+        startActivity(intent);
     }
 
     @Override
@@ -280,26 +305,60 @@ public class Bit100MainActivity extends AppCompatActivity implements View.OnClic
     public void onBackPressed() {
         if (!isExit){
             isExit = true;
-            Toast.makeText(this, "双击退出", Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    isExit = false;
-                }
-            }, 1000);
+            Toast.makeText(this, R.string.toast_exit_confirm_text, Toast.LENGTH_SHORT).show();
+            new Handler().postDelayed(() -> isExit = false, 1000);
             return;
         }
 
-        finish();
-        System.exit(0);
-
+        AppManager.getAppManager().AppExit(this);
     }
 
 
     @Override
     public void onDestroy() {
         RequestUtil.cancelAllRequest();
+        mPresenter.detachView();//VP分离
+        mPresenter = null;
         super.onDestroy();
     }
 
+    @Override
+    public void getFileListSuccess(List<FileBean> files) {
+
+    }
+
+    @Override
+    public void addTab(String title) {
+
+    }
+
+    @Override
+    public void updatePosition(int position, FileBean bean) {
+
+    }
+
+    @Override
+    public void addFilePosition(int position, FileBean bean) {
+
+    }
+
+    @Override
+    public void otherSuccess(int flag) {
+
+    }
+
+    @Override
+    public void onFailure(int errorCode, String message, int flag) {
+
+    }
+
+    @Override
+    public void showWait(String message, boolean canBack, int flag) {
+
+    }
+
+    @Override
+    public void hideWait(int flag) {
+
+    }
 }

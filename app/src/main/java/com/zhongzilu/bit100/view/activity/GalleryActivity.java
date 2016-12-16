@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,14 +22,14 @@ import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.ImageLoadUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
-import com.zhongzilu.bit100.application.util.StatusBarUtils;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 import com.zhongzilu.bit100.widget.TouchImageView;
 
 /**
  * 图片画廊，用于查看网页上的图片
  * Created by zhongzilu on 2016-09-16.
  */
-public class GalleryActivity extends BaseActivity {
+public class GalleryActivity extends BaseToolbarActivity {
     private static final String TAG = "GalleryActivity==>";
 
     //Extra Tag
@@ -57,11 +56,19 @@ public class GalleryActivity extends BaseActivity {
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
-        setToolbar();
+    public int getLayoutId() {
+        return R.layout.activity_gallery;
+    }
 
+    @Override
+    protected void initStatusBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
+        toolbar.setTitle("");
+        initToolbar(toolbar);
+    }
+
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
         mViewPager = (ViewPager) findViewById(R.id.container);
 
         Intent intent = getIntent();
@@ -82,30 +89,12 @@ public class GalleryActivity extends BaseActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setCurrentItem(mChosePosition, true);
-        mViewPager.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                LogUtil.d(TAG, "onTouch: ");
-                return false;
-            }
-        });
     }
 
-    private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.gallery_toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        StatusBarUtils.from(this)
-                //沉浸状态栏
-                .setTransparentStatusbar(true)
-                //白底黑字状态栏
-                .setLightStatusBar(false)
-                //设置toolbar,actionbar等view
-                .setActionbarView(toolbar)
-                .process();
-        setupActionBar();
-    }
+    @Override
+    public void initData() {
 
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -115,7 +104,7 @@ public class GalleryActivity extends BaseActivity {
                 overridePendingTransition(R.anim.fade_anim_in, R.anim.fade_anim_out);
                 break;
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 
@@ -129,7 +118,6 @@ public class GalleryActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     /**==========================================================================================
      * A placeholder fragment containing a simple view.

@@ -3,7 +3,7 @@ package com.zhongzilu.bit100.model.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.zhongzilu.bit100.application.util.Command;
+import com.zhongzilu.bit100.application.data.Command;
 
 /**
  * 文章详情Bean

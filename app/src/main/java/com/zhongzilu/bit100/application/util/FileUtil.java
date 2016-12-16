@@ -44,7 +44,7 @@ public class FileUtil {
                 return false;
             }
         }
-        return true;
+        return directory.delete();
     }
 
     private static String readFile(String paramString) {
@@ -57,6 +57,26 @@ public class FileUtil {
 
     private static void save(String paramString1, String paramString2, boolean paramBoolean) {
 
+    }
+
+    /**获取目录下所有文件的总大小*/
+    public static long getFolderSize(File folder){
+        long size = 0L;
+        try {
+
+            File[] fileArray = folder.listFiles();
+            for (File f : fileArray){
+                if (f.isDirectory()){
+                    size += getFolderSize(f);
+                } else {
+                    size += f.length();
+                }
+
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return size;
     }
 
 }

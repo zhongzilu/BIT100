@@ -25,7 +25,6 @@ import com.yolanda.nohttp.rest.Response;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
-import com.zhongzilu.bit100.application.util.LogUtil;
 import com.zhongzilu.bit100.application.util.NetworkUtil;
 import com.zhongzilu.bit100.application.util.RequestUtil;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
@@ -110,7 +109,6 @@ public class Bit100ArticleDetailFragment extends Fragment
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        LogUtil.d(TAG, "setUserVisibleHint: " + isVisibleToUser);
         if (isVisibleToUser && isFirst){
             if (isNetwork()){
                 RequestUtil.getRecentPost(this);
@@ -144,7 +142,6 @@ public class Bit100ArticleDetailFragment extends Fragment
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        LogUtil.d(TAG, "onHiddenChanged: " + hidden);
         if (hidden && isFirst){
             if (mBean == null)return;
             RequestUtil.getPostById(mBean, this);
@@ -180,8 +177,8 @@ public class Bit100ArticleDetailFragment extends Fragment
         Snackbar.make(getView(), R.string.toast_invoking_share, Snackbar.LENGTH_SHORT).show();
         Intent localIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
         localIntent.setType("text/plain");
-        localIntent.putExtra(Intent.EXTRA_TEXT, mBean.title +
-                "【来自"+getString(R.string.app_name)+"App】\n" + mBean.url);
+        localIntent.putExtra(Intent.EXTRA_TEXT, mBean.title
+                + getString(R.string.share_where_from_text) + mBean.url);
         startActivity(Intent.createChooser(localIntent, getString(R.string.title_chooser_share)));
     }
 
@@ -196,7 +193,6 @@ public class Bit100ArticleDetailFragment extends Fragment
      */
     @JavascriptInterface
     public void showImages(String[] imgSrc, int position){
-        LogUtil.d(TAG, "showImages: imageSize==>" + imgSrc.length + "\tposition==>" + position);
         Intent intent = new Intent(getActivity(), GalleryActivity.class);
         intent.putExtra(GalleryActivity.EXTRA_IMAGES_LIST, imgSrc);
         intent.putExtra(GalleryActivity.EXTRA_CURRENT_IMAGE_POSITION, position);

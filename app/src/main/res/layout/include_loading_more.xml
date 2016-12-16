@@ -5,7 +5,6 @@
     android:background="#eee"
     android:gravity="center"
     android:orientation="horizontal"
-    android:foreground="?android:attr/selectableItemBackground"
     android:padding="10dp">
 
     <ProgressBar

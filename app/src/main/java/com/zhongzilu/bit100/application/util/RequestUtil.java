@@ -5,6 +5,7 @@ import com.yolanda.nohttp.RequestMethod;
 import com.yolanda.nohttp.rest.OnResponseListener;
 import com.yolanda.nohttp.rest.Request;
 import com.yolanda.nohttp.rest.RequestQueue;
+import com.zhongzilu.bit100.application.data.Command;
 import com.zhongzilu.bit100.application.data.Contacts;
 import com.zhongzilu.bit100.model.bean.ArticleDetailBean;
 import com.zhongzilu.bit100.model.bean.CategoriesBean;

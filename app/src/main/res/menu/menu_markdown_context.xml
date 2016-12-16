@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_copy"
+        android:title="@string/share_copy_text"/>
+
+    <item
+        android:id="@+id/action_share_context"
+        android:title="@string/share_copy_text" />
+
+    <item
+        android:id="@+id/action_share_md"
+        android:title="@string/share_md" />
+    <item
+        android:id="@+id/action_share_html"
+        android:title="@string/share_html" />
+    <item
+        android:id="@+id/action_share_image"
+        android:title="@string/share_png" />
+</menu>

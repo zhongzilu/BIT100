@@ -11,19 +11,12 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class Bit100LauncherActivity extends AppCompatActivity {
 
-    //**延迟发送消息的延迟时间*/
-    private long mDelay =1500;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                goMainActivity();
-            }
-        }, mDelay);
+        long mDelay = 1500;
+        new Handler().postDelayed(this::goMainActivity, mDelay);
     }
 
     private void goNext(){

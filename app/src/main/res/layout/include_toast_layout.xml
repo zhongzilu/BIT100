@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/img_toast_icon"
-        android:text="网络不给力，请检查网络设置。" />
+        android:text="@string/toast_check_network" />
 
 </RelativeLayout>

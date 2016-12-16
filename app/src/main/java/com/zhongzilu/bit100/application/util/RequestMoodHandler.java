@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.zhongzilu.bit100.application.data.ResponseHandlerInterface;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
 
 import java.lang.ref.WeakReference;

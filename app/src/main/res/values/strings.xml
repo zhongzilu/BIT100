@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">比特壹百</string>
+    <string name="app_name">比特100</string>
+    <string name="share_where_from_text">\n【来自比特100App】\n</string>
 
     <!--menu action title-->
     <string name="action_settings">设置</string>
@@ -63,7 +64,7 @@
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
-    <string name="share_application">推荐给大家一款很好的博客应用【比特壹佰】,简单即美好!\n下载请戳这里：http://www.bit100.com/.zhongzilu/mood/version/RainbowMood.apk</string>
+    <string name="share_application">推荐给大家一款很好的博客应用【比特壹佰】,简单即美好!\n下载请戳这里：http://www.bit100.com/apk/BIT100-V1.0.0-release.apk</string>
     <string name="toast_no_more">没有更多了</string>
     <string name="toast_can_not_deal">不存在处理的应用</string>
     <string name="title_chooser">选择方式</string>
@@ -83,10 +84,58 @@
     <string name="label_about_me_activity">关于我</string>
     <string name="label_feedback_activity">意见反馈</string>
     <string name="action_refresh_title">刷新</string>
-    <string name="remember_pwd_text">記住密碼?</string>
-    <string name="forgot_pwd_text">忘記密碼?</string>
-    <string name="label_forgot_activity">忘記密碼</string>
-    <string name="action_feedback_title">發送</string>
-    <string name="toast_check_network">请检查网络~~</string>
+    <string name="remember_pwd_text">记住密碼?</string>
+    <string name="forgot_pwd_text">忘记密碼?</string>
+    <string name="label_forgot_activity">忘记密碼</string>
+    <string name="action_feedback_title">发送</string>
+    <string name="toast_check_network">网络不给力，请检查网络设置~~</string>
+    <string name="setting_load_image_option">加载图片</string>
+    <string name="setting_show_notify_option">是否显示通知</string>
+    <string name="setting_clear_cache_option">清除缓存</string>
+    <string name="setting_check_update_option">检查更新</string>
+    <string name="setting_about_me_option">关于我</string>
+    <string name="setting_feedback_option">意见反馈</string>
+    <string name="dialog_checking_update_text">正在检查更新</string>
+    <string name="toast_latest_version_text">已经是最新了~</string>
+    <string name="confirm_clear_cache_message">确认清除缓存吗?</string>
+    <string name="dialog_confirm_button_text">确定</string>
+    <string name="dialog_cancel_button_text">取消</string>
+    <string name="toast_clear_cache_success_text">清除成功</string>
+    <string name="toast_no_handle_application_text">没有处理该请求的应用</string>
+    <string name="dialog_landing_text">正在登录</string>
+    <string name="toast_exit_confirm_text">双击退出</string>
+    <string name="dialog_storage_permission_fail_text">没有权限我们将无法为您保存图片!</string>
+    <string name="toast_load_web_fail_text">未加载任何网页</string>
+    <string name="toast_copy_success">复制成功</string>
+    <string name="toast_copy_fail">复制失败</string>
+    <string name="decorator_tag_text">标签</string>
+    <string name="decorator_category_text">目录</string>
+    <string name="hint_feedback_contact_text">联系方式 QQ/微信/电话/邮箱</string>
+    <string name="hint_feedback_content">写下您宝贵的意见，我将及时联系您</string>
+    <string name="share_mood_copyright_text">分享来自比特壹佰 via BIT100</string>
+
+    <string name="action_redo">重做</string>
+    <string name="action_undo">撤销</string>
+    <string name="action_preview">预览</string>
+    <string name="action_save">保存</string>
+    <string name="action_other_operate">其他操作</string>
+    <string name="action_helper">语法参考</string>
+    <string name="action_edit">编辑</string>
+
+    <string name="share_copy_text">复制为文本</string>
+    <string name="share_text">分享为文本</string>
+    <string name="share_md">分享为MD文件(.md)</string>
+    <string name="share_html">分享为HTML文本(.html)</string>
+    <string name="share_png">分享为图片(.png)</string>
+
+    <!--webViewActivity相关菜单-->
+    <string name="action_refresh">刷新</string>
+    <string name="action_copy_url">复制链接</string>
+    <string name="action_open_url">打开链接</string>
+    <string name="action_clear_cache">清理缓存和历史</string>
+    <string name="action_clear_cookie">清理cookie</string>
+
+    <string name="menu_web_horizontal">横屏显示</string>
+    <string name="menu_web_vertical">竖屏显示</string>
 
 </resources>

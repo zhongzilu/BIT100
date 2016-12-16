@@ -1,11 +1,7 @@
 package com.zhongzilu.bit100.view.activity;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zhongzilu.bit100.R;
+import com.zhongzilu.bit100.application.App;
 import com.zhongzilu.bit100.application.util.BitmapUtil;
 import com.zhongzilu.bit100.application.util.ImageLoadUtil;
 import com.zhongzilu.bit100.application.util.LogUtil;
-import com.zhongzilu.bit100.application.util.StatusBarUtils;
+import com.zhongzilu.bit100.application.util.SystemUtils;
 import com.zhongzilu.bit100.model.bean.CardMoodModel;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 
 import java.io.File;
 
@@ -30,7 +28,7 @@ import java.io.File;
  * 心情签名页面
  * Created by zhongzilu on 2016-11-07.
  */
-public class MoodCardActivity extends BaseActivity
+public class MoodCardActivity extends BaseToolbarActivity
         implements View.OnClickListener{
     private static final String TAG = "MoodCardActivity==>";
 
@@ -47,38 +45,31 @@ public class MoodCardActivity extends BaseActivity
     private Bitmap mImageBitmap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mood_card_layout);
-        setToolbar();
+    public int getLayoutId() {
+        return R.layout.activity_mood_card_layout;
+    }
+
+    @Override
+    protected void initStatusBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_mood_card);
+        toolbar.setTitle("");
+        initToolbar(toolbar);
+    }
+
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
 
         mMoodContent = (TextView) findViewById(R.id.tv_mood_content);
-        Typeface face = Typeface.createFromAsset(getAssets(), "font/FZYTK.ttf");
-        mMoodContent.setTypeface(face);
+        mMoodContent.setTypeface(App.getTypeface());
         mMoodImage = (ImageView) findViewById(R.id.img_mood_image);
         mMoodImage.setOnClickListener(this);
         mMoodContent.setOnClickListener(this);
         registerForContextMenu(mMoodContent);
         getIntentData();
-        initData();
     }
 
-    private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_mood_card);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        StatusBarUtils.from(this)
-                //沉浸状态栏
-                .setTransparentStatusbar(true)
-                //白底黑字状态栏
-                .setLightStatusBar(false)
-                //设置toolbar,actionbar等view
-                .setActionbarView(toolbar)
-                .process();
-        setupActionBar();
-    }
-
-    private void initData() {
+    @Override
+    public void initData() {
         if (mMoodObject != null){
             mMoodContent.setText(mMoodObject.mood_text);
             if (mImageBitmap != null){
@@ -134,30 +125,16 @@ public class MoodCardActivity extends BaseActivity
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_share:
-                shareAction("来自BIT100的分享", saveCaptureAndReturnPath());
+                shareAction(getString(R.string.share_where_from_text), saveCaptureAndReturnPath());
                 break;
             case R.id.action_capture:
-                Toast.makeText(this, "截图保存在" + saveCaptureAndReturnPath(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.toast_image_saved) + saveCaptureAndReturnPath(), Toast.LENGTH_LONG).show();
                 break;
             case R.id.action_copy:
-                copyToClipboard(mMoodContent.getText().toString());
+                SystemUtils.copyToClipBoard(this, mMoodContent.getText().toString());
                 break;
         }
         return super.onContextItemSelected(item);
-    }
-
-    /**
-     * 将文字复制到剪切板
-     * @param text 复制的文字
-     */
-    public void copyToClipboard(String text){
-        try {
-            ((ClipboardManager)getApplication().getSystemService(Context.CLIPBOARD_SERVICE))
-                    .setPrimaryClip(ClipData.newPlainText(null, text.trim()));
-            Toast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show();
-        } catch (Exception e){
-            Toast.makeText(this, "复制失败", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private String saveCaptureAndReturnPath(){
@@ -198,15 +175,4 @@ public class MoodCardActivity extends BaseActivity
         startActivity(Intent.createChooser(intent, getString(R.string.title_chooser_share)));
 
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                break;
-        }
-        return true;
-    }
-
 }

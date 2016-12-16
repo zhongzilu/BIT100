@@ -43,7 +43,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_margin="10dp"
-                android:text="分享来自比特壹佰 via BIT100"
+                android:text="@string/share_mood_copyright_text"
                 android:textColor="#c9bbbb"
                 android:textSize="8sp" />
         </RelativeLayout>

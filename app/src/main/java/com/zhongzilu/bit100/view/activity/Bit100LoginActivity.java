@@ -24,43 +24,55 @@ import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.helper.CacheHelper;
 import com.zhongzilu.bit100.application.particlesys.ParticleSystemRenderer;
 import com.zhongzilu.bit100.application.util.RequestUtil;
-import com.zhongzilu.bit100.application.util.StatusBarUtils;
 import com.zhongzilu.bit100.model.response.LoginResponse;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import butterknife.Bind;
 
 /**
  * 登录界面
  * Created by zhongzilu on 2016-10-13.
  */
-public class Bit100LoginActivity extends BaseActivity
+public class Bit100LoginActivity extends BaseToolbarActivity
         implements View.OnClickListener,
         CompoundButton.OnCheckedChangeListener,RequestUtil.RequestCallback{
 
     // UI
-    private GLSurfaceView mGlSurfaceView;
-    private EditText mUsername,mPassword;
-    private View mForgetPass;
-    private Button mLoginBtn;
-    private CheckBox mRememberPwd;
+    @Bind(R.id.gl_surface_view)
+    protected GLSurfaceView mGlSurfaceView;
+    @Bind(R.id.et_login_account)
+    protected EditText mUsername;
+    @Bind(R.id.et_login_password)
+    protected EditText mPassword;
+    @Bind(R.id.tv_forgot_password)
+    protected View mForgetPass;
+    @Bind(R.id.btn_login)
+    protected Button mLoginBtn;
+    @Bind(R.id.cb_remember_pwd)
+    protected CheckBox mRememberPwd;
+
+    //other
     private String name;
     private String pwd;
     private ProgressDialog mWaitingDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public int getLayoutId() {
+        return R.layout.activity_login;
+    }
 
-        setToolbar();
+    @Override
+    protected void initStatusBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_login);
+        toolbar.setTitle("");
+        initToolbar(toolbar);
+    }
 
-        mGlSurfaceView = (GLSurfaceView) findViewById(R.id.gl_surface_view);
-        mUsername = (EditText) findViewById(R.id.et_login_account);
-        mPassword = (EditText) findViewById(R.id.et_login_password);
-        mForgetPass = findViewById(R.id.tv_forgot_password);
-        mLoginBtn = (Button) findViewById(R.id.btn_login);
-        mRememberPwd = (CheckBox) findViewById(R.id.cb_remember_pwd);
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
 
         mForgetPass.setOnClickListener(this);
         mLoginBtn.setOnClickListener(this);
@@ -72,7 +84,7 @@ public class Bit100LoginActivity extends BaseActivity
         final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
 
         if (supportsEs2) {
-            // Request an OpenGL ES 2.0 compatible context.
+            // Request an OpenGL ES 2.0 compatible getAppContext.
             mGlSurfaceView.setEGLContextClientVersion(2);
 
             // Set the renderer to our demo renderer, defined below.
@@ -82,23 +94,11 @@ public class Bit100LoginActivity extends BaseActivity
         } else {
             throw new UnsupportedOperationException();
         }
-
-        getLoginInfoCache();
     }
 
-    private void setToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_login);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        StatusBarUtils.from(this)
-                //沉浸状态栏
-                .setTransparentStatusbar(true)
-                //白底黑字状态栏
-                .setLightStatusBar(false)
-                //设置toolbar,actionbar等view
-                .setActionbarView(toolbar)
-                .process();
-        setupActionBar();
+    @Override
+    public void initData() {
+        getLoginInfoCache();
     }
 
     @Override
@@ -194,7 +194,7 @@ public class Bit100LoginActivity extends BaseActivity
         return new OnResponseListener<JSONObject>() {
             @Override
             public void onStart(int what) {
-                mWaitingDialog = ProgressDialog.show(Bit100LoginActivity.this, null, "正在登录" );
+                mWaitingDialog = ProgressDialog.show(Bit100LoginActivity.this, null, getString(R.string.dialog_landing_text) );
             }
 
             @Override
@@ -251,4 +251,5 @@ public class Bit100LoginActivity extends BaseActivity
         }
         return true;
     }
+
 }

@@ -27,6 +27,7 @@ import com.zhongzilu.bit100.model.bean.TagBean;
 import com.zhongzilu.bit100.model.response.AllPostsByCategoryResponse;
 import com.zhongzilu.bit100.view.adapter.MainRecyclerViewAdapter;
 import com.zhongzilu.bit100.view.adapter.listener.MyItemClickListener;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,7 @@ import java.util.ArrayList;
  * <p/>
  * Created by zhongzilu on 2016-10-27.
  */
-public class Bit100ArticleListActivity extends BaseActivity
+public class Bit100ArticleListActivity extends BaseToolbarActivity
         implements RequestUtil.RequestCallback, MyItemClickListener{
 
     private static final String TAG = "Bit100ArticleDetailActivity==>";
@@ -66,13 +67,14 @@ public class Bit100ArticleListActivity extends BaseActivity
     private boolean isLoadMore = false;
     private ArrayList<PushModel> mPushList = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_article_list_activity);
-        setupCenterTitleToolbar();
-        setupActionBar();
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.activity_article_list_activity;
+    }
+
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_common_recyclerView);
         mRefresh = (SwipeRefreshLayout) findViewById(R.id.refresh_common_refresh);
         mRefresh.setOnRefreshListener(() -> {
@@ -92,6 +94,10 @@ public class Bit100ArticleListActivity extends BaseActivity
         initRecyclerView();
 
         initExtraData();
+    }
+
+    @Override
+    public void initData() {
 
     }
 
@@ -194,16 +200,6 @@ public class Bit100ArticleListActivity extends BaseActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                onBackPressed();
-                break;
-        }
-        return true;
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         RequestUtil.cancelAllRequest();
@@ -248,8 +244,8 @@ public class Bit100ArticleListActivity extends BaseActivity
                     //点击分享按钮
                     case R.id.img_article_share:
                         bean = (ArticleDetailBean) mPushList.get(position).getPushObject();
-                        String shareText = bean.title +
-                                "【来自" + getString(R.string.app_name) + "App】\n" + bean.url;
+                        String shareText = bean.title
+                                + getString(R.string.share_where_from_text) + bean.url;
                         shareAction(shareText);
                         break;
                     //点击点赞按钮
@@ -273,37 +269,31 @@ public class Bit100ArticleListActivity extends BaseActivity
      * @param json 请求响应返回的JSON数据
      */
     private void handleAllPostsByCategoryResponse(final String json){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
-                            new TypeToken<AllPostsByCategoryResponse>(){}.getType());
+        new Thread(() -> {
+            try {
+                AllPostsByCategoryResponse allPosts = new Gson().fromJson(json,
+                        new TypeToken<AllPostsByCategoryResponse>(){}.getType());
 
-                    if ("ok".equals(allPosts.status)){
+                if ("ok".equals(allPosts.status)){
 
-                        for (ArticleDetailBean bean : allPosts.posts){
-                            mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
-                        }
-
-                        if (allPosts.posts.length < 4)
-                            mAdapter.setMoreVisible(false);
-
-                    } else {
-                        if (!TextUtils.isEmpty(allPosts.error))
-                            Toast.makeText(Bit100ArticleListActivity.this, allPosts.error, Toast.LENGTH_SHORT).show();
+                    for (ArticleDetailBean bean : allPosts.posts){
+                        mPushList.add(new PushModel(MainRecyclerViewAdapter.TYPE_MAIN_ARTICLE_ITEM, bean));
                     }
-                } catch (Exception e){
-                    e.printStackTrace();
-                } finally {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                            endLoading();
-                        }
-                    });
+
+                    if (allPosts.posts.length < 4)
+                        mAdapter.setMoreVisible(false);
+
+                } else {
+                    if (!TextUtils.isEmpty(allPosts.error))
+                        Toast.makeText(Bit100ArticleListActivity.this, allPosts.error, Toast.LENGTH_SHORT).show();
                 }
+            } catch (Exception e){
+                e.printStackTrace();
+            } finally {
+                runOnUiThread(() -> {
+                    mAdapter.notifyDataSetChanged();
+                    endLoading();
+                });
             }
         }).start();
     }
@@ -324,4 +314,5 @@ public class Bit100ArticleListActivity extends BaseActivity
         if (mRefresh.isRefreshing())
             mRefresh.setRefreshing(false);
     }
+
 }

@@ -18,12 +18,13 @@ import android.widget.Toast;
 import com.zhongzilu.bit100.R;
 import com.zhongzilu.bit100.application.helper.CacheCleanHelper;
 import com.zhongzilu.bit100.application.util.SharePreferenceUtil;
+import com.zhongzilu.bit100.view.base.BaseToolbarActivity;
 
 /**
  * 设置界面
  * Created by zhongzilu on 2016-11-18.
  */
-public class Bit100SettingActivity extends BaseActivity
+public class Bit100SettingActivity extends BaseToolbarActivity
         implements View.OnClickListener, CompoundButton.OnCheckedChangeListener{
 
     //UI
@@ -35,12 +36,12 @@ public class Bit100SettingActivity extends BaseActivity
     private int mVersionCode;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_layout);
-        setupCenterTitleToolbar();
-        setupActionBar();
+    public int getLayoutId() {
+        return R.layout.activity_setting_layout;
+    }
 
+    @Override
+    public void onCreateAfter(Bundle savedInstanceState) {
         mNoImageSwitch = (Switch) findViewById(R.id.preference_on_image_switch);
         mShowNotifySwitch = (Switch) findViewById(R.id.preference_show_notify_switch);
         mLoadVideoOnWifiSwitch = (Switch) findViewById(R.id.preference_load_video_on_wifi_switch);
@@ -57,11 +58,10 @@ public class Bit100SettingActivity extends BaseActivity
         mShowNotifySwitch.setOnCheckedChangeListener(this);
         mLoadVideoOnWifiSwitch.setOnCheckedChangeListener(this);
         mLoadHDVideoSwitch.setOnCheckedChangeListener(this);
-
-        bindData();
     }
 
-    private void bindData(){
+    @Override
+    public void initData() {
         getSettingInfo();
         checkCacheSize();
         loadLocalVersion();
@@ -75,17 +75,9 @@ public class Bit100SettingActivity extends BaseActivity
     }
 
     private void checkCacheSize(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final String size = CacheCleanHelper.getTotalCacheSize(Bit100SettingActivity.this);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mCatchInfo.setText(size);
-                    }
-                });
-            }
+        new Thread(() -> {
+            final String size = CacheCleanHelper.getTotalCacheSize(Bit100SettingActivity.this);
+            runOnUiThread(() -> mCatchInfo.setText(size));
         }).start();
 
     }
@@ -128,32 +120,29 @@ public class Bit100SettingActivity extends BaseActivity
 
     /**检查版本更新*/
     private void checkUpdateVersion() {
-        final ProgressDialog mWaitingDialog = ProgressDialog.show(this, null, "正在检查更新", true, true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mWaitingDialog.dismiss();
-                Toast.makeText(Bit100SettingActivity.this, "已经是最新了~", Toast.LENGTH_SHORT).show();
-            }
+        final ProgressDialog mWaitingDialog = ProgressDialog.show(this, null, getString(R.string.dialog_checking_update_text), true, true);
+        new Handler().postDelayed(() -> {
+            mWaitingDialog.dismiss();
+            Toast.makeText(Bit100SettingActivity.this, R.string.toast_latest_version_text, Toast.LENGTH_SHORT).show();
         }, 2000);
     }
 
     /**清除缓存*/
     private void clearCatch() {
         new AlertDialog.Builder(this)
-                .setTitle("清除缓存")
+                .setTitle(R.string.setting_clear_cache_option)
                 .setCancelable(true)
-                .setMessage("确认清除缓存吗？")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setMessage(R.string.confirm_clear_cache_message)
+                .setPositiveButton(R.string.dialog_confirm_button_text, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         CacheCleanHelper.cleanAllCache(Bit100SettingActivity.this);
                         mCatchInfo.setText("");
-                        Toast.makeText(Bit100SettingActivity.this, "清除成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Bit100SettingActivity.this, R.string.toast_clear_cache_success_text, Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton("取消", null)
+                .setNegativeButton(R.string.dialog_cancel_button_text, null)
                 .create()
                 .show();
     }
@@ -189,4 +178,5 @@ public class Bit100SettingActivity extends BaseActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
 }
