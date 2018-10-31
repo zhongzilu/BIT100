@@ -1,10 +1,14 @@
-﻿# BIT100
-www.bit100.com client demo. create by zhongzilu.
+﻿BIT100
+===
 
-####项目说明
+![Screenshot](https://github.com/zhongzilu/BIT100/blob/master/image/screenshot.png "Screenshot.png")
+
 该项目为[BIT100](http://www.bit100.com)网的客户端，网站采用知名的WordPress平台搭建。客户端访问的接口由[WordPress JSON API插件](https://wordpress.org/plugins/json-api/)生成，JSON API的使用文档：https://wordpress.org/plugins/json-api/other_notes/。
 
-####感谢第三方库作者和组织
+[戳此下载最新版本APK](https://github.com/zhongzilu/BIT100/releases/download/v1.0.0/BIT100-release.1.0.0.apk "BIT100-release.1.0.0.apk")
+
+### 感谢第三方库作者和组织
+
 1.JSON解析库：Gson
 2.网络框架：Nohttp
 3.图片加载库：Glide
@@ -12,11 +16,3 @@ www.bit100.com client demo. create by zhongzilu.
 5.运行时权限：Rxpermissions:0.7.0
 6.标签控件：me.gujun.android.taggroup
 7.星空特效：com.yalantis.starwars
-
-####截图
-![Capture01](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_01.png)![Capture02](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_02.png)![Capture03](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_03.png)
-
-![Capture04](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_04.png)![Capture05](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_05.png)![Capture06](https://github.com/zhongzilu/BIT100/blob/master/image/com.zhongzilu.bit100_06.png)
-
-####DEMO下载
-[BIT100-V1.0.0-release.apk](http://www.bit100.com/apk/BIT100-V1.0.0-release.apk)
