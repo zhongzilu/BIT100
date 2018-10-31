@@ -9,10 +9,10 @@
 
 ### 感谢第三方库作者和组织
 
-1.JSON解析库：Gson
-2.网络框架：Nohttp
-3.图片加载库：Glide
-4.响应式框架：Rxjava、Rxandroid
-5.运行时权限：Rxpermissions:0.7.0
-6.标签控件：me.gujun.android.taggroup
-7.星空特效：com.yalantis.starwars
+- JSON解析库：Gson
+- 网络框架：Nohttp
+- 图片加载库：Glide
+- 响应式框架：Rxjava、Rxandroid
+- 运行时权限：Rxpermissions:0.7.0
+- 标签控件：me.gujun.android.taggroup
+- 星空特效：com.yalantis.starwars
